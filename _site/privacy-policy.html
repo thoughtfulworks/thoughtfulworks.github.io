@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<link rel="icon" href="/assets/images/logo/logo_square.png">
+
+<title>Privacy Policy | Scala in Action</title>
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Privacy Policy | Scala in Action</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Privacy Policy" />
+<meta name="author" content="https://www.gravatar.com/avatar/6fc127cda8cd99830932538a58dc6173?s=250&d=mm&r=x" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="In rust in action, we delve into a broad variety of concepts, such as how to productively produce, manage, and democratize data. In all of our posts, we strive to provide you with sufficient information to grasp the concepts while also making them as simple to read as possible." />
+<meta property="og:description" content="In rust in action, we delve into a broad variety of concepts, such as how to productively produce, manage, and democratize data. In all of our posts, we strive to provide you with sufficient information to grasp the concepts while also making them as simple to read as possible." />
+<link rel="canonical" href="http://localhost:4000/privacy-policy.html" />
+<meta property="og:url" content="http://localhost:4000/privacy-policy.html" />
+<meta property="og:site_name" content="Scala in Action" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Privacy Policy" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","author":{"@type":"Person","name":"https://www.gravatar.com/avatar/6fc127cda8cd99830932538a58dc6173?s=250&d=mm&r=x"},"description":"In rust in action, we delve into a broad variety of concepts, such as how to productively produce, manage, and democratize data. In all of our posts, we strive to provide you with sufficient information to grasp the concepts while also making them as simple to read as possible.","headline":"Privacy Policy","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/images/logo/logo_transparent.png"},"name":"https://www.gravatar.com/avatar/6fc127cda8cd99830932538a58dc6173?s=250&d=mm&r=x"},"url":"http://localhost:4000/privacy-policy.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    
+<link href="/assets/css/prism.css" rel="stylesheet">
+
+<link href="/assets/css/theme.css" rel="stylesheet">
+
+<script src="/assets/js/jquery.min.js"></script>
+
+<script src="https://kit.fontawesome.com/a04651ccb8.js" crossorigin="anonymous"></script>
+
+</head>
+
+
+
+<script>
+    const repoOwner = 'rust-lang';
+    const repoName = 'rust';
+
+    // const apiUrlStars = `https://api.github.com/repos/${repoOwner}/${repoName}`;
+
+    // fetch(apiUrlStars)
+    //     .then(response => response.json())
+    //     .then(data => {
+    //     document.getElementById('repo-stars').innerText = `${data.stargazers_count}`;
+    //     })
+    //     .catch(error => console.error('Error fetching GitHub repository information:', error));
+  
+    const apiUrlRelease = `https://api.github.com/repos/${repoOwner}/${repoName}/releases/latest`;
+  
+    fetch(apiUrlRelease)
+        .then(response => response.json())
+        .then(data => {
+        document.getElementById('current-release').innerText = `${data.tag_name}`;
+        document.getElementById('release-url').innerHTML = `<a href="${data.html_url}" target="_blank">${data.tag_name}</a>`;
+        })
+        .catch(error => console.error('Error fetching GitHub release information:', error));
+</script> 
+
+
+<body class="line-numbers">
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="outer site-nav-main">
+                <div class="inner">
+                    <nav class="site-nav">
+                        <div class="site-nav-left-wrapper">
+                            <div class="site-nav-left">
+                                <!-- Site Logo/Name -->
+                                <a class="navbar-brand" href="/">
+                                    <img src="/assets/images/logo/logo_transparent.png" alt="Scala in Action">
+                                </a>
+                                &nbsp;&nbsp;
+                                <a href="https://twitter.com/scalainaction" target="_blank" style="text-decoration: none;">
+                                    <span style="color:#000000; font-size: 25px;">
+                                        <i class="fa-brands fa-x-twitter"></i>
+                                    </span>
+                                </a>
+                                <a href="https://www.instagram.com/scalainaction/" target="_blank" style="text-decoration: none;">
+                                    <span style="color:#000000; font-size: 25px;">
+                                        <i class="fa-brands fa-square-instagram"></i>
+                                    </span>
+                                </a> 
+                                <a href="https://github.com/scalainact?tab=repositories" target="_blank" style="text-decoration: none;">
+                                    <span style="color:#000000; font-size: 25px;">
+                                        <i class="fa-brands fa-github"></i>
+                                    </span>
+                                </a>
+                                <span style="color: grey; font-size: 25px;"><i class="fa-solid fa-ellipsis-vertical"></i></span>
+                                <a href="https://scastie.scala-lang.org" target="_blank" style="text-decoration: none;">
+                                    <span style="color:#000000; font-size: 25px;">
+                                        <i class="fa-solid fa-code"></i>
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </header>
+    </div>
+
+	<!-- Defer loading of font and font awesome -->
+	<noscript id="deferred-styles">
+		<link href="https://fonts.googleapis.com/css?family=Sen:400,700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+	</noscript>
+
+    <!-- Back to top icon/button -->
+    <script src="https://unpkg.com/vanilla-back-to-top@7.2.1/dist/vanilla-back-to-top.min.js"></script>
+    <!-- <script>addBackToTop()</script>     -->
+    <script>addBackToTop({
+        diameter: 50,
+        backgroundColor: 'rgba(22, 22, 23, .8)',
+        textColor: '#fff'
+        })
+    </script>
+
+    <!-- Begin Sidebar Navigation -->
+    <div class="sidebar">    
+    </div>   
+    <div class="nav-icon">
+        <div class="hamburger-bar"></div>
+    </div>
+    <div id="blackover-nav" class="blackover"></div>
+    <nav id="menu">
+        <ul>
+            <h4>Navigation</h4>
+            <!--<li><a href="/">Home</a></li>-->
+            <li><a href="/tags">Tags</a></li>
+            <li><a href="/about">About</a></li>
+            <!--<li><a href="/authors">Contributors <span class="badge badge-primary">new</span></a></li>-->
+            <li><a href="/authors">Contributors</a></li>
+            <li><a href="/contact">Contact us</a></li>       
+        </ul>   
+    </nav>
+
+    <script src="/assets/js/lunr.js"></script>
+
+<style>
+    
+</style>
+
+<div class="wrap-search">
+    <div class="d-flex align-items-center ml-auto">
+        <i class="fas fa-search show-search"></i>
+        <form class="bd-search ml-3" onSubmit="return lunr_search(document.getElementById('lunrsearch').value);">
+            <input type="text" class="form-control bigradius text-small launch-modal-search" id="lunrsearch" name="q" maxlength="255" value="" placeholder="Type and enter..."/>
+        </form>
+    </div>
+</div>
+
+<div id="lunrsearchresults">
+    <ul></ul>
+</div>
+
+<script src="/assets/js/lunrsearchengine.js"></script>
+    <!-- End Sidebar Navigation -->
+
+    <div class="site-content ">
+
+    <div class="container">
+        <!-- Content -->
+        <div class="main-content">
+            <div class="page-single">
+    <div class="entry-header">       
+        <h1 class="posttitle">Privacy Policy</h1>        
+    </div>
+</div>
+
+<!-- Featured Image -->
+
+
+<!-- Content -->
+<!-- Post, Page Content
+================================================== -->
+<div class="article-post">
+    <!-- Toc if any -->
+    
+    <!-- End Toc -->
+    <p>Your privacy really matters! <b>Scala in Action</b> takes your privacy seriously. To better protect your privacy, we provide this privacy policy notice explaining the way your personal information is collected and used.</p>
+
+<p>Please do not hesitate to <a href="/contact.html">contact us</a> if you have further concerns or seek extra information about our Privacy Policy.</p>
+
+<h4 id="cookies">Cookies</h4>
+
+<p>This website DOES NOT use cookies.</p>
+
+<h4 id="links-to-third-party-websites">Links to Third Party Websites</h4>
+
+<p>We have included links on this website for your use and reference. We are not responsible for the privacy policies on these websites. You should be aware that the privacy policies of these websites may differ from our own.</p>
+
+<h4 id="security">Security</h4>
+
+<p>The security of your personal information is important to us, but remember that no method of transmission over the Internet, or method of electronic storage, is 100% secure. While we strive to use commercially acceptable means to protect your personal information, we cannot guarantee its absolute security.</p>
+
+<h4 id="changes-to-this-privacy-policy">Changes To This Privacy Policy</h4>
+
+<p>This Privacy Policy is effective and will remain in effect except with respect to any changes in its provisions in the future, which will be in effect immediately after being posted on this page.</p>
+
+<p>We reserve the right to update or change our Privacy Policy at any time and you should check this Privacy Policy periodically. If we make any material changes to this Privacy Policy, we will notify you either through the email address you have provided us, or by placing a prominent notice on our website.</p>
+
+<h4 id="consent">Consent</h4>
+
+<p>By using our website, you consent to and accept our Privacy Policy and its terms and conditions.</p>
+
+</div>
+
+<!-- Comments if not disabled with comments: false -->
+<!-- Comments
+================================================== -->
+ 
+<div class="comments mt-5">
+    <button class="btn btn-outline-dark py-3 px-5 d-block w-100 show-comments"><i class="fa fa-comments text-muted"></i> &nbsp; Show comments</button>         
+    <div id="comments">  
+        <h4 class="mb-4">Comments</h4>                 
+            <section class="disqus">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rustinaction'; 
+        var disqus_developer = 0;
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = window.location.protocol + '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</section>
+     
+    <div class="clearfix"></div>              
+    </div>    
+</div>       
+
+        </div>
+
+        
+        <!-- Newsletter -->
+        <div class="newsletter text-center">
+            <span class="h4"><!--<img src="/assets/images/logo/logo_transparent.png" class="newsletter-logo" alt="Scala in Action"> &nbsp;-->If you like our posts and don't want to miss any of them, sign up for our newsletter.</span>
+            <form action="https://gmail.us17.list-manage.com/subscribe?u=155954fdd35cc37fcbfab134a&id=acc42a78d4" method="post" name="mc-embedded-subscribe-form" class="wj-contact-form validate" target="_blank" novalidate>
+                <div class="mc-field-group d-inline-flex">
+                <input type="email" placeholder="Your e-mail" name="EMAIL" class="required email" id="mce-EMAIL" autocomplete="on" required>
+                <input type="submit" value="Subscribe" name="subscribe" class="heart">
+                </div>
+            </form>
+        </div>
+        
+        
+    </div>
+
+    <!-- Begin Footer -->
+    <!-- <script>
+        const repoOwner = 'rust-lang';
+        const repoName = 'rust';
+
+        const apiUrlRelease = `https://api.github.com/repos/${repoOwner}/${repoName}/releases/latest`;
+      
+        fetch(apiUrlRelease)
+            .then(response => response.json())
+            .then(data => {
+            document.getElementById('current-release').innerText = `${data.tag_name}`;
+            document.getElementById('release-url').innerHTML = `<a href="${data.html_url}" target="_blank">${data.tag_name}</a>`;
+            })
+            .catch(error => console.error('Error fetching GitHub release information:', error));
+    </script>  -->
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-sm-12 text-center text-lg-left">
+                    Copyright © 2024 <b>Scala in Action</b> | <a href="/privacy-policy.html" target="_blank">Privacy Policy</a> | Made with <b>Jekyll</b> and hosted on <b>GitHub Pages</b> | This website DOES NOT use cookies.
+                </div>
+                <div class="col-md-6 col-sm-12 text-center text-lg-right">    
+                    <!-- <i class="fa-brands fa-rust"></i> <a href=`<span id="release-url"></span>`><span id="current-release"></span></a>&nbsp;<i class="fa-solid fa-tag"></i>&nbsp;(latest) -->
+                    <!-- - <i class="fa-solid fa-star"></i> <span id="repo-stars"></span> -->
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- End Footer -->
+
+    </div> <!-- /.site-content -->
+
+    <!-- Scripts (if you need bootstrap.js, please add it yourself. I didn't use it for performance reasons, it was not needed in this theme) -->
+
+    <script src="/assets/js/prism.js"></script>
+
+    <script src="/assets/js/theme.js"></script>
+
+    
+
+    
+</body>
+</html>

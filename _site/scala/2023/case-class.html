@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<link rel="icon" href="/assets/images/logo/logo_square.png">
+
+<title>Case Class in Scala | Scala in Action</title>
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Case Class in Scala | Scala in Action</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Case Class in Scala" />
+<meta name="author" content="senthil" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="What is a case class? Case classes are a special kind of class created using the keyword case. Case classes are excellent for data transfer objects and for representing immutable data. It is a type of class that is mostly utilised for data storage." />
+<meta property="og:description" content="What is a case class? Case classes are a special kind of class created using the keyword case. Case classes are excellent for data transfer objects and for representing immutable data. It is a type of class that is mostly utilised for data storage." />
+<link rel="canonical" href="http://localhost:4000/scala/2023/case-class" />
+<meta property="og:url" content="http://localhost:4000/scala/2023/case-class" />
+<meta property="og:site_name" content="Scala in Action" />
+<meta property="og:image" content="http://localhost:4000/assets/images/posts-cover-images/case-class.jpg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-12-20T00:00:00+05:30" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="http://localhost:4000/assets/images/posts-cover-images/case-class.jpg" />
+<meta property="twitter:title" content="Case Class in Scala" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"senthil"},"dateModified":"2023-12-20T00:00:00+05:30","datePublished":"2023-12-20T00:00:00+05:30","description":"What is a case class? Case classes are a special kind of class created using the keyword case. Case classes are excellent for data transfer objects and for representing immutable data. It is a type of class that is mostly utilised for data storage.","headline":"Case Class in Scala","image":"http://localhost:4000/assets/images/posts-cover-images/case-class.jpg","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/scala/2023/case-class"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/images/logo/logo_transparent.png"},"name":"senthil"},"url":"http://localhost:4000/scala/2023/case-class"}</script>
+<!-- End Jekyll SEO tag -->
+
+    
+<link href="/assets/css/prism.css" rel="stylesheet">
+
+<link href="/assets/css/theme.css" rel="stylesheet">
+
+<script src="/assets/js/jquery.min.js"></script>
+
+<script src="https://kit.fontawesome.com/a04651ccb8.js" crossorigin="anonymous"></script>
+
+</head>
+
+
+
+<script>
+    const repoOwner = 'rust-lang';
+    const repoName = 'rust';
+
+    // const apiUrlStars = `https://api.github.com/repos/${repoOwner}/${repoName}`;
+
+    // fetch(apiUrlStars)
+    //     .then(response => response.json())
+    //     .then(data => {
+    //     document.getElementById('repo-stars').innerText = `${data.stargazers_count}`;
+    //     })
+    //     .catch(error => console.error('Error fetching GitHub repository information:', error));
+  
+    const apiUrlRelease = `https://api.github.com/repos/${repoOwner}/${repoName}/releases/latest`;
+  
+    fetch(apiUrlRelease)
+        .then(response => response.json())
+        .then(data => {
+        document.getElementById('current-release').innerText = `${data.tag_name}`;
+        document.getElementById('release-url').innerHTML = `<a href="${data.html_url}" target="_blank">${data.tag_name}</a>`;
+        })
+        .catch(error => console.error('Error fetching GitHub release information:', error));
+</script> 
+
+
+<body class="line-numbers">
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="outer site-nav-main">
+                <div class="inner">
+                    <nav class="site-nav">
+                        <div class="site-nav-left-wrapper">
+                            <div class="site-nav-left">
+                                <!-- Site Logo/Name -->
+                                <a class="navbar-brand" href="/">
+                                    <img src="/assets/images/logo/logo_transparent.png" alt="Scala in Action">
+                                </a>
+                                &nbsp;&nbsp;
+                                <a href="https://twitter.com/scalainaction" target="_blank" style="text-decoration: none;">
+                                    <span style="color:#000000; font-size: 25px;">
+                                        <i class="fa-brands fa-x-twitter"></i>
+                                    </span>
+                                </a>
+                                <a href="https://www.instagram.com/scalainaction/" target="_blank" style="text-decoration: none;">
+                                    <span style="color:#000000; font-size: 25px;">
+                                        <i class="fa-brands fa-square-instagram"></i>
+                                    </span>
+                                </a> 
+                                <a href="https://github.com/scalainact?tab=repositories" target="_blank" style="text-decoration: none;">
+                                    <span style="color:#000000; font-size: 25px;">
+                                        <i class="fa-brands fa-github"></i>
+                                    </span>
+                                </a>
+                                <span style="color: grey; font-size: 25px;"><i class="fa-solid fa-ellipsis-vertical"></i></span>
+                                <a href="https://scastie.scala-lang.org" target="_blank" style="text-decoration: none;">
+                                    <span style="color:#000000; font-size: 25px;">
+                                        <i class="fa-solid fa-code"></i>
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </header>
+    </div>
+
+	<!-- Defer loading of font and font awesome -->
+	<noscript id="deferred-styles">
+		<link href="https://fonts.googleapis.com/css?family=Sen:400,700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+	</noscript>
+
+    <!-- Back to top icon/button -->
+    <script src="https://unpkg.com/vanilla-back-to-top@7.2.1/dist/vanilla-back-to-top.min.js"></script>
+    <!-- <script>addBackToTop()</script>     -->
+    <script>addBackToTop({
+        diameter: 50,
+        backgroundColor: 'rgba(22, 22, 23, .8)',
+        textColor: '#fff'
+        })
+    </script>
+
+    <!-- Begin Sidebar Navigation -->
+    <div class="sidebar">    
+    </div>   
+    <div class="nav-icon">
+        <div class="hamburger-bar"></div>
+    </div>
+    <div id="blackover-nav" class="blackover"></div>
+    <nav id="menu">
+        <ul>
+            <h4>Navigation</h4>
+            <!--<li><a href="/">Home</a></li>-->
+            <li><a href="/tags">Tags</a></li>
+            <li><a href="/about">About</a></li>
+            <!--<li><a href="/authors">Contributors <span class="badge badge-primary">new</span></a></li>-->
+            <li><a href="/authors">Contributors</a></li>
+            <li><a href="/contact">Contact us</a></li>       
+        </ul>   
+    </nav>
+
+    <script src="/assets/js/lunr.js"></script>
+
+<style>
+    
+</style>
+
+<div class="wrap-search">
+    <div class="d-flex align-items-center ml-auto">
+        <i class="fas fa-search show-search"></i>
+        <form class="bd-search ml-3" onSubmit="return lunr_search(document.getElementById('lunrsearch').value);">
+            <input type="text" class="form-control bigradius text-small launch-modal-search" id="lunrsearch" name="q" maxlength="255" value="" placeholder="Type and enter..."/>
+        </form>
+    </div>
+</div>
+
+<div id="lunrsearchresults">
+    <ul></ul>
+</div>
+
+<script src="/assets/js/lunrsearchengine.js"></script>
+    <!-- End Sidebar Navigation -->
+
+    <div class="site-content ">
+
+    <div class="container">
+        <!-- Content -->
+        <div class="main-content">
+            <div class="entry-header">
+    <!-- Kicker -->
+    
+        <!--<h6 class="kicker">Scala</h6>-->
+        <span class="kicker">
+            <a href="/categories#scala">Scala</a>
+        </span>
+    
+
+    <!-- Post Title -->
+    <h1 class="posttitle">Case Class in Scala</h1>
+
+    <!-- Author and Date -->
+    
+    
+        <div class="d-flex align-items-center mt-4" style="font-size: 100%">
+            <div>
+                
+                <img class="author-thumb" src="https://www.gravatar.com/avatar/6fc127cda8cd99830932538a58dc6173?s=250&d=mm&r=x" alt="Senthil Nayagan">
+                
+            </div>            
+            <div>
+                
+                    <!-- <a target="_blank" href="https://www.linkedin.com/in/senthilnayagan" style="color: black; border-bottom: 1px solid blue;"><b>Senthil Nayagan</b></a> -->
+                    <span class="author-name">
+                        <a target="_blank" href="https://www.linkedin.com/in/senthilnayagan">Senthil Nayagan</a>
+                    </span>
+                
+                
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <span class="social-connect-icon">
+                        <a target="_blank" href="https://senthilnayagan.com/">
+                            <i class="fa-solid fa-window-maximize"></i>
+                        </a>
+                    </span> 
+                                     
+                
+                    &nbsp;
+                    <span class="social-connect-icon">
+                        <a target="_blank" href="https://fosstodon.org/@towardsdata">
+                            <i class="fa-brands fa-mastodon"></i>
+                        </a>                         
+                    </span>
+                                
+                
+                    &nbsp;
+                    <span class="social-connect-icon">
+                        <a target="_blank" href="https://twitter.com/SenthilNayagan">
+                            <i class="fa-brands fa-x-twitter"></i>
+                        </a>                         
+                    </span>                    
+                
+                
+                    &nbsp;
+                    <span class="social-connect-icon">
+                        <a target="_blank" href="https://www.instagram.com/senthilnayagan">
+                            <i class="fa-brands fa-square-instagram"></i>
+                        </a>                         
+                    </span>                    
+                                                   
+                <br/> 
+                <span class="post-date-and-mins-read">           
+                    
+                        <i class="fa-regular fa-calendar-days"></i>&nbsp;<time datetime="2023-12-20T00:00:00+05:30">Dec 20, 2023</time>
+                    
+                    
+                    -&nbsp;<i class="fa-solid fa-clock"></i>&nbsp;4 Mins Read
+                </span>
+            </div>            
+        </div>
+    
+</div>
+
+<!-- Adsense under title if enabled from _config.yml (change your pub id and slot) -->
+<!---->
+
+<!-- Tags -->
+<div class="article-post">
+    <ul class="tags">
+        
+        
+        <li>
+            <a class="smoothscroll" href="/tags#dto">dto</a>
+        </li>
+        
+        <li>
+            <a class="smoothscroll" href="/tags#object-oriented-programming">object-oriented-programming</a>
+        </li>
+        
+        <li>
+            <a class="smoothscroll" href="/tags#oops">oops</a>
+        </li>
+        
+    </ul>
+</div>
+
+<!-- Summary -->
+<div class="summary">
+    
+    <hr class="grey_line"></hr>
+</div>
+
+<!-- Draft - Shows writing in progress -->
+<div class="draft">
+    
+</div>
+
+<!-- Featured Image -->
+
+<div class="entry-featured-image">
+    
+        <img class="featured-image  image-shadow " src="/assets/images/posts-cover-images/case-class.jpg" alt="Case Class in Scala">
+    
+    
+        <span class="featured-image-credits">
+            <p><b>Image Credits: </b>AI-generated image by <a href='https://www.freepik.com/' target='_blank'>freepik</a>.</p>
+        </span>
+    
+ </div>
+
+
+<!-- Content -->
+<!-- Post, Page Content
+================================================== -->
+<div class="article-post">
+    <!-- Toc if any -->
+    
+    <!-- End Toc -->
+    <h1 id="what-is-a-case-class">What is a case class?</h1>
+<p>Case classes are a special kind of class created using the keyword case. Case classes are excellent for data transfer objects and for representing immutable data. It is a type of class that is mostly utilised for data storage.</p>
+
+<pre><code class="language-scala">case class Person(name: String, age: Int)
+</code></pre>
+
+<p>The following beneficial features or conveniences are automatically added to our class when the Scala compiler discovers a case class:</p>
+<ul>
+  <li>It adds a factory method, <code>apply()</code> for creating new instances, so we don’t need to use the keyword <code>new</code> to instantiate a class.</li>
+  <li>Unless all arguments in the parameter list of a case class are declared as <code>var</code>, all arguments implicitly get a <code>val</code> prefix, and thus the <code>val</code> keyword is optional. To put it another way, by default, case classes automatically transform arguments to value fields (<code>val</code> fields), therefore the <code>val</code> keyword is not required to prefix them. If we require a variable field, we can still use the <code>var</code> keyword, but this is not what the case class was intended for.</li>
+  <li>The compiler automatically implements the following methods for the class:
+    <ul>
+      <li><code>apply</code></li>
+      <li><code>unapply</code></li>
+      <li><code>copy</code></li>
+      <li><code>equals</code></li>
+      <li><code>hashCode</code></li>
+      <li><code>toString</code></li>
+    </ul>
+  </li>
+  <li>Every case class has a method named <code>copy</code> that allows us to easily create a same or a modified copy of the class’s instance.</li>
+  <li>A <em>companion object</em> is created automatically with the appropriate <code>apply</code> and <code>unapply</code> methods.</li>
+</ul>
+
+<blockquote>
+  <p>The methods generated by the Scala compiler for case classes aren’t special in any way, other than that they are automatically generated for us. By adding the methods and companion objects ourselves, we may avoid using case classes. Because it would take a lot of time and effort to write each of these methods appropriately for every data-storage class, case classes have the advantage of being more convenient.</p>
+</blockquote>
+
+<p>Like a regular class, a case class can extend other classes, including trait and case classes. Case classes are Scala’s way of allowing pattern matching on objects without requiring a large amount of boilerplate code.</p>
+
+<p>Let’s explore the advantages of a case class in action:</p>
+
+<pre><code class="language-text">scala&gt; case class Person(name: String, age: Int)
+defined case class Person
+
+scala&gt; val person = Person("John", 36)
+val person: Person = Person(John,36)
+
+scala&gt; val otherPerson = person.copy(name = "Robert")
+val otherPerson: Person = Person(Robert,36)
+
+scala&gt; val someOtherPerson = person.copy()
+val someOtherPerson: Person = Person(John,36)
+scala&gt; println(person.equals(someOtherPerson))
+true
+
+scala&gt; person == otherPerson
+val res0: Boolean = false
+
+scala&gt; person match {
+     |     case Person(x, 36) =&gt; s"$x is a younger person"
+     |     case Person(x, 50) =&gt; s"$x is a older person"
+     | }
+val res1: String = John is a younger person
+</code></pre>
+
+<ul>
+  <li><strong>Line 1:</strong> Able to instantiate without a new operator because of the companion object’s factory method, Person.apply().</li>
+  <li><strong>Line 5:</strong> The auto-generated toString method prints the fields in our instance.</li>
+  <li><strong>Line 7:</strong> The second instance (otherPerson) shares the same value for the second field, so we only need to specify a new value for the first field in the copy method.</li>
+  <li><strong>Line 10:</strong> Copies of case classes result in strict equivalence. Hence, the equals statement in line 12 results in true.</li>
+</ul>
+
+<blockquote>
+  <p><strong>Case class extends other class:</strong> If our case class had extended another class with its own fields but we hadn’t added the fields as case class parameters, the generated methods wouldn’t have been able to make use of them. Before using case classes, it’s necessary to be aware of this important caution.</p>
+</blockquote>
+
+<h1 id="copy-vs-clone">Copy vs. clone</h1>
+<p>The case class’s <code>copy</code> method lets us make a <code>copy</code> of an object. Remember that a <code>copy</code> method differs from a <code>clone</code> method in that a <code>copy</code> allows us to modify fields at any time while it is being copied.</p>
+
+<pre><code class="language-scala">case class Worker(name: String, department: String)
+
+object CaseClassCopyMethod extends App {
+  val john = Worker("John", "Sales")
+  val mike = john.copy(name="Mike")
+}
+</code></pre>
+
+<h1 id="abstract-case-class">Abstract case class</h1>
+<p>When we declare an abstract case class, Scala won’t generate the apply method in the companion object, which makes sense as we can’t create an instance of an abstract class.</p>
+
+<pre><code class="language-scala"> abstract case class PositiveInt(value: Int)
+</code></pre>
+
+<h1 id="case-object">Case object</h1>
+<p>We can also create case objects. Just like a regular object, a case object inherits all the features of a regular object. Note that a case object is serialisable by default, whereas a regular object is not.</p>
+
+<pre><code class="language-scala"> case object Fruit {
+    val costPerKg = 10
+}
+</code></pre>
+
+<p>We must extend the <code>Serializable</code> trait in order to make a case object serialisable.</p>
+
+</div>
+
+<!-- Rating -->
+
+
+<!-- Author Box if enabled from _config.yml -->
+<!-- Author Box -->
+
+
+
+
+<!-- Comments if not disabled with comments: false -->
+<!-- Comments
+================================================== -->
+ 
+<div class="comments mt-5">
+    <button class="btn btn-outline-dark py-3 px-5 d-block w-100 show-comments"><i class="fa fa-comments text-muted"></i> &nbsp; Show comments</button>         
+    <div id="comments">  
+        <h4 class="mb-4">Comments</h4>                 
+            <section class="disqus">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rustinaction'; 
+        var disqus_developer = 0;
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = window.location.protocol + '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</section>
+     
+    <div class="clearfix"></div>              
+    </div>    
+</div>       
+
+
+<!-- Share -->
+<div class="share">
+    <!-- <ul>
+        <li class="ml-1 mr-1">
+            <a href="/" ><i class="fas fa-home"></i></a>
+        </li>
+    </ul>
+    <hr> -->
+    <!---->
+    <span>Share</span>
+    <ul>
+        <li class="ml-1 mr-1">
+            <a target="_blank" href="https://twitter.com/intent/tweet?text=Case Class in Scala&url=http://localhost:4000/scala/2023/case-class" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                <i class="fa-brands fa-x-twitter"></i>
+            </a>
+        </li>
+        <li class="ml-1 mr-1">
+            <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url=http://localhost:4000/scala/2023/case-class" onclick="window.open(this.href, 'width=550,height=435');return false;">
+                <i class="fab fa-linkedin-in"></i>
+            </a>
+        </li>
+        <!--<li class="ml-1 mr-1">
+            <a target="_blank" href="http://news.ycombinator.com/submitlink?u=http://localhost:4000/scala/2023/case-class" onclick="window.open(this.href, 'width=550,height=435');return false;">
+                <i class="fab fa-y-combinator"></i>
+            </a>
+        </li>
+        <li class="ml-1 mr-1">
+            <a target="_blank" href="http://www.reddit.com/submit?url=http://localhost:4000/scala/2023/case-class&title=Case Class in Scala" onclick="window.open(this.href, 'width=550,height=435');return false;">
+                <i class="fab fa-reddit"></i>
+            </a>
+        </li>-->                 
+        <li class="ml-1 mr-1">
+            <a target="_blank" href="https://api.whatsapp.com/send?text=Case Class in Scala%20http://localhost:4000/scala/2023/case-class" onclick="window.open(this.href, 'width=550,height=435');return false;">
+                <i class="fab fa-whatsapp"></i>
+            </a>
+        </li>
+        <li class="ml-1 mr-1">
+            <a href="#" onclick="copyToClipboard()">
+                <i class="fas fa-link"></i>
+            </a>
+            <script>
+                function copyToClipboard() { 
+                   window.navigator.clipboard.writeText(`http://localhost:4000/scala/2023/case-class`);
+                }
+            </script>
+        </li>         
+        <!--
+        
+            <ul>
+                <li>
+                <a class="small" href="#disqus_thread"></a>
+                </li>
+            </ul>
+           
+        -->
+    </ul>
+    <!---->
+</div>
+
+
+<!-- Related Post -->
+<!-- Related Posts
+================================================== -->
+<div class=" related-posts ">  
+
+    
+    <h2 class="text-center mb-4">Explore more like this</h2>
+    
+    
+    <div class="d-flex justify-content-center align-items-center">
+    
+    <!-- Categories -->
+    <!--
+    
+    
+    <a class="smoothscroll badge badge-primary text-capitalize" href="/categories#scala">scala</a>                
+    
+    -->
+
+    <!-- Tags -->  
+    
+                    
+    <a class="smoothscroll badge badge-primary text-lowercase" href="/tags#dto">dto</a>               
+                    
+    <a class="smoothscroll badge badge-primary text-lowercase" href="/tags#object-oriented-programming">object-oriented-programming</a>               
+                    
+    <a class="smoothscroll badge badge-primary text-lowercase" href="/tags#oops">oops</a>               
+    
+
+    </div>
+
+    
+    
+    
+    <div class="blog-grid-container">
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+        </div>        
+</div>
+
+<!-- Review with LD-JSON, adapt it for your needs if you like, but make sure you test the generated HTML source code first: 
+https://search.google.com/structured-data/testing-tool/u/0/
+================================================== -->
+
+        </div>
+
+        
+        <!-- Newsletter -->
+        <div class="newsletter text-center">
+            <span class="h4"><!--<img src="/assets/images/logo/logo_transparent.png" class="newsletter-logo" alt="Scala in Action"> &nbsp;-->If you like our posts and don't want to miss any of them, sign up for our newsletter.</span>
+            <form action="https://gmail.us17.list-manage.com/subscribe?u=155954fdd35cc37fcbfab134a&id=acc42a78d4" method="post" name="mc-embedded-subscribe-form" class="wj-contact-form validate" target="_blank" novalidate>
+                <div class="mc-field-group d-inline-flex">
+                <input type="email" placeholder="Your e-mail" name="EMAIL" class="required email" id="mce-EMAIL" autocomplete="on" required>
+                <input type="submit" value="Subscribe" name="subscribe" class="heart">
+                </div>
+            </form>
+        </div>
+        
+        
+    </div>
+
+    <!-- Begin Footer -->
+    <!-- <script>
+        const repoOwner = 'rust-lang';
+        const repoName = 'rust';
+
+        const apiUrlRelease = `https://api.github.com/repos/${repoOwner}/${repoName}/releases/latest`;
+      
+        fetch(apiUrlRelease)
+            .then(response => response.json())
+            .then(data => {
+            document.getElementById('current-release').innerText = `${data.tag_name}`;
+            document.getElementById('release-url').innerHTML = `<a href="${data.html_url}" target="_blank">${data.tag_name}</a>`;
+            })
+            .catch(error => console.error('Error fetching GitHub release information:', error));
+    </script>  -->
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-sm-12 text-center text-lg-left">
+                    Copyright © 2024 <b>Scala in Action</b> | <a href="/privacy-policy.html" target="_blank">Privacy Policy</a> | Made with <b>Jekyll</b> and hosted on <b>GitHub Pages</b> | This website DOES NOT use cookies.
+                </div>
+                <div class="col-md-6 col-sm-12 text-center text-lg-right">    
+                    <!-- <i class="fa-brands fa-rust"></i> <a href=`<span id="release-url"></span>`><span id="current-release"></span></a>&nbsp;<i class="fa-solid fa-tag"></i>&nbsp;(latest) -->
+                    <!-- - <i class="fa-solid fa-star"></i> <span id="repo-stars"></span> -->
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- End Footer -->
+
+    </div> <!-- /.site-content -->
+
+    <!-- Scripts (if you need bootstrap.js, please add it yourself. I didn't use it for performance reasons, it was not needed in this theme) -->
+
+    <script src="/assets/js/prism.js"></script>
+
+    <script src="/assets/js/theme.js"></script>
+
+    
+
+    
+    <script id="dsq-count-scr" src="//rustinaction.disqus.com/count.js"></script>
+    
+</body>
+</html>
