@@ -6,10 +6,10 @@
 
 <link rel="icon" href="/assets/images/logo/logo_square.png">
 
-<title>Home | Scala in Action</title>
+<title>Home | thoughtful works</title>
 
 <!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Home | Scala in Action</title>
+<title>Home | thoughtful works</title>
 <meta name="generator" content="Jekyll v4.3.2" />
 <meta property="og:title" content="Home" />
 <meta name="author" content="https://www.gravatar.com/avatar/6fc127cda8cd99830932538a58dc6173?s=250&d=mm&r=x" />
@@ -18,12 +18,12 @@
 <meta property="og:description" content="In rust in action, we delve into a broad variety of concepts, such as how to productively produce, manage, and democratize data. In all of our posts, we strive to provide you with sufficient information to grasp the concepts while also making them as simple to read as possible." />
 <link rel="canonical" href="http://localhost:4000/" />
 <meta property="og:url" content="http://localhost:4000/" />
-<meta property="og:site_name" content="Scala in Action" />
+<meta property="og:site_name" content="thoughtful works" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Home" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"https://www.gravatar.com/avatar/6fc127cda8cd99830932538a58dc6173?s=250&d=mm&r=x"},"description":"In rust in action, we delve into a broad variety of concepts, such as how to productively produce, manage, and democratize data. In all of our posts, we strive to provide you with sufficient information to grasp the concepts while also making them as simple to read as possible.","headline":"Home","name":"Scala in Action","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/images/logo/logo_transparent.png"},"name":"https://www.gravatar.com/avatar/6fc127cda8cd99830932538a58dc6173?s=250&d=mm&r=x"},"url":"http://localhost:4000/"}</script>
+{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"https://www.gravatar.com/avatar/6fc127cda8cd99830932538a58dc6173?s=250&d=mm&r=x"},"description":"In rust in action, we delve into a broad variety of concepts, such as how to productively produce, manage, and democratize data. In all of our posts, we strive to provide you with sufficient information to grasp the concepts while also making them as simple to read as possible.","headline":"Home","name":"thoughtful works","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/images/logo/logo_transparent.png"},"name":"https://www.gravatar.com/avatar/6fc127cda8cd99830932538a58dc6173?s=250&d=mm&r=x"},"url":"http://localhost:4000/"}</script>
 <!-- End Jekyll SEO tag -->
 
     
@@ -39,30 +39,6 @@
 
 
 
-<script>
-    const repoOwner = 'rust-lang';
-    const repoName = 'rust';
-
-    // const apiUrlStars = `https://api.github.com/repos/${repoOwner}/${repoName}`;
-
-    // fetch(apiUrlStars)
-    //     .then(response => response.json())
-    //     .then(data => {
-    //     document.getElementById('repo-stars').innerText = `${data.stargazers_count}`;
-    //     })
-    //     .catch(error => console.error('Error fetching GitHub repository information:', error));
-  
-    const apiUrlRelease = `https://api.github.com/repos/${repoOwner}/${repoName}/releases/latest`;
-  
-    fetch(apiUrlRelease)
-        .then(response => response.json())
-        .then(data => {
-        document.getElementById('current-release').innerText = `${data.tag_name}`;
-        document.getElementById('release-url').innerHTML = `<a href="${data.html_url}" target="_blank">${data.tag_name}</a>`;
-        })
-        .catch(error => console.error('Error fetching GitHub release information:', error));
-</script> 
-
 
 <body class="line-numbers">
     <div class="site-wrapper">
@@ -74,30 +50,30 @@
                             <div class="site-nav-left">
                                 <!-- Site Logo/Name -->
                                 <a class="navbar-brand" href="/">
-                                    <img src="/assets/images/logo/logo_transparent.png" alt="Scala in Action">
+                                    <img src="/assets/images/logo/logo_transparent.png" alt="thoughtful works">
                                 </a>
                                 &nbsp;&nbsp;
-                                <a href="https://twitter.com/scalainaction" target="_blank" style="text-decoration: none;">
+                                <a href="https://twitter.com/thoughtfulwx" target="_blank" style="text-decoration: none;">
                                     <span style="color:#000000; font-size: 25px;">
                                         <i class="fa-brands fa-x-twitter"></i>
                                     </span>
                                 </a>
-                                <a href="https://www.instagram.com/scalainaction/" target="_blank" style="text-decoration: none;">
+                                <a href="https://www.instagram.com/thoughtful.works/" target="_blank" style="text-decoration: none;">
                                     <span style="color:#000000; font-size: 25px;">
                                         <i class="fa-brands fa-square-instagram"></i>
                                     </span>
                                 </a> 
-                                <a href="https://github.com/scalainact?tab=repositories" target="_blank" style="text-decoration: none;">
+                                <a href="https://github.com/thoughtfulworks?tab=repositories" target="_blank" style="text-decoration: none;">
                                     <span style="color:#000000; font-size: 25px;">
                                         <i class="fa-brands fa-github"></i>
                                     </span>
                                 </a>
                                 <span style="color: grey; font-size: 25px;"><i class="fa-solid fa-ellipsis-vertical"></i></span>
-                                <a href="https://scastie.scala-lang.org" target="_blank" style="text-decoration: none;">
+                                <!-- <a href="https://scastie.scala-lang.org" target="_blank" style="text-decoration: none;">
                                     <span style="color:#000000; font-size: 25px;">
                                         <i class="fa-solid fa-code"></i>
                                     </span>
-                                </a>
+                                </a> -->
                             </div>
                         </div>
                     </nav>
@@ -132,10 +108,8 @@
     <nav id="menu">
         <ul>
             <h4>Navigation</h4>
-            <!--<li><a href="/">Home</a></li>-->
             <li><a href="/tags">Tags</a></li>
             <li><a href="/about">About</a></li>
-            <!--<li><a href="/authors">Contributors <span class="badge badge-primary">new</span></a></li>-->
             <li><a href="/authors">Contributors</a></li>
             <li><a href="/contact">Contact us</a></li>       
         </ul>   
@@ -253,7 +227,7 @@
         
         <!-- Newsletter -->
         <div class="newsletter text-center">
-            <span class="h4"><!--<img src="/assets/images/logo/logo_transparent.png" class="newsletter-logo" alt="Scala in Action"> &nbsp;-->If you like our posts and don't want to miss any of them, sign up for our newsletter.</span>
+            <span class="h4"><!--<img src="/assets/images/logo/logo_transparent.png" class="newsletter-logo" alt="thoughtful works"> &nbsp;-->If you like our posts and don't want to miss any of them, sign up for our newsletter.</span>
             <form action="https://gmail.us17.list-manage.com/subscribe?u=155954fdd35cc37fcbfab134a&id=acc42a78d4" method="post" name="mc-embedded-subscribe-form" class="wj-contact-form validate" target="_blank" novalidate>
                 <div class="mc-field-group d-inline-flex">
                 <input type="email" placeholder="Your e-mail" name="EMAIL" class="required email" id="mce-EMAIL" autocomplete="on" required>
@@ -285,7 +259,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6 col-sm-12 text-center text-lg-left">
-                    Copyright © 2024 <b>Scala in Action</b> | <a href="/privacy-policy.html" target="_blank">Privacy Policy</a> | Made with <b>Jekyll</b> and hosted on <b>GitHub Pages</b> | This website DOES NOT use cookies.
+                    Copyright © 2024 <b>thoughtful works</b> | <a href="/privacy-policy.html" target="_blank">Privacy Policy</a> | Made with <b>Jekyll</b> and hosted on <b>GitHub Pages</b> | This website DOES NOT use cookies.
                 </div>
                 <div class="col-md-6 col-sm-12 text-center text-lg-right">    
                     <!-- <i class="fa-brands fa-rust"></i> <a href=`<span id="release-url"></span>`><span id="current-release"></span></a>&nbsp;<i class="fa-solid fa-tag"></i>&nbsp;(latest) -->

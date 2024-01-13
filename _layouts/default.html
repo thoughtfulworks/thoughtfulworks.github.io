@@ -32,30 +32,6 @@
 </script>
 {% endif %}
 
-<script>
-    const repoOwner = 'rust-lang';
-    const repoName = 'rust';
-
-    // const apiUrlStars = `https://api.github.com/repos/${repoOwner}/${repoName}`;
-
-    // fetch(apiUrlStars)
-    //     .then(response => response.json())
-    //     .then(data => {
-    //     document.getElementById('repo-stars').innerText = `${data.stargazers_count}`;
-    //     })
-    //     .catch(error => console.error('Error fetching GitHub repository information:', error));
-  
-    const apiUrlRelease = `https://api.github.com/repos/${repoOwner}/${repoName}/releases/latest`;
-  
-    fetch(apiUrlRelease)
-        .then(response => response.json())
-        .then(data => {
-        document.getElementById('current-release').innerText = `${data.tag_name}`;
-        document.getElementById('release-url').innerHTML = `<a href="${data.html_url}" target="_blank">${data.tag_name}</a>`;
-        })
-        .catch(error => console.error('Error fetching GitHub release information:', error));
-</script> 
-
 {% capture layout %}{% if page.layout %}layout-{{ page.layout }}{% endif %}{% endcapture %}
 <body class="line-numbers">
     <div class="site-wrapper">
@@ -70,27 +46,27 @@
                                     <img src="{{ site.baseurl }}/{{ site.logo }}" alt="{{ site.name }}">
                                 </a>
                                 &nbsp;&nbsp;
-                                <a href="https://twitter.com/scalainaction" target="_blank" style="text-decoration: none;">
+                                <a href="https://twitter.com/thoughtfulwx" target="_blank" style="text-decoration: none;">
                                     <span style="color:#000000; font-size: 25px;">
                                         <i class="fa-brands fa-x-twitter"></i>
                                     </span>
                                 </a>
-                                <a href="https://www.instagram.com/scalainaction/" target="_blank" style="text-decoration: none;">
+                                <a href="https://www.instagram.com/thoughtful.works/" target="_blank" style="text-decoration: none;">
                                     <span style="color:#000000; font-size: 25px;">
                                         <i class="fa-brands fa-square-instagram"></i>
                                     </span>
                                 </a> 
-                                <a href="https://github.com/scalainact?tab=repositories" target="_blank" style="text-decoration: none;">
+                                <a href="https://github.com/thoughtfulworks?tab=repositories" target="_blank" style="text-decoration: none;">
                                     <span style="color:#000000; font-size: 25px;">
                                         <i class="fa-brands fa-github"></i>
                                     </span>
                                 </a>
                                 <span style="color: grey; font-size: 25px;"><i class="fa-solid fa-ellipsis-vertical"></i></span>
-                                <a href="https://scastie.scala-lang.org" target="_blank" style="text-decoration: none;">
+                                <!-- <a href="https://scastie.scala-lang.org" target="_blank" style="text-decoration: none;">
                                     <span style="color:#000000; font-size: 25px;">
                                         <i class="fa-solid fa-code"></i>
                                     </span>
-                                </a>
+                                </a> -->
                             </div>
                         </div>
                     </nav>
@@ -125,10 +101,8 @@
     <nav id="menu">
         <ul>
             <h4>Navigation</h4>
-            <!--<li><a href="{{ site.baseurl }}/">Home</a></li>-->
             <li><a href="{{ site.baseurl }}/tags">Tags</a></li>
             <li><a href="{{ site.baseurl }}/about">About</a></li>
-            <!--<li><a href="{{ site.baseurl }}/authors">Contributors <span class="badge badge-primary">new</span></a></li>-->
             <li><a href="{{ site.baseurl }}/authors">Contributors</a></li>
             <li><a href="{{ site.baseurl }}/contact">Contact us</a></li>       
         </ul>   

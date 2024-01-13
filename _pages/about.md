@@ -28,8 +28,8 @@ Happy learning!
 **Senthil Nayagan**<br/>
 <sup>Founder and content creator, [**towardsdata.dev**](https://towardsdata.dev/){:target="_blank"} and **rustinaction.dev**.</sup>
 
-**Email:** [hello@rustinaction.dev](mailto:hello@rustinaction.dev)<br/>
-**Twitter:** [rustinact](https://twitter.com/rustinact){:target="_blank"}<br/>
-**Instagram:** [rustinaction](https://www.instagram.com/rustinaction){:target="_blank"}<br/>
-**GitHub:** [rustinact](https://github.com/rustinact){:target="_blank"}<br/>
+**Email:** [hello@thoughtfulworks.dev](mailto:hello@thoughtfulworks.dev)<br/>
+**Twitter:** [thoughtfulwx](https://twitter.com/thoughtfulwx){:target="_blank"}<br/>
+**Instagram:** [thoughtful.works](https://www.instagram.com/thoughtful.works){:target="_blank"}<br/>
+**GitHub:** [thoughtfulworks](https://github.com/thoughtfulworks){:target="_blank"}<br/>
 
