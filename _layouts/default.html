@@ -62,11 +62,7 @@
                                     </span>
                                 </a>
                                 <span style="color: grey; font-size: 25px;"><i class="fa-solid fa-ellipsis-vertical"></i></span>
-                                <!-- <a href="https://scastie.scala-lang.org" target="_blank" style="text-decoration: none;">
-                                    <span style="color:#000000; font-size: 25px;">
-                                        <i class="fa-solid fa-code"></i>
-                                    </span>
-                                </a> -->
+                                {% include search-lunr.html %}
                             </div>
                         </div>
                     </nav>
@@ -108,7 +104,7 @@
         </ul>   
     </nav>
 
-    {% include search-lunr.html %}
+    <!-- {% include search-lunr.html %} -->
     <!-- End Sidebar Navigation -->
 
     <div class="site-content {% if page.url == '/' %} firstpage {% endif %}">

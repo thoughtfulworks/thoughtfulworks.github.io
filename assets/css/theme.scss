@@ -772,10 +772,10 @@ img, img:hover {
 
 // Search
 .show-search {
-    cursor:pointer;
+    cursor: pointer;
     &:hover {
         // color: darken($primary,20%);
-        color: $blue;
+        // color: $blue;
     }
 }
 .bd-search {
@@ -788,11 +788,17 @@ img, img:hover {
         transition:opacity 0.5s linear;
     }
 }
+// .wrap-search {
+//     position: fixed;
+//     left: 30px;
+//     bottom: 25px;
+//     z-index: 1026;
+// }
 .wrap-search {
-    position: fixed;
-    left: 30px;
-    bottom: 25px;
-    z-index: 1026;
+    position: relative;
+    // left: 30px;
+    // bottom: 25px;
+    // z-index: 1026;
 }
 .modal-open .modal {
     background: rgba(0,0,0,0.3);
@@ -805,15 +811,20 @@ img, img:hover {
         display: block;
         font-size: 20px;
         margin-bottom: 5px;
+        letter-spacing: normal;
+        text-wrap: wrap;
         &:hover {
             color: $blue;
         }
     }
     span.body {
         color: $gray-500;
-        line-height: 1.7;
+        line-height: 1.2;
+        font-size: 15px;
         display: block;
         margin-bottom: 10px;
+        letter-spacing: normal;
+        text-wrap: wrap;
     }
     a {
         &:hover {
@@ -1056,8 +1067,11 @@ ul.tags li a:hover {
     right: 0;
     left: 0;
     z-index: 1000;
-    background: #f7f8fa;
+    // background: #f7f8fa;
+    background: #fff;
     border-bottom: solid #d5dbe2 1px;
+    // border-top: solid #F4B701 3px;
+    // border-top: solid #d52b1e 3px;
 }
 
 .outer {
