@@ -2,11 +2,13 @@
 layout: post
 title:  "Data Governance"
 kicker: "Data Governance"
-subtitle: "Data governance is the process of defining security guidelines and policies and making sure they are followed by having authority and control over how data assets are managed."
+summary: "Data governance is the process of defining security guidelines and policies and making sure they are followed by having authority and control over how data assets are managed."
 image: assets/images/posts-cover-images/data-governance.jpg
 featured_image: assets/images/featured-images/data-governance.jpg
+image-credits: "Vector image designed by <a href='https://www.freepik.com/' target='_blank'>freepik</a>."
+imageshadow: true
 author: senthil
-date: 2022-07-26 19:00:00 +0530
+date: 2024-01-16 00:00:00 +0530
 last_modified_at: 2022-07-29 00:00:00 +0530
 tags: ["data-engineering", "big-data", "data-goverance", "data-security"]
 categories: data-security-and-compliance

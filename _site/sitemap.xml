@@ -41,10 +41,6 @@
 <lastmod>2022-07-25T00:00:00+05:30</lastmod>
 </url>
 <url>
-<loc>http://localhost:4000/data-security-and-compliance/2022/data-governance</loc>
-<lastmod>2022-07-29T00:00:00+05:30</lastmod>
-</url>
-<url>
 <loc>http://localhost:4000/data-engineering/2022/reverse-etl</loc>
 <lastmod>2022-07-31T00:00:00+05:30</lastmod>
 </url>
@@ -191,6 +187,10 @@
 <url>
 <loc>http://localhost:4000/data-management/2024/data-product-vs-data-as-a-product</loc>
 <lastmod>2024-01-16T00:00:00+05:30</lastmod>
+</url>
+<url>
+<loc>http://localhost:4000/data-security-and-compliance/2024/data-governance</loc>
+<lastmod>2022-07-29T00:00:00+05:30</lastmod>
 </url>
 <url>
 <loc>http://localhost:4000/apache-pinot/2024/introduction-to-apache-pinot</loc>

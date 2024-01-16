@@ -5,8 +5,8 @@
     <description>In rust in action, we delve into a broad variety of concepts, such as how to productively produce, manage, and democratize data. In all of our posts, we strive to provide you with sufficient information to grasp the concepts while also making them as simple to read as possible.</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 16 Jan 2024 12:11:51 +0530</pubDate>
-    <lastBuildDate>Tue, 16 Jan 2024 12:11:51 +0530</lastBuildDate>
+    <pubDate>Tue, 16 Jan 2024 12:14:30 +0530</pubDate>
+    <lastBuildDate>Tue, 16 Jan 2024 12:14:30 +0530</lastBuildDate>
     <generator>Jekyll v4.3.2</generator>
     
       <item>
@@ -1810,6 +1810,105 @@ bin/pinot-admin.sh PostQuery \
       </item>
     
       <item>
+        <title>Data Governance</title>
+        <description>&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;Writing in progress:&lt;/strong&gt; If you have any suggestions for improving the content or notice any inaccuracies, please email me at &lt;a href=&quot;mailto:hello@senthilnayagan.com&quot;&gt;hello@senthilnayagan.com&lt;/a&gt;. Thanks!&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;What do we mean when we claim the data is secure? It means:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Data is only &lt;em&gt;accessible to authorized users&lt;/em&gt; in authorized ways.&lt;/li&gt;
+  &lt;li&gt;Data is &lt;em&gt;auditable&lt;/em&gt;, which means that all accesses, including modifications, are logged.&lt;/li&gt;
+  &lt;li&gt;Data &lt;em&gt;complies with all regulations&lt;/em&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;what-is-data-governance&quot;&gt;What is data governance?&lt;/h1&gt;
+
+&lt;p&gt;Data governance is a collection of &lt;em&gt;processes&lt;/em&gt;, &lt;em&gt;roles&lt;/em&gt;, &lt;em&gt;policies&lt;/em&gt;, &lt;em&gt;responsibilities&lt;/em&gt; and &lt;em&gt;standards&lt;/em&gt; that ensure data is &lt;em&gt;secure&lt;/em&gt;, &lt;em&gt;accurate&lt;/em&gt;, and &lt;em&gt;available as an asset&lt;/em&gt; across the organization. In other words, it is the process of defining security guidelines and policies and making sure they are followed by having authority and control over how data assets are managed.&lt;/p&gt;
+
+&lt;p&gt;It defines &lt;em&gt;&lt;strong&gt;who&lt;/strong&gt; can take &lt;strong&gt;what actions&lt;/strong&gt; based on &lt;strong&gt;what data&lt;/strong&gt;, under &lt;strong&gt;what conditions&lt;/strong&gt;, and using &lt;strong&gt;what methods&lt;/strong&gt;.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;The practice of data governance also includes adhering to external standards set by industry associations, government agencies, and other stakeholders. Regulations such as the GDPR and many others impose legal accountability and severe penalties on firms (&lt;a href=&quot;https://gdpr.eu/fines/&quot; target=&quot;_blank&quot;&gt;&lt;em&gt;in the case of GDPR, the penalty may be up to 4% of global revenue&lt;/em&gt;&lt;/a&gt;) that fail to adhere to governance principles around data privacy, retention, and portability.&lt;/p&gt;
+
+&lt;p&gt;No matter how large the organization is or the volume of data, the principles of data governance remain the same. However, data governance practitioners make decisions about tools and ways to implement them based on practical factors that are affected by the environment in which they work.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;It is important to note that data governance is not just about data security; it is more than that. Data governance guarantees that data is trustworthy while also maintaining its quality and integrity.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;enhancing-trust-in-data&quot;&gt;Enhancing trust in data&lt;/h2&gt;
+
+&lt;p&gt;The goal of data governance is to establish &lt;em&gt;trust in data&lt;/em&gt;. Trustworthy data is required to enable decision making and risk assessment. To ensure data trust, a data governance strategy must address three key aspects:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Discoverability&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Security&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Accountability&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;data-quality&quot;&gt;Data quality&lt;/h2&gt;
+
+&lt;p&gt;We can accomplish data quality by using data governance. Data quality is focused on making sure that the data complies with our &lt;strong&gt;data quality dimensions&lt;/strong&gt; such as &lt;em&gt;accuracy&lt;/em&gt;, &lt;em&gt;completeness&lt;/em&gt;, &lt;em&gt;validity&lt;/em&gt;, &lt;em&gt;timeliness&lt;/em&gt;, &lt;em&gt;consistency&lt;/em&gt;, and &lt;em&gt;uniqueness&lt;/em&gt;. To put it simply, data quality guarantees that we have high-quality data.&lt;/p&gt;
+
+&lt;p&gt;We can figure out the data quality by looking at its source, i.e., where it came from (e.g., was it entered by humans, who often make mistakes?). A &lt;em&gt;sense of ownership&lt;/em&gt; is one method for improving data quality—making sure the business unit responsible for generating the data also owns the quality of that data.&lt;/p&gt;
+
+&lt;p&gt;The organization can set up a &lt;em&gt;data acceptance process&lt;/em&gt; that states that data cannot be used until the people who own it demonstrate that it meets the organization’s quality criteria.&lt;/p&gt;
+
+&lt;h2 id=&quot;why-is-data-governance-important&quot;&gt;Why is data governance important?&lt;/h2&gt;
+
+&lt;p&gt;Data governance is not only about managing the rules but also making data useful. Effective data governance implementation ensures that high-quality data must be efficiently available to the right people throughout the organisation.&lt;/p&gt;
+
+&lt;h2 id=&quot;data-governance-vs-data-management&quot;&gt;Data governance vs. data management&lt;/h2&gt;
+
+&lt;h3 id=&quot;data-governance&quot;&gt;Data governance&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Data governance describes the general structure that need to be in place.&lt;/li&gt;
+  &lt;li&gt;It has policies, procedures, and accountability.&lt;/li&gt;
+  &lt;li&gt;It’s more about what should happen and how things should happen.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;data-management&quot;&gt;Data management&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;The goal of data management is to put all of the policies into practice.&lt;/li&gt;
+  &lt;li&gt;It’s a hands-on daily effort to make sure that the policies we put in place are being followed.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;data-encryption&quot;&gt;Data encryption&lt;/h2&gt;
+
+&lt;p&gt;Data encryption adds another level of protection. Only the systems or users who have the keys can make sense of the data. There are several data encryption implementations available. However, the &lt;em&gt;envelope encryption&lt;/em&gt; technique offers the best security while also performing well.&lt;/p&gt;
+
+&lt;h2 id=&quot;identity-and-access-management-iam&quot;&gt;Identity and access management (IAM)&lt;/h2&gt;
+
+&lt;p&gt;Access control is based on who the user is (called “authentication”) and whether or not the user is allowed to access certain data (called “authorization”).&lt;/p&gt;
+
+&lt;p&gt;Authorization is based on a set of permissions and roles that are tied to a user’s or service’s identity. Authorization decides whether or not the user is allowed to access or perform any activity on the data in question.&lt;/p&gt;
+
+&lt;p&gt;Authentication is typically handled by providing a password associated with the individual seeking access. The obvious weakness of this approach is that anybody who has obtained access to the password may access whatever that person has access to. So we must add extra layers of protection to the authentication process by making it more difficult for attackers to acquire access-we can enhance it even further by adding &lt;em&gt;two-factor authentication&lt;/em&gt;. If possible, we may include &lt;em&gt;biometric data in the authentication request&lt;/em&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;roles&quot;&gt;Roles&lt;/h2&gt;
+
+&lt;p&gt;The first thing we need to consider when it comes to data governance is who is engaged and what their roles are. There are usually several roles, but the most important one is &lt;em&gt;data owner&lt;/em&gt; or &lt;em&gt;data sponsor&lt;/em&gt;. These are the individuals who have ultimate decision-making authority over the data and are solely responsible for ensuring that the data is accurate and up to date. These individuals have a deeper understanding of the groundwork that’s being done with the data. There could be many data owners or data sponsors. For instance, a sales data owner, an inventory data owner, etc.&lt;/p&gt;
+</description>
+        <pubDate>Tue, 16 Jan 2024 00:00:00 +0530</pubDate>
+        <link>http://localhost:4000/data-security-and-compliance/2024/data-governance</link>
+        <guid isPermaLink="true">http://localhost:4000/data-security-and-compliance/2024/data-governance</guid>
+        
+        <category>data-engineering</category>
+        
+        <category>big-data</category>
+        
+        <category>data-goverance</category>
+        
+        <category>data-security</category>
+        
+        
+        <category>data-security-and-compliance</category>
+        
+      </item>
+    
+      <item>
         <title>Data Product vs. Data as a Product</title>
         <description>&lt;h1 id=&quot;overview&quot;&gt;Overview&lt;/h1&gt;
 
@@ -1968,106 +2067,6 @@ bin/pinot-admin.sh PostQuery \
         
         
         <category>data-engineering</category>
-        
-      </item>
-    
-      <item>
-        <title>Data Catalog</title>
-        <description>&lt;blockquote&gt;
-  &lt;p&gt;&lt;strong&gt;Writing in progress:&lt;/strong&gt; If you have any suggestions for improving the content or notice any inaccuracies, please email me at &lt;a href=&quot;mailto:hello@senthilnayagan.com&quot;&gt;hello@senthilnayagan.com&lt;/a&gt;. Thanks!&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h1 id=&quot;what-is-a-data-catalog&quot;&gt;What is a data catalog?&lt;/h1&gt;
-&lt;p&gt;A catalog, in its literal sense, refers to a book or document containing a complete list of things, usually arranged &lt;em&gt;systematically&lt;/em&gt;. A data catalog, in the context of data management, is an organised inventory of all &lt;em&gt;data assets&lt;/em&gt; inside an organisation to help data professionals quickly and easily locate the most relevant data with the aim of gaining business insights.&lt;/p&gt;
-
-&lt;p&gt;With a data catalog, the entire organization is given the ability to see all the data it has. Data catalogs have emerged as a powerful tool for data management and data governance.&lt;/p&gt;
-
-&lt;h2 id=&quot;what-is-data-assets&quot;&gt;What is data assets?&lt;/h2&gt;
-
-&lt;p&gt;The data assets consist of, but are not limited to:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Files and folders&lt;/li&gt;
-  &lt;li&gt;Structured (tabular) data&lt;/li&gt;
-  &lt;li&gt;Unstructured data&lt;/li&gt;
-  &lt;li&gt;Reports and query results&lt;/li&gt;
-  &lt;li&gt;Data visualisations and dashboards&lt;/li&gt;
-  &lt;li&gt;Machine learning models&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;metadata-catalog&quot;&gt;Metadata catalog&lt;/h2&gt;
-&lt;p&gt;A data catalog, at its core, is a &lt;em&gt;collection of metadata&lt;/em&gt; combined with data management (e.g., access permissions) and search tools. We can also call it a &lt;em&gt;metadata catalog&lt;/em&gt;. When the data catalog gathers metadata about a data asset, it obtains information such as the asset’s creation date, owner, column names, schema name, and so on. Put it simply, the metadata summarises or describes the underlying data assets.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;&lt;strong&gt;Metadata Indexing:&lt;/strong&gt; The underlying data assets are not indexed by the data catalog. Only the metadata describing these data assets is indexed.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&quot;organizes-metadata&quot;&gt;Organizes metadata&lt;/h2&gt;
-
-&lt;p&gt;We mentioned in the definition of a data catalog that it is &lt;em&gt;an “organized” inventory of all data assets&lt;/em&gt;. When it says “organized,” it signifies that the data catalog’s metadata is well organized based on domains and other parameters.&lt;/p&gt;
-
-&lt;p&gt;A domain is a collection of data assets that are conceptually related. Finance, sales, inventories, and so forth are examples of domains. It is up to the domain owners to specify which data assets get into their domain in a data catalog.&lt;/p&gt;
-
-&lt;h2 id=&quot;data-catalog-doesnt-reveal-actual-data&quot;&gt;Data catalog doesn’t reveal actual data&lt;/h2&gt;
-
-&lt;p&gt;The data catalog only provides an overview at the metadata level and does not expose any actual data. As a result, we can let everyone see everything without worry of exposing confidential or sensitive data.&lt;/p&gt;
-
-&lt;h2 id=&quot;what-kind-of-queries-may-be-sent-to-a-data-catalog&quot;&gt;What kind of queries may be sent to a data catalog?&lt;/h2&gt;
-
-&lt;p&gt;A data catalog should, at the very least, respond to:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Where can I get my data?&lt;/li&gt;
-  &lt;li&gt;Are these data relevant and important?&lt;/li&gt;
-  &lt;li&gt;What do these data indicates?&lt;/li&gt;
-  &lt;li&gt;How can I make use of this data?&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;what-can-be-accomplished-with-a-data-catalog&quot;&gt;What can be accomplished with a data catalog?&lt;/h2&gt;
-
-&lt;p&gt;Generally, the data catalog gives users access to tools that let them accomplish the following:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Search the catalog with flexible searching and filtering options&lt;/li&gt;
-  &lt;li&gt;Data discovery&lt;/li&gt;
-  &lt;li&gt;Data governance in compliance with organisational or governmental rules&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;how-does-a-data-catalog-get-created&quot;&gt;How does a data catalog get created?&lt;/h2&gt;
-
-&lt;p&gt;A data catalog can retrieve metadata from our IT landscape (data sources) using a built-in crawler. Crawler is a pull-based system, however data catalog may also be push-based.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;The data catalogs that crawl the data sources (i.e., that pull, not push) must have a wide variety of connectors to support various data sources.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;The IT landscape that is reflected in our data catalog will get business terminology added to it as “tags”. We can also enhance our data catalog with additional information such as roles, supplementary descriptions, classifications, and so on.&lt;/p&gt;
-
-&lt;p&gt;A data catalog has various roles built into it, such as data steward, data owner, and others that all perform certain functions in the data catalog.&lt;/p&gt;
-
-&lt;h2 id=&quot;searchable-data-catalog&quot;&gt;Searchable data catalog&lt;/h2&gt;
-
-&lt;p&gt;Search is one of the most important features of a data catalog. A data catalog enables all data specialists in an organization to search for any data.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;&lt;strong&gt;Data discovery:&lt;/strong&gt; Searching and finding relevant data is called data discovery. It determines if the data exists or not, not what is contained inside it.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-</description>
-        <pubDate>Tue, 16 Jan 2024 00:00:00 +0530</pubDate>
-        <link>http://localhost:4000/data-management/2024/data-catalog</link>
-        <guid isPermaLink="true">http://localhost:4000/data-management/2024/data-catalog</guid>
-        
-        <category>data-engineering</category>
-        
-        <category>big-data</category>
-        
-        <category>data-lake</category>
-        
-        <category>data-catalog</category>
-        
-        <category>data-inventory</category>
-        
-        
-        <category>data-management</category>
         
       </item>
     
