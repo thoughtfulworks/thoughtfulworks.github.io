@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<link rel="icon" href="/assets/images/logo/logo_square.png">
+
+<title>Defining Variables Using the `def` Keyword in Scala | thoughtful works</title>
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Defining Variables Using the def Keyword in Scala | thoughtful works</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Defining Variables Using the def Keyword in Scala" />
+<meta name="author" content="senthil" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="The title reads as follows: “Defining Variables Using the def Keyword.” Before we continue, let’s see if this title is appropriate. It’s not!" />
+<meta property="og:description" content="The title reads as follows: “Defining Variables Using the def Keyword.” Before we continue, let’s see if this title is appropriate. It’s not!" />
+<link rel="canonical" href="http://localhost:4000/scala/2022/def-vs-lazy-val" />
+<meta property="og:url" content="http://localhost:4000/scala/2022/def-vs-lazy-val" />
+<meta property="og:site_name" content="thoughtful works" />
+<meta property="og:image" content="http://localhost:4000/assets/images/posts-cover-images/scala-def-vs-lazy-val.jpeg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-07-21T20:11:10+05:30" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="http://localhost:4000/assets/images/posts-cover-images/scala-def-vs-lazy-val.jpeg" />
+<meta property="twitter:title" content="Defining Variables Using the def Keyword in Scala" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"senthil"},"dateModified":"2022-07-21T20:11:10+05:30","datePublished":"2022-07-21T20:11:10+05:30","description":"The title reads as follows: “Defining Variables Using the def Keyword.” Before we continue, let’s see if this title is appropriate. It’s not!","headline":"Defining Variables Using the def Keyword in Scala","image":"http://localhost:4000/assets/images/posts-cover-images/scala-def-vs-lazy-val.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/scala/2022/def-vs-lazy-val"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/images/logo/logo_transparent.png"},"name":"senthil"},"url":"http://localhost:4000/scala/2022/def-vs-lazy-val"}</script>
+<!-- End Jekyll SEO tag -->
+
+    
+<link href="/assets/css/prism.css" rel="stylesheet">
+
+<link href="/assets/css/theme.css" rel="stylesheet">
+
+<script src="/assets/js/jquery.min.js"></script>
+
+<script src="https://kit.fontawesome.com/a04651ccb8.js" crossorigin="anonymous"></script>
+
+</head>
+
+
+
+
+<body class="line-numbers">
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="outer site-nav-main">
+                <div class="inner">
+                    <nav class="site-nav">
+                        <div class="site-nav-left-wrapper">
+                            <div class="site-nav-left">
+                                <!-- Site Logo/Name -->
+                                <a class="navbar-brand" href="/">
+                                    <img src="/assets/images/logo/logo_transparent.png" alt="thoughtful works">
+                                </a>
+                                &nbsp;&nbsp;
+                                <a href="https://twitter.com/thoughtfulwx" target="_blank" style="text-decoration: none;">
+                                    <span style="color:#000000; font-size: 25px;">
+                                        <i class="fa-brands fa-x-twitter"></i>
+                                    </span>
+                                </a>
+                                <a href="https://www.instagram.com/thoughtful.works/" target="_blank" style="text-decoration: none;">
+                                    <span style="color:#000000; font-size: 25px;">
+                                        <i class="fa-brands fa-square-instagram"></i>
+                                    </span>
+                                </a> 
+                                <a href="https://github.com/thoughtfulworks?tab=repositories" target="_blank" style="text-decoration: none;">
+                                    <span style="color:#000000; font-size: 25px;">
+                                        <i class="fa-brands fa-github"></i>
+                                    </span>
+                                </a>
+                                <span style="color: grey; font-size: 25px;"><i class="fa-solid fa-ellipsis-vertical"></i></span>
+                                <script src="/assets/js/lunr.js"></script>
+
+<style>
+    
+</style>
+
+<div class="wrap-search">
+    <div class="d-flex align-items-center ml-auto">
+        <i class="fas fa-search show-search"></i>
+        <form class="bd-search ml-3" onSubmit="return lunr_search(document.getElementById('lunrsearch').value);">
+            <input type="text" class="form-control bigradius text-small launch-modal-search" id="lunrsearch" name="q" maxlength="255" value="" placeholder="Type and enter..."/>
+        </form>
+    </div>
+</div>
+
+<div id="lunrsearchresults">
+    <ul></ul>
+</div>
+
+<script src="/assets/js/lunrsearchengine.js"></script>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </header>
+    </div>
+
+	<!-- Defer loading of font and font awesome -->
+	<noscript id="deferred-styles">
+		<link href="https://fonts.googleapis.com/css?family=Sen:400,700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+	</noscript>
+
+    <!-- Back to top icon/button -->
+    <script src="https://unpkg.com/vanilla-back-to-top@7.2.1/dist/vanilla-back-to-top.min.js"></script>
+    <!-- <script>addBackToTop()</script>     -->
+    <script>addBackToTop({
+        diameter: 50,
+        backgroundColor: 'rgba(22, 22, 23, .8)',
+        textColor: '#fff'
+        })
+    </script>
+
+    <!-- Begin Sidebar Navigation -->
+    <div class="sidebar">    
+    </div>   
+    <div class="nav-icon">
+        <div class="hamburger-bar"></div>
+    </div>
+    <div id="blackover-nav" class="blackover"></div>
+    <nav id="menu">
+        <ul>
+            <h4>Navigation</h4>
+            <li><a href="/tags">Tags</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/authors">Contributors</a></li>
+            <li><a href="/contact">Contact us</a></li>       
+        </ul>   
+    </nav>
+
+    <!-- <script src="/assets/js/lunr.js"></script>
+
+<style>
+    
+</style>
+
+<div class="wrap-search">
+    <div class="d-flex align-items-center ml-auto">
+        <i class="fas fa-search show-search"></i>
+        <form class="bd-search ml-3" onSubmit="return lunr_search(document.getElementById('lunrsearch').value);">
+            <input type="text" class="form-control bigradius text-small launch-modal-search" id="lunrsearch" name="q" maxlength="255" value="" placeholder="Type and enter..."/>
+        </form>
+    </div>
+</div>
+
+<div id="lunrsearchresults">
+    <ul></ul>
+</div>
+
+<script src="/assets/js/lunrsearchengine.js"></script> -->
+    <!-- End Sidebar Navigation -->
+
+    <div class="site-content ">
+
+    <div class="container">
+        <!-- Content -->
+        <div class="main-content">
+            <div class="entry-header">
+    <!-- Kicker -->
+    
+        <!--<h6 class="kicker">Scala</h6>-->
+        <span class="kicker">
+            <a href="/categories#scala">Scala</a>
+        </span>
+    
+
+    <!-- Post Title -->
+    <h1 class="posttitle">Defining Variables Using the `def` Keyword in Scala</h1>
+
+    <!-- Author and Date -->
+    
+    
+        <div class="d-flex align-items-center mt-4" style="font-size: 100%">
+            <div>
+                
+                <img class="author-thumb" src="https://www.gravatar.com/avatar/6fc127cda8cd99830932538a58dc6173?s=250&d=mm&r=x" alt="Senthil Nayagan">
+                
+            </div>            
+            <div>
+                
+                    <!-- <a target="_blank" href="https://www.linkedin.com/in/senthilnayagan" style="color: black; border-bottom: 1px solid blue;"><b>Senthil Nayagan</b></a> -->
+                    <span class="author-name">
+                        <a target="_blank" href="https://www.linkedin.com/in/senthilnayagan">Senthil Nayagan</a>
+                    </span>
+                
+                
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <span class="social-connect-icon">
+                        <a target="_blank" href="https://senthilnayagan.com/">
+                            <i class="fa-solid fa-window-maximize"></i>
+                        </a>
+                    </span> 
+                                     
+                
+                    &nbsp;
+                    <span class="social-connect-icon">
+                        <a target="_blank" href="https://fosstodon.org/@towardsdata">
+                            <i class="fa-brands fa-mastodon"></i>
+                        </a>                         
+                    </span>
+                                
+                
+                    &nbsp;
+                    <span class="social-connect-icon">
+                        <a target="_blank" href="https://twitter.com/SenthilNayagan">
+                            <i class="fa-brands fa-x-twitter"></i>
+                        </a>                         
+                    </span>                    
+                
+                
+                    &nbsp;
+                    <span class="social-connect-icon">
+                        <a target="_blank" href="https://www.instagram.com/senthilnayagan">
+                            <i class="fa-brands fa-square-instagram"></i>
+                        </a>                         
+                    </span>                    
+                                                   
+                <br/> 
+                <span class="post-date-and-mins-read">           
+                    
+                        <i class="fa-regular fa-calendar-days"></i>&nbsp;<time datetime="2022-07-21T20:11:10+05:30">Jul 21, 2022</time>
+                    
+                    
+                    -&nbsp;<i class="fa-solid fa-clock"></i>&nbsp;2 Mins Read
+                </span>
+            </div>            
+        </div>
+    
+</div>
+
+<!-- Adsense under title if enabled from _config.yml (change your pub id and slot) -->
+<!---->
+
+<!-- Tags -->
+<div class="article-post">
+    <ul class="tags">
+        
+        
+        <li>
+            <a class="smoothscroll" href="/tags#functional-programming">functional-programming</a>
+        </li>
+        
+        <li>
+            <a class="smoothscroll" href="/tags#programming">programming</a>
+        </li>
+        
+        <li>
+            <a class="smoothscroll" href="/tags#scala">scala</a>
+        </li>
+        
+    </ul>
+</div>
+
+<!-- Summary -->
+<div class="summary">
+    
+    <hr class="grey_line"></hr>
+</div>
+
+<!-- Draft - Shows writing in progress -->
+<div class="draft">
+    
+</div>
+
+<!-- Featured Image -->
+
+<div class="entry-featured-image">
+    
+        <img class="featured-image " src="/assets/images/posts-cover-images/scala-def-vs-lazy-val.jpeg" alt="Defining Variables Using the `def` Keyword in Scala">
+    
+    
+ </div>
+
+
+<!-- Content -->
+<!-- Post, Page Content
+================================================== -->
+<div class="article-post">
+    <!-- Toc if any -->
+    
+    <!-- End Toc -->
+    <p>The title reads as follows: “<em>Defining Variables Using the def Keyword.</em>” Before we continue, let’s see if this title is appropriate. It’s not!</p>
+
+<p>Let’s first be clear that a <code>def</code> is not a variable declaration. It’s a declaration of a function or method instead.</p>
+
+<p>Consider the following code:</p>
+
+<pre><code class="language-shell">scala&gt; def i = 3
+def i: Int
+
+scala&gt; i.getClass
+val res0: Class[Int] = int
+
+scala&gt; println(i)
+3
+
+scala&gt; val j = 3
+val j: Int = 3
+
+scala&gt; j.getClass
+val res1: Class[Int] = int
+
+scala&gt; println(j)
+3
+
+scala&gt; i + j
+val res2: Int = 6
+</code></pre>
+
+<p>As we see above, variable definition works using <code>def</code>. Unlike a <code>val</code> or <code>var</code> declaration, a <code>def</code> is not a variable declaration. It’s a function declaration. What we are doing is creating a function or method that returns a constant number 3. Having said that, both <code>i</code> and <code>j</code> are functions that do not take any arguments.</p>
+
+<p>Unless the <code>lazy</code> keyword is prefixed, variables declared with the <code>val</code> or <code>var</code> are evaluated immediately, whereas <code>def</code> is evaluated on call, which means it is lazy evaluated. Having said, <code>def</code> evaluation happens when called explicitly.</p>
+
+<blockquote>
+  <p>Note that Scala does not permit the creation of lazy variables, i.e., var. Only lazy values (val) are allowed.</p>
+</blockquote>
+
+<h1 id="difference-between-lazy-val-and-def">Difference between lazy val and def</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"><img src="https://cdn.hashnode.com/res/hashnode/image/upload/v1658412816599/I9I25eUsl.jpeg?auto=compress,format&amp;format=webp" alt="Lazy Worker.jpeg" /></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><a href="https://www.freepik.com/free-vector/two-office-workers-looking-sleepy-colleagues-exhausted-employee-sleeping-workplace-flat-vector-illustration-lazy-worker-burnout_10173989.htm"><sup><em>Designed by Freepik.</em></sup></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Difference between <code>lazy val</code> and <code>def</code>:</p>
+<ul>
+  <li>When accessed for the first time,  <code>lazy</code> evaluates and caches the result.</li>
+  <li>The <code>def</code> declaration is evaluated every time we call method name.</li>
+</ul>
+
+<p>Let’s see the difference between lazy val and def in action:</p>
+
+<pre><code class="language-shell">scala&gt; lazy val a = { println("a value evaluated"); 1}
+lazy val a: Int
+
+scala&gt; a
+a value evaluated
+val res0: Int = 1
+
+scala&gt; a
+val res1: Int = 1
+
+scala&gt; def b = { println("b function evaluated"); 2}
+def b: Int
+
+scala&gt; a
+b function evaluated
+val res3: Int = 2
+
+scala&gt; a
+b function evaluated
+val res4: Int = 2
+</code></pre>
+
+<p>As we see above, <code>a</code> is <em>evaluated only once</em>, and any subsequent invocations of a return the cached result. This indicates that <code>lazy val</code> only needs to be evaluated once and then the result is stored forever.</p>
+
+<p>On the other hand, a <code>def</code> is <em>evaluated every time it is invoked</em>. In this case, we see <code>println</code> output every time we invoke the function.</p>
+
+<p>I hope this explains how <code>def</code> differs from <code>val</code> in terms of evaluation frequency.</p>
+
+<p>Happy learning!</p>
+
+</div>
+
+<!-- Rating -->
+
+
+<!-- Author Box if enabled from _config.yml -->
+<!-- Author Box -->
+
+
+
+
+<!-- Comments if not disabled with comments: false -->
+<!-- Comments
+================================================== -->
+ 
+<div class="comments mt-5">
+    <button class="btn btn-outline-dark py-3 px-5 d-block w-100 show-comments"><i class="fa fa-comments text-muted"></i> &nbsp; Show comments</button>         
+    <div id="comments">  
+        <h4 class="mb-4">Comments</h4>                 
+            <section class="disqus">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rustinaction'; 
+        var disqus_developer = 0;
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = window.location.protocol + '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</section>
+     
+    <div class="clearfix"></div>              
+    </div>    
+</div>       
+
+
+<!-- Share -->
+<div class="share">
+    <!-- <ul>
+        <li class="ml-1 mr-1">
+            <a href="/" ><i class="fas fa-home"></i></a>
+        </li>
+    </ul>
+    <hr> -->
+    <!---->
+    <span>Share</span>
+    <ul>
+        <li class="ml-1 mr-1">
+            <a target="_blank" href="https://twitter.com/intent/tweet?text=Defining Variables Using the `def` Keyword in Scala&url=http://localhost:4000/scala/2022/def-vs-lazy-val" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                <i class="fa-brands fa-x-twitter"></i>
+            </a>
+        </li>
+        <li class="ml-1 mr-1">
+            <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url=http://localhost:4000/scala/2022/def-vs-lazy-val" onclick="window.open(this.href, 'width=550,height=435');return false;">
+                <i class="fab fa-linkedin-in"></i>
+            </a>
+        </li>
+        <!--<li class="ml-1 mr-1">
+            <a target="_blank" href="http://news.ycombinator.com/submitlink?u=http://localhost:4000/scala/2022/def-vs-lazy-val" onclick="window.open(this.href, 'width=550,height=435');return false;">
+                <i class="fab fa-y-combinator"></i>
+            </a>
+        </li>
+        <li class="ml-1 mr-1">
+            <a target="_blank" href="http://www.reddit.com/submit?url=http://localhost:4000/scala/2022/def-vs-lazy-val&title=Defining Variables Using the `def` Keyword in Scala" onclick="window.open(this.href, 'width=550,height=435');return false;">
+                <i class="fab fa-reddit"></i>
+            </a>
+        </li>-->                 
+        <li class="ml-1 mr-1">
+            <a target="_blank" href="https://api.whatsapp.com/send?text=Defining Variables Using the `def` Keyword in Scala%20http://localhost:4000/scala/2022/def-vs-lazy-val" onclick="window.open(this.href, 'width=550,height=435');return false;">
+                <i class="fab fa-whatsapp"></i>
+            </a>
+        </li>
+        <li class="ml-1 mr-1">
+            <a href="#" onclick="copyToClipboard()">
+                <i class="fas fa-link"></i>
+            </a>
+            <script>
+                function copyToClipboard() { 
+                   window.navigator.clipboard.writeText(`http://localhost:4000/scala/2022/def-vs-lazy-val`);
+                }
+            </script>
+        </li>         
+        <!--
+        
+            <ul>
+                <li>
+                <a class="small" href="#disqus_thread"></a>
+                </li>
+            </ul>
+           
+        -->
+    </ul>
+    <!---->
+</div>
+
+
+<!-- Related Post -->
+<!-- Related Posts
+================================================== -->
+<div class=" related-posts ">  
+
+    
+    <h2 class="text-center mb-4">Explore more like this</h2>
+    
+    
+    <div class="d-flex justify-content-center align-items-center">
+    
+    <!-- Categories -->
+    <!--
+    
+    
+    <a class="smoothscroll badge badge-primary text-capitalize" href="/categories#scala">scala</a>                
+    
+    -->
+
+    <!-- Tags -->  
+    
+                    
+    <a class="smoothscroll badge badge-primary text-lowercase" href="/tags#functional-programming">functional-programming</a>               
+                    
+    <a class="smoothscroll badge badge-primary text-lowercase" href="/tags#programming">programming</a>               
+                    
+    <a class="smoothscroll badge badge-primary text-lowercase" href="/tags#scala">scala</a>               
+    
+
+    </div>
+
+    
+    
+    
+    <div class="blog-grid-container">
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+        </div>        
+</div>
+
+<!-- Review with LD-JSON, adapt it for your needs if you like, but make sure you test the generated HTML source code first: 
+https://search.google.com/structured-data/testing-tool/u/0/
+================================================== -->
+
+        </div>
+
+        
+        <!-- Newsletter -->
+        <div class="newsletter text-center">
+            <span class="h4"><!--<img src="/assets/images/logo/logo_transparent.png" class="newsletter-logo" alt="thoughtful works"> &nbsp;-->If you like our posts and don't want to miss any of them, sign up for our newsletter.</span>
+            <form action="https://gmail.us17.list-manage.com/subscribe?u=155954fdd35cc37fcbfab134a&id=acc42a78d4" method="post" name="mc-embedded-subscribe-form" class="wj-contact-form validate" target="_blank" novalidate>
+                <div class="mc-field-group d-inline-flex">
+                <input type="email" placeholder="Your e-mail" name="EMAIL" class="required email" id="mce-EMAIL" autocomplete="on" required>
+                <input type="submit" value="Subscribe" name="subscribe" class="heart">
+                </div>
+            </form>
+        </div>
+        
+        
+    </div>
+
+    <!-- Begin Footer -->
+    <!-- <script>
+        const repoOwner = 'rust-lang';
+        const repoName = 'rust';
+
+        const apiUrlRelease = `https://api.github.com/repos/${repoOwner}/${repoName}/releases/latest`;
+      
+        fetch(apiUrlRelease)
+            .then(response => response.json())
+            .then(data => {
+            document.getElementById('current-release').innerText = `${data.tag_name}`;
+            document.getElementById('release-url').innerHTML = `<a href="${data.html_url}" target="_blank">${data.tag_name}</a>`;
+            })
+            .catch(error => console.error('Error fetching GitHub release information:', error));
+    </script>  -->
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-sm-12 text-center text-lg-left">
+                    Copyright © 2024 <b>thoughtful works</b> | <a href="/privacy-policy.html" target="_blank">Privacy Policy</a> | Made with <b>Jekyll</b> and hosted on <b>GitHub Pages</b> | This website DOES NOT use cookies.
+                </div>
+                <div class="col-md-6 col-sm-12 text-center text-lg-right">    
+                    <!-- <i class="fa-brands fa-rust"></i> <a href=`<span id="release-url"></span>`><span id="current-release"></span></a>&nbsp;<i class="fa-solid fa-tag"></i>&nbsp;(latest) -->
+                    <!-- - <i class="fa-solid fa-star"></i> <span id="repo-stars"></span> -->
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- End Footer -->
+
+    </div> <!-- /.site-content -->
+
+    <!-- Scripts (if you need bootstrap.js, please add it yourself. I didn't use it for performance reasons, it was not needed in this theme) -->
+
+    <script src="/assets/js/prism.js"></script>
+
+    <script src="/assets/js/theme.js"></script>
+
+    
+
+    
+    <script id="dsq-count-scr" src="//rustinaction.disqus.com/count.js"></script>
+    
+</body>
+</html>

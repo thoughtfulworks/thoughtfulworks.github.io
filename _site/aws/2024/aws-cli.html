@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<link rel="icon" href="/assets/images/logo/logo_square.png">
+
+<title>AWS Command Line Interface (AWS CLI) | thoughtful works</title>
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>AWS Command Line Interface (AWS CLI) | thoughtful works</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="AWS Command Line Interface (AWS CLI)" />
+<meta name="author" content="senthil" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="AWS command line interface" />
+<meta property="og:description" content="AWS command line interface" />
+<link rel="canonical" href="http://localhost:4000/aws/2024/aws-cli" />
+<meta property="og:url" content="http://localhost:4000/aws/2024/aws-cli" />
+<meta property="og:site_name" content="thoughtful works" />
+<meta property="og:image" content="http://localhost:4000/assets/images/posts-cover-images/aws_cli.jpg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-01-16T00:00:00+05:30" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="http://localhost:4000/assets/images/posts-cover-images/aws_cli.jpg" />
+<meta property="twitter:title" content="AWS Command Line Interface (AWS CLI)" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"senthil"},"dateModified":"2024-01-16T00:00:00+05:30","datePublished":"2024-01-16T00:00:00+05:30","description":"AWS command line interface","headline":"AWS Command Line Interface (AWS CLI)","image":"http://localhost:4000/assets/images/posts-cover-images/aws_cli.jpg","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/aws/2024/aws-cli"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/images/logo/logo_transparent.png"},"name":"senthil"},"url":"http://localhost:4000/aws/2024/aws-cli"}</script>
+<!-- End Jekyll SEO tag -->
+
+    
+<link href="/assets/css/prism.css" rel="stylesheet">
+
+<link href="/assets/css/theme.css" rel="stylesheet">
+
+<script src="/assets/js/jquery.min.js"></script>
+
+<script src="https://kit.fontawesome.com/a04651ccb8.js" crossorigin="anonymous"></script>
+
+</head>
+
+
+
+
+<body class="line-numbers">
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="outer site-nav-main">
+                <div class="inner">
+                    <nav class="site-nav">
+                        <div class="site-nav-left-wrapper">
+                            <div class="site-nav-left">
+                                <!-- Site Logo/Name -->
+                                <a class="navbar-brand" href="/">
+                                    <img src="/assets/images/logo/logo_transparent.png" alt="thoughtful works">
+                                </a>
+                                &nbsp;&nbsp;
+                                <a href="https://twitter.com/thoughtfulwx" target="_blank" style="text-decoration: none;">
+                                    <span style="color:#000000; font-size: 25px;">
+                                        <i class="fa-brands fa-x-twitter"></i>
+                                    </span>
+                                </a>
+                                <a href="https://www.instagram.com/thoughtful.works/" target="_blank" style="text-decoration: none;">
+                                    <span style="color:#000000; font-size: 25px;">
+                                        <i class="fa-brands fa-square-instagram"></i>
+                                    </span>
+                                </a> 
+                                <a href="https://github.com/thoughtfulworks?tab=repositories" target="_blank" style="text-decoration: none;">
+                                    <span style="color:#000000; font-size: 25px;">
+                                        <i class="fa-brands fa-github"></i>
+                                    </span>
+                                </a>
+                                <span style="color: grey; font-size: 25px;"><i class="fa-solid fa-ellipsis-vertical"></i></span>
+                                <script src="/assets/js/lunr.js"></script>
+
+<style>
+    
+</style>
+
+<div class="wrap-search">
+    <div class="d-flex align-items-center ml-auto">
+        <i class="fas fa-search show-search"></i>
+        <form class="bd-search ml-3" onSubmit="return lunr_search(document.getElementById('lunrsearch').value);">
+            <input type="text" class="form-control bigradius text-small launch-modal-search" id="lunrsearch" name="q" maxlength="255" value="" placeholder="Type and enter..."/>
+        </form>
+    </div>
+</div>
+
+<div id="lunrsearchresults">
+    <ul></ul>
+</div>
+
+<script src="/assets/js/lunrsearchengine.js"></script>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </header>
+    </div>
+
+	<!-- Defer loading of font and font awesome -->
+	<noscript id="deferred-styles">
+		<link href="https://fonts.googleapis.com/css?family=Sen:400,700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+	</noscript>
+
+    <!-- Back to top icon/button -->
+    <script src="https://unpkg.com/vanilla-back-to-top@7.2.1/dist/vanilla-back-to-top.min.js"></script>
+    <!-- <script>addBackToTop()</script>     -->
+    <script>addBackToTop({
+        diameter: 50,
+        backgroundColor: 'rgba(22, 22, 23, .8)',
+        textColor: '#fff'
+        })
+    </script>
+
+    <!-- Begin Sidebar Navigation -->
+    <div class="sidebar">    
+    </div>   
+    <div class="nav-icon">
+        <div class="hamburger-bar"></div>
+    </div>
+    <div id="blackover-nav" class="blackover"></div>
+    <nav id="menu">
+        <ul>
+            <h4>Navigation</h4>
+            <li><a href="/tags">Tags</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/authors">Contributors</a></li>
+            <li><a href="/contact">Contact us</a></li>       
+        </ul>   
+    </nav>
+
+    <!-- <script src="/assets/js/lunr.js"></script>
+
+<style>
+    
+</style>
+
+<div class="wrap-search">
+    <div class="d-flex align-items-center ml-auto">
+        <i class="fas fa-search show-search"></i>
+        <form class="bd-search ml-3" onSubmit="return lunr_search(document.getElementById('lunrsearch').value);">
+            <input type="text" class="form-control bigradius text-small launch-modal-search" id="lunrsearch" name="q" maxlength="255" value="" placeholder="Type and enter..."/>
+        </form>
+    </div>
+</div>
+
+<div id="lunrsearchresults">
+    <ul></ul>
+</div>
+
+<script src="/assets/js/lunrsearchengine.js"></script> -->
+    <!-- End Sidebar Navigation -->
+
+    <div class="site-content ">
+
+    <div class="container">
+        <!-- Content -->
+        <div class="main-content">
+            <div class="entry-header">
+    <!-- Kicker -->
+    
+        <!--<h6 class="kicker">AWS</h6>-->
+        <span class="kicker">
+            <a href="/categories#aws">AWS</a>
+        </span>
+    
+
+    <!-- Post Title -->
+    <h1 class="posttitle">AWS Command Line Interface (AWS CLI)</h1>
+
+    <!-- Author and Date -->
+    
+    
+        <div class="d-flex align-items-center mt-4" style="font-size: 100%">
+            <div>
+                
+                <img class="author-thumb" src="https://www.gravatar.com/avatar/6fc127cda8cd99830932538a58dc6173?s=250&d=mm&r=x" alt="Senthil Nayagan">
+                
+            </div>            
+            <div>
+                
+                    <!-- <a target="_blank" href="https://www.linkedin.com/in/senthilnayagan" style="color: black; border-bottom: 1px solid blue;"><b>Senthil Nayagan</b></a> -->
+                    <span class="author-name">
+                        <a target="_blank" href="https://www.linkedin.com/in/senthilnayagan">Senthil Nayagan</a>
+                    </span>
+                
+                
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <span class="social-connect-icon">
+                        <a target="_blank" href="https://senthilnayagan.com/">
+                            <i class="fa-solid fa-window-maximize"></i>
+                        </a>
+                    </span> 
+                                     
+                
+                    &nbsp;
+                    <span class="social-connect-icon">
+                        <a target="_blank" href="https://fosstodon.org/@towardsdata">
+                            <i class="fa-brands fa-mastodon"></i>
+                        </a>                         
+                    </span>
+                                
+                
+                    &nbsp;
+                    <span class="social-connect-icon">
+                        <a target="_blank" href="https://twitter.com/SenthilNayagan">
+                            <i class="fa-brands fa-x-twitter"></i>
+                        </a>                         
+                    </span>                    
+                
+                
+                    &nbsp;
+                    <span class="social-connect-icon">
+                        <a target="_blank" href="https://www.instagram.com/senthilnayagan">
+                            <i class="fa-brands fa-square-instagram"></i>
+                        </a>                         
+                    </span>                    
+                                                   
+                <br/> 
+                <span class="post-date-and-mins-read">           
+                    
+                        <i class="fa-regular fa-calendar-days"></i>&nbsp;<time datetime="2024-01-16T00:00:00+05:30">Jan 16, 2024</time>
+                    
+                    
+                    -&nbsp;<i class="fa-solid fa-clock"></i>&nbsp;4 Mins Read
+                </span>
+            </div>            
+        </div>
+    
+</div>
+
+<!-- Adsense under title if enabled from _config.yml (change your pub id and slot) -->
+<!---->
+
+<!-- Tags -->
+<div class="article-post">
+    <ul class="tags">
+        
+        
+        <li>
+            <a class="smoothscroll" href="/tags#aws">aws</a>
+        </li>
+        
+        <li>
+            <a class="smoothscroll" href="/tags#aws-cli">aws-cli</a>
+        </li>
+        
+    </ul>
+</div>
+
+<!-- Summary -->
+<div class="summary">
+    
+        <p></p>
+        <span style="font-weight: 50;">AWS CLI is an open-source tool that allows us to interact with AWS services using command-line shell commands.</span>
+    
+    <hr class="grey_line"></hr>
+</div>
+
+<!-- Draft - Shows writing in progress -->
+<div class="draft">
+    
+</div>
+
+<!-- Featured Image -->
+
+<div class="entry-featured-image">
+    
+        <img class="featured-image  image-shadow " src="/assets/images/posts-cover-images/aws_cli.jpg" alt="AWS Command Line Interface (AWS CLI)">
+    
+    
+        <span class="featured-image-credits">
+            <p><b>Image Credits: </b>Vector image designed by <a href='https://www.freepik.com/' target='_blank'>freepik</a>.</p>
+        </span>
+    
+ </div>
+
+
+<!-- Content -->
+<!-- Post, Page Content
+================================================== -->
+<div class="article-post">
+    <!-- Toc if any -->
+    
+    <!---->
+    <div class="toc mt-4 mb-4 lead" style="font-size: 85%">
+        <h5 class="font-weight-bold">Table of contents</h5>
+        <ul>
+  <li><a href="#aws-command-line-interface">AWS command line interface</a>
+    <ul>
+      <li><a href="#aws-cli-version-2">AWS CLI version 2</a></li>
+      <li><a href="#how-to-configure-aws-cli-to-interact-with-aws-services">How to configure AWS CLI to interact with AWS services?</a>
+        <ul>
+          <li><a href="#configure-aws-cli-to-connect-to-aws">Configure AWS CLI to connect to AWS</a></li>
+          <li><a href="#managing-multiple-aws-accounts">Managing multiple AWS accounts</a>
+            <ul>
+              <li><a href="#creating-a-new-named-profile">Creating a new named profile</a></li>
+            </ul>
+          </li>
+          <li><a href="#how-to-update-existing-settings">How to update existing settings?</a></li>
+          <li><a href="#list-flag"><code>list</code> flag</a>
+            <ul>
+              <li><a href="#example">Example</a></li>
+            </ul>
+          </li>
+          <li><a href="#get-flag"><code>get</code> flag</a>
+            <ul>
+              <li><a href="#examples">Examples</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+    </div>
+    
+    <!-- End Toc -->
+    <h1 id="aws-command-line-interface">AWS command line interface</h1>
+
+<p>The AWS command line interface (AWS CLI) is an open-source tool that allows us to interact with AWS services (S3, EC2, etc.) using commands in our command-line shell. It’s an interface between users and AWS services.</p>
+
+<p>The AWS CLI lets us start running commands that do the same things as the browser-based <em>AWS Management Console</em> from the command prompt in our terminal application with minimal configuration. The AWS CLI provides direct access to the public APIs of AWS services.</p>
+
+<h2 id="aws-cli-version-2">AWS CLI version 2</h2>
+
+<p>The AWS CLI version 2 is the most current major version and supports all of the most recent features. Some features included in version 2 are not backported to version 1, and we must update to use them.</p>
+
+<blockquote>
+  <p><strong>Note:</strong> The AWS CLI version 2 is only available as a packaged installer. While it may be available via package managers, these are unsupported and unofficial packages that are not produced or maintained by AWS.</p>
+</blockquote>
+
+<p>To install the AWS CLI version 2, refer <a href="https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html" target="_blank">here</a>.</p>
+
+<p>Use the following command to verify the currently installed version:</p>
+
+<pre><code class="language-shell">aws --version
+</code></pre>
+
+<h2 id="how-to-configure-aws-cli-to-interact-with-aws-services">How to configure AWS CLI to interact with AWS services?</h2>
+
+<p>Let’s take a look at how to quickly configure the basic settings that the AWS CLI uses to interact with AWS. In general, the <code>aws configure</code> command is the quickest approach to get our AWS CLI installation up and running.</p>
+
+<p>When we enter this (<code>aws configure</code>) command with no arguments, the AWS CLI prompts us for four pieces of information:</p>
+
+<ul>
+  <li><strong>Access key ID</strong> (<em>sensitive information</em>)</li>
+  <li><strong>Secret access key</strong> (<em>sensitive information</em>)</li>
+  <li><strong>AWS Region</strong> (<em>non-sensitive information</em>)</li>
+  <li><strong>Output format</strong> (<em>non-sensitive information</em>)</li>
+</ul>
+
+<p>The AWS CLI stores <em>sensitive</em> credential information that we specify with <code>aws configure</code> command in a local file named <code>credentials</code>, in a folder named <code>.aws</code> in our home directory-the default location is <code>~/.aws/credentials</code>.</p>
+
+<p>The <em>non-sensitive</em> configuration options that we specify with <code>aws configure</code> are stored in a local file named <code>config</code>, stored under the same <code>.aws</code> folder in our home directory i.e., <code>~/.aws/config</code>.</p>
+
+<pre><code class="language-shell">$ ls -ltr ~/.aws
+-rw-------  1 user  staff  116 Sep 24 18:02 credentials
+-rw-------  1 user  staff   10 Sep 24 18:02 config
+</code></pre>
+
+<h3 id="configure-aws-cli-to-connect-to-aws">Configure AWS CLI to connect to AWS</h3>
+
+<p>Here is how we configure the AWS CLI to connect to our AWS account. These are only sample values. Replace them with our own values.</p>
+
+<pre><code class="language-shell">% aws configure
+AWS Access Key ID [None]: AKIA4S2AHSC2UKNSQCFM
+AWS Secret Access Key [None]: TCORDiSPQ5o4B7+SGerdEud1wZHQEQ7N0zhbX7m9
+Default region name [None]: us-east-1
+Default output format [None]: json
+</code></pre>
+
+<p>The AWS CLI stores the given details in a <em>profile</em> named <code>[default]</code> in both the <code>credentials</code> and <code>config</code> files as shown below:</p>
+
+<pre><code class="language-shell">% cat ~/.aws/credentials
+[default]
+aws_access_key_id = AKIA4S2AHSC2UKNSQCFM
+aws_secret_access_key = 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
+</code></pre>
+
+<pre><code class="language-shell">% cat ~/.aws/config
+[default]
+region = us-west-2
+output = table
+</code></pre>
+
+<blockquote>
+  <p><strong>Profile:</strong> A profile is a collection of settings that include access key id, secret access key, region name and output format. By default, when we run an AWS CLI command that doesn’t say which profile to use, the information in the <code>[default]</code> profile is used.</p>
+</blockquote>
+
+<h3 id="managing-multiple-aws-accounts">Managing multiple AWS accounts</h3>
+
+<p>If we have multiple AWS accounts to connect using AWS CLI from a single computer, we may use the <code>—-profile</code> parameter to create a named profile. We can specify a <code>--profile profilename</code> and use the credentials and settings stored under that name.</p>
+
+<h4 id="creating-a-new-named-profile">Creating a new named profile</h4>
+
+<p>The following example creates a profile named <code>guestuser</code>:</p>
+
+<pre><code class="language-shell">aws configure --profile guestuser
+AWS Access Key ID [None]: AKIAI44QH8DHBEXAMPLE
+AWS Secret Access Key [None]: je7MtGbClwBF/2Zp9Utk/h3yCo8nvbEXAMPLEKEY
+Default region name [None]: us-west-2
+Default output format [None]: table
+</code></pre>
+
+<h3 id="how-to-update-existing-settings">How to update existing settings?</h3>
+
+<p>To update these settings, run <code>aws configure</code> again (with or without the <code>--profile</code> parameter, depending on which profile we want to update) and enter new values as appropriate.</p>
+
+<pre><code class="language-shell">$ aws configure
+AWS Access Key ID [****]:
+AWS Secret Access Key [****]:
+Default region name [us-west-1]: us-west-2
+Default output format [None]:
+</code></pre>
+
+<h3 id="list-flag"><code>list</code> flag</h3>
+
+<p>The <code>list</code> flag will show us the current configuration data.</p>
+
+<pre><code class="language-shell">$ aws configure list [--profile profile-name]
+</code></pre>
+
+<h4 id="example">Example</h4>
+
+<pre><code class="language-shell">$ aws configure list
+      Name                    Value             Type    Location
+      ----                    -----             ----    --------
+   profile                &lt;not set&gt;             None    None
+access_key     ****************XIEM shared-credentials-file
+secret_key     ****************OqwS shared-credentials-file
+    region                us-east-1              env    ['AWS_REGION', 'AWS_DEFAULT_REGION']
+</code></pre>
+
+<h3 id="get-flag"><code>get</code> flag</h3>
+
+<p>The <code>get</code> flag gets a configuration value from both the credential and the config file, depending on what value we have given.</p>
+
+<pre><code class="language-shell">$ aws configure get varname [--profile profile-name]
+</code></pre>
+
+<h4 id="examples">Examples</h4>
+
+<pre><code class="language-shell">$ aws configure get aws_access_key_id
+$ aws configure get default.aws_access_key_id
+$ aws configure get region
+$ aws configure get aws_secret_access_key --profile guestuser
+</code></pre>
+
+</div>
+
+<!-- Rating -->
+
+
+<!-- Author Box if enabled from _config.yml -->
+<!-- Author Box -->
+
+
+
+
+<!-- Comments if not disabled with comments: false -->
+<!-- Comments
+================================================== -->
+ 
+<div class="comments mt-5">
+    <button class="btn btn-outline-dark py-3 px-5 d-block w-100 show-comments"><i class="fa fa-comments text-muted"></i> &nbsp; Show comments</button>         
+    <div id="comments">  
+        <h4 class="mb-4">Comments</h4>                 
+            <section class="disqus">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rustinaction'; 
+        var disqus_developer = 0;
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = window.location.protocol + '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</section>
+     
+    <div class="clearfix"></div>              
+    </div>    
+</div>       
+
+
+<!-- Share -->
+<div class="share">
+    <!-- <ul>
+        <li class="ml-1 mr-1">
+            <a href="/" ><i class="fas fa-home"></i></a>
+        </li>
+    </ul>
+    <hr> -->
+    <!---->
+    <span>Share</span>
+    <ul>
+        <li class="ml-1 mr-1">
+            <a target="_blank" href="https://twitter.com/intent/tweet?text=AWS Command Line Interface (AWS CLI)&url=http://localhost:4000/aws/2024/aws-cli" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                <i class="fa-brands fa-x-twitter"></i>
+            </a>
+        </li>
+        <li class="ml-1 mr-1">
+            <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url=http://localhost:4000/aws/2024/aws-cli" onclick="window.open(this.href, 'width=550,height=435');return false;">
+                <i class="fab fa-linkedin-in"></i>
+            </a>
+        </li>
+        <!--<li class="ml-1 mr-1">
+            <a target="_blank" href="http://news.ycombinator.com/submitlink?u=http://localhost:4000/aws/2024/aws-cli" onclick="window.open(this.href, 'width=550,height=435');return false;">
+                <i class="fab fa-y-combinator"></i>
+            </a>
+        </li>
+        <li class="ml-1 mr-1">
+            <a target="_blank" href="http://www.reddit.com/submit?url=http://localhost:4000/aws/2024/aws-cli&title=AWS Command Line Interface (AWS CLI)" onclick="window.open(this.href, 'width=550,height=435');return false;">
+                <i class="fab fa-reddit"></i>
+            </a>
+        </li>-->                 
+        <li class="ml-1 mr-1">
+            <a target="_blank" href="https://api.whatsapp.com/send?text=AWS Command Line Interface (AWS CLI)%20http://localhost:4000/aws/2024/aws-cli" onclick="window.open(this.href, 'width=550,height=435');return false;">
+                <i class="fab fa-whatsapp"></i>
+            </a>
+        </li>
+        <li class="ml-1 mr-1">
+            <a href="#" onclick="copyToClipboard()">
+                <i class="fas fa-link"></i>
+            </a>
+            <script>
+                function copyToClipboard() { 
+                   window.navigator.clipboard.writeText(`http://localhost:4000/aws/2024/aws-cli`);
+                }
+            </script>
+        </li>         
+        <!--
+        
+            <ul>
+                <li>
+                <a class="small" href="#disqus_thread"></a>
+                </li>
+            </ul>
+           
+        -->
+    </ul>
+    <!---->
+</div>
+
+
+<!-- Related Post -->
+<!-- Related Posts
+================================================== -->
+<div class=" related-posts ">  
+
+    
+    <h2 class="text-center mb-4">Explore more like this</h2>
+    
+    
+    <div class="d-flex justify-content-center align-items-center">
+    
+    <!-- Categories -->
+    <!--
+    
+    
+    <a class="smoothscroll badge badge-primary text-capitalize" href="/categories#aws">aws</a>                
+    
+    -->
+
+    <!-- Tags -->  
+    
+                    
+    <a class="smoothscroll badge badge-primary text-lowercase" href="/tags#aws">aws</a>               
+                    
+    <a class="smoothscroll badge badge-primary text-lowercase" href="/tags#aws-cli">aws-cli</a>               
+    
+
+    </div>
+
+    
+    
+    
+    <div class="blog-grid-container">
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+        </div>        
+</div>
+
+<!-- Review with LD-JSON, adapt it for your needs if you like, but make sure you test the generated HTML source code first: 
+https://search.google.com/structured-data/testing-tool/u/0/
+================================================== -->
+
+        </div>
+
+        
+        <!-- Newsletter -->
+        <div class="newsletter text-center">
+            <span class="h4"><!--<img src="/assets/images/logo/logo_transparent.png" class="newsletter-logo" alt="thoughtful works"> &nbsp;-->If you like our posts and don't want to miss any of them, sign up for our newsletter.</span>
+            <form action="https://gmail.us17.list-manage.com/subscribe?u=155954fdd35cc37fcbfab134a&id=acc42a78d4" method="post" name="mc-embedded-subscribe-form" class="wj-contact-form validate" target="_blank" novalidate>
+                <div class="mc-field-group d-inline-flex">
+                <input type="email" placeholder="Your e-mail" name="EMAIL" class="required email" id="mce-EMAIL" autocomplete="on" required>
+                <input type="submit" value="Subscribe" name="subscribe" class="heart">
+                </div>
+            </form>
+        </div>
+        
+        
+    </div>
+
+    <!-- Begin Footer -->
+    <!-- <script>
+        const repoOwner = 'rust-lang';
+        const repoName = 'rust';
+
+        const apiUrlRelease = `https://api.github.com/repos/${repoOwner}/${repoName}/releases/latest`;
+      
+        fetch(apiUrlRelease)
+            .then(response => response.json())
+            .then(data => {
+            document.getElementById('current-release').innerText = `${data.tag_name}`;
+            document.getElementById('release-url').innerHTML = `<a href="${data.html_url}" target="_blank">${data.tag_name}</a>`;
+            })
+            .catch(error => console.error('Error fetching GitHub release information:', error));
+    </script>  -->
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-sm-12 text-center text-lg-left">
+                    Copyright © 2024 <b>thoughtful works</b> | <a href="/privacy-policy.html" target="_blank">Privacy Policy</a> | Made with <b>Jekyll</b> and hosted on <b>GitHub Pages</b> | This website DOES NOT use cookies.
+                </div>
+                <div class="col-md-6 col-sm-12 text-center text-lg-right">    
+                    <!-- <i class="fa-brands fa-rust"></i> <a href=`<span id="release-url"></span>`><span id="current-release"></span></a>&nbsp;<i class="fa-solid fa-tag"></i>&nbsp;(latest) -->
+                    <!-- - <i class="fa-solid fa-star"></i> <span id="repo-stars"></span> -->
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- End Footer -->
+
+    </div> <!-- /.site-content -->
+
+    <!-- Scripts (if you need bootstrap.js, please add it yourself. I didn't use it for performance reasons, it was not needed in this theme) -->
+
+    <script src="/assets/js/prism.js"></script>
+
+    <script src="/assets/js/theme.js"></script>
+
+    
+
+    
+    <script id="dsq-count-scr" src="//rustinaction.disqus.com/count.js"></script>
+    
+</body>
+</html>

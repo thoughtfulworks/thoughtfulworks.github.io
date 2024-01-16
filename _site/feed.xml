@@ -5,118 +5,2069 @@
     <description>In rust in action, we delve into a broad variety of concepts, such as how to productively produce, manage, and democratize data. In all of our posts, we strive to provide you with sufficient information to grasp the concepts while also making them as simple to read as possible.</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 15 Jan 2024 22:25:28 +0530</pubDate>
-    <lastBuildDate>Mon, 15 Jan 2024 22:25:28 +0530</lastBuildDate>
+    <pubDate>Tue, 16 Jan 2024 12:11:51 +0530</pubDate>
+    <lastBuildDate>Tue, 16 Jan 2024 12:11:51 +0530</lastBuildDate>
     <generator>Jekyll v4.3.2</generator>
     
       <item>
-        <title>Case Class in Scala</title>
-        <description>&lt;h1 id=&quot;what-is-a-case-class&quot;&gt;What is a case class?&lt;/h1&gt;
-&lt;p&gt;Case classes are a special kind of class created using the keyword case. Case classes are excellent for data transfer objects and for representing immutable data. It is a type of class that is mostly utilised for data storage.&lt;/p&gt;
+        <title>How To Set SLA in Apache Airflow</title>
+        <description>&lt;h1 id=&quot;a-quick-overview-of-airflow&quot;&gt;A quick overview of Airflow&lt;/h1&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-scala&quot;&gt;case class Person(name: String, age: Int)
+&lt;p&gt;Apache Airflow is, at its core, an open-source &lt;em&gt;batch&lt;/em&gt; task scheduler. It’s a platform for &lt;em&gt;programmatically&lt;/em&gt; &lt;em&gt;authoring&lt;/em&gt; (creating), &lt;em&gt;scheduling&lt;/em&gt;, and &lt;em&gt;monitoring&lt;/em&gt; workflows via Directed Acyclic Graphs (DAGs). Airflow is distinguished from other schedulers primarily by its ability to schedule &lt;em&gt;tasks as code&lt;/em&gt;. It’s gaining popularity, especially among developers, because it’s written in Python and it’s easy to create code-based orchestration with it. To put it all together, Airflow is a batch-oriented open-source framework that enables us to build data pipelines and monitor data workflows efficiently.&lt;/p&gt;
+
+&lt;h1 id=&quot;how-to-set-sla-in-airflow&quot;&gt;How to set SLA in Airflow&lt;/h1&gt;
+
+&lt;p&gt;SLA stands for &lt;strong&gt;service-level agreement&lt;/strong&gt;. It’s a &lt;em&gt;contract&lt;/em&gt; between a service provider and its customer that outlines &lt;em&gt;the level of service expected by the customer and guaranteed by the vendor&lt;/em&gt;. &lt;/p&gt;
+
+&lt;p&gt;In the context of Airflow, an SLA is the maximum amount of time a task or a DAG should take to complete. It serves to notify us if our DAG or tasks are taking longer than expected to complete.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; SLAs are set to the DAG execution date rather than the task start time.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h1 id=&quot;sla-misses&quot;&gt;SLA misses&lt;/h1&gt;
+
+&lt;p&gt;An SLA miss occurs if a task or DAG is not finished within the allotted time for the SLA.&lt;/p&gt;
+
+&lt;p&gt;When SLAs are breached, Airflow can perform the following:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Sends an email alert notification&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Logs the event in the database&lt;/strong&gt; - the event is also logged in the database and made available in the web UI. The web UI gives us broad details about which task failed to meet the SLA and when. Additionally, it shows if an email was sent after the SLA failed.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Invokes the callback function&lt;/strong&gt; via &lt;code&gt;sla_miss_callback&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; It should be noted that only scheduled tasks will be checked against the SLA. An SLA miss won’t be triggered by manually initiated tasks!&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h1 id=&quot;defining-slas&quot;&gt;Defining SLAs&lt;/h1&gt;
+
+&lt;p&gt;There are several ways to define an SLA that include:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Defining SLA on the task itself&lt;/li&gt;
+  &lt;li&gt;Defining SLA on DAG level&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;defining-sla-on-the-task-itself&quot;&gt;Defining SLA on the task itself&lt;/h2&gt;
+
+&lt;p&gt;Note that defining SLAs for a task is optional. As a result, in a DAG with several tasks, some tasks may have SLAs and others may not. To set an SLA for a task, pass a &lt;code&gt;datetime.timedelta&lt;/code&gt; object to the task/operator’s &lt;code&gt;sla&lt;/code&gt; parameter as shown below:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;from airflow import DAG
+from airflow.operators.bash_operator import BashOperator
+from datetime import datetime, timedelta
+
+with DAG(&amp;#39;setting_sla&amp;#39;, 
+        start_date=datetime(2002, 1, 1), 
+        schedule_interval=&amp;#39;@daily&amp;#39;,
+        catchup=False) as dag:
+        
+    bash_task = BashOperator(
+        task_id=&amp;#39;bash_task&amp;#39;,
+        bash_command=&amp;#39;sleep 10&amp;#39;,
+        sla=timedelta(seconds=5)  # SLA for the task
+    )&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;When a task exceeds its SLA, it is not cancelled. It’s free to continue running till the end.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The &lt;code&gt;timedelta&lt;/code&gt; object is found in the Python’s datetime library. It takes the following arguments:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;microseconds (not applicable to Airflow)&lt;/li&gt;
+  &lt;li&gt;milliseconds (not applicable to Airflow)&lt;/li&gt;
+  &lt;li&gt;seconds&lt;/li&gt;
+  &lt;li&gt;minutes&lt;/li&gt;
+  &lt;li&gt;hours&lt;/li&gt;
+  &lt;li&gt;days&lt;/li&gt;
+  &lt;li&gt;weeks&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Note that milliseconds and microseconds available, but those wouldn’t apply to Airflow.&lt;/p&gt;
+
+&lt;h3 id=&quot;cancelling-or-failing-the-task&quot;&gt;Cancelling or failing the task&lt;/h3&gt;
+
+&lt;p&gt;Timeouts can help cancel or fail a task if it takes longer than the allotted time. If we want to cancel a task after a certain runtime is reached, we can set the &lt;code&gt;execution_timeout&lt;/code&gt; attribute to a &lt;code&gt;datetime.timedelta&lt;/code&gt; value that represents the longest permitted duration.&lt;/p&gt;
+
+&lt;p&gt;Having said that, the maximum duration permitted for each execution is managed by the property &lt;code&gt;execution_timeout&lt;/code&gt;. If it’s breached, the task times out and &lt;code&gt;AirflowTaskTimeout&lt;/code&gt; is raised.&lt;/p&gt;
+
+&lt;h1 id=&quot;implementing-our-own-logic&quot;&gt;Implementing our own logic&lt;/h1&gt;
+
+&lt;p&gt;We can use callbacks to trigger our own logic if we choose to do so. In this case, we can use &lt;code&gt;sla_miss_callback&lt;/code&gt; that will be called when the SLA is not met.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Only one callback function is permitted for tasks or a DAG.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The function signature of an &lt;code&gt;sla_miss_callback&lt;/code&gt; requires the following five parameters:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;dag&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;task_list&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;blocking_task_list&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;slas&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;blocking_tis&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Let’s define a callback method:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;def _sla_missied_take_action(*args, **kwargs):
+    logger.info(args)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;The following beneficial features or conveniences are automatically added to our class when the Scala compiler discovers a case class:&lt;/p&gt;
+&lt;p&gt;Pass the callback method to DAG as shown below:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;with DAG(&apos;setting_sla&apos;, 
+    start_date=datetime(2002, 1, 1),
+    default_args=default_args,
+    schedule_interval=&apos;@daily&apos;,
+    sla_miss_callback=_sla_missied_take_action  # callback function
+    catchup=False) as dag:
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&quot;disabling-sla&quot;&gt;Disabling SLA&lt;/h1&gt;
+
+&lt;p&gt;If we want to disable SLA checking entirely, we can set &lt;code&gt;check_slas = False&lt;/code&gt; in Airflow’s &lt;code&gt;[core]&lt;/code&gt; configuration.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-text&quot;&gt;[core]
+check_slas = False
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        <pubDate>Tue, 16 Jan 2024 00:00:01 +0530</pubDate>
+        <link>http://localhost:4000/orchestration/2024/airflow-setting-sla</link>
+        <guid isPermaLink="true">http://localhost:4000/orchestration/2024/airflow-setting-sla</guid>
+        
+        <category>airflow</category>
+        
+        <category>sla</category>
+        
+        <category>service-level-agreement</category>
+        
+        <category>workflow-engine</category>
+        
+        
+        <category>orchestration</category>
+        
+      </item>
+    
+      <item>
+        <title>Introduction to gRPC</title>
+        <description>&lt;h1 id=&quot;overview&quot;&gt;Overview&lt;/h1&gt;
+
+&lt;p&gt;&lt;strong&gt;gRPC&lt;/strong&gt; is an open-source, high-performance &lt;strong&gt;Remote Procedure Call&lt;/strong&gt; (&lt;strong&gt;RPC&lt;/strong&gt;) framework that can run in any environment. With pluggable support for &lt;em&gt;load balancing&lt;/em&gt;, &lt;em&gt;tracing&lt;/em&gt;, &lt;em&gt;health checking&lt;/em&gt;, and &lt;em&gt;authentication&lt;/em&gt;, it can efficiently connect distributed services in and across data centers. gRPC builds on &lt;strong&gt;HTTP/2 protocol&lt;/strong&gt; and the &lt;strong&gt;protobuf&lt;/strong&gt; (protocol buffers) message-encoding protocol to provide high performance, low-bandwidth communication between applications and services. gRPC can use protocol buffers as both its &lt;a href=&quot;/rpc/2022/introduction-to-grpc#what-is--interface-definition-language-idl&quot;&gt;&lt;strong&gt;Interface Definition/Description Language&lt;/strong&gt;&lt;/a&gt; (&lt;strong&gt;IDL&lt;/strong&gt;) and as the format for exchanging messages.&lt;/p&gt;
+
+&lt;p&gt;It can generate code for both the server and the client in the most common programming languages and platforms, such as.NET, Java, Python, Node.js, Go, and C++. With gRPC, a client application can directly call a method on a server application on a different machine as if it were a local object. This makes it easier to create distributed applications and services.&lt;/p&gt;
+
+&lt;p&gt;As with most RPC systems, gRPC is based on the idea of defining a service by specifying the methods that can be called remotely, along with their parameters and return types. On the server side, the server implements this interface and runs a gRPC server to handle calls from clients. On the client side, the client has a stub that provides the same methods as the server.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/assets/images/posts/grpc-overview.svg&quot; alt=&quot;gRPC - Communication between clients and server&quot; /&gt;&lt;/th&gt;
+      &lt;th&gt; &lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;sup&gt;&lt;em&gt;Figure 1: gRPC - Communication between clients and server. (Image courtesy: grpc.io)&lt;/em&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;br /&gt;&lt;br /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;gRPC clients and servers can run and talk to each other in any platform (Linux, macos, etc.) and can be written in any of gRPC’s supported languages. For example, we can easily create a gRPC server in Java with clients in Go, Python, or Ruby. Also, the latest Google APIs will have gRPC versions of their interfaces, which will make it easy to add Google features to our applications.&lt;/p&gt;
+
+&lt;h1 id=&quot;protocol-buffers&quot;&gt;Protocol buffers&lt;/h1&gt;
+
+&lt;p&gt;Let’s talk about what protocol buffers (also called protobuf) are and how to use them. Protocol buffers is an open-source protocol developed by Google to &lt;em&gt;serialize&lt;/em&gt; structured data in a way that works in different languages (language-agnostic) and on different platforms.&lt;/p&gt;
+
+&lt;p&gt;When working with protocol buffers, the first step is to define the structure of the data that we want to serialize in a &lt;em&gt;proto file&lt;/em&gt;. Proto file is an ordinary text file with a &lt;code&gt;.proto&lt;/code&gt; extension. Protocol buffer data is organized into &lt;em&gt;messages&lt;/em&gt;, where each message is a small logical record of information with a set of name-value pairs called &lt;em&gt;fields&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Here’s a simple proto definition example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-grpc&quot;&gt;message Person {
+  string name = 1;
+  int32 id = 2;
+  bool is_married = 3;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Once we’ve specified our data structures (shown above), we use the protocol buffer compiler &lt;code&gt;protoc&lt;/code&gt; to generate data access classes in our preferred language from our proto definition. These provide simple accessors (&lt;code&gt;name()&lt;/code&gt;) and mutators (&lt;code&gt;set_name()&lt;/code&gt;) for each field, as well as methods to serialize/parse the whole structure to/from raw bytes. For instance, if our chosen language is Java or Python, running the compiler on the example above will generate a class called &lt;code&gt;Person&lt;/code&gt;. We can then use this class in our application to &lt;em&gt;populate&lt;/em&gt;, &lt;em&gt;serialize&lt;/em&gt;, and &lt;em&gt;retrieve&lt;/em&gt; &lt;code&gt;Person&lt;/code&gt; protocol buffer messages.&lt;/p&gt;
+
+&lt;h1 id=&quot;grpc-usecases&quot;&gt;gRPC usecases&lt;/h1&gt;
+
+&lt;p&gt;Everyone agrees that gRPC is the best way for internal microservices to talk to each other because it is fast and can be used in different gRPC supported languages. Microservices must agree on the API, data format, error patterns, load balancing, and other things in order to exchange data. Since gRPC lets us describe a service contract in a binary format, programmers can have a standard way to describe these contracts that works with any language and ensures interoperability.&lt;/p&gt;
+
+&lt;h1 id=&quot;benefits-of-grpc&quot;&gt;Benefits of gRPC&lt;/h1&gt;
+
+&lt;p&gt;TODO&lt;/p&gt;
+
+&lt;h1 id=&quot;weakness-of-grpc&quot;&gt;Weakness of gRPC&lt;/h1&gt;
+
+&lt;p&gt;TODO&lt;/p&gt;
+
+&lt;h1 id=&quot;frequently-asked-questions-faq&quot;&gt;Frequently asked questions (FAQ)&lt;/h1&gt;
+
+&lt;h2 id=&quot;what-is-g-in-grpc&quot;&gt;What is “g” in gRPC?&lt;/h2&gt;
+
+&lt;p&gt;We know that Google developed gRPC, but the “g” at the beginning of gRPC doesn’t stand for Google. At first, the “g” in “gRPC” was a &lt;em&gt;recursive acronym&lt;/em&gt; (an acronym that refers to itself) that stood for “gRPC.” Later, each release meant something different. In version 1.49, it stands for “gamma,” and in version 1.50, it stands for “galley.”&lt;/p&gt;
+
+&lt;h2 id=&quot;what-is-protocol-buffers&quot;&gt;What is protocol buffers?&lt;/h2&gt;
+
+&lt;p&gt;Protocol buffers (aka protobuf) is an open-source way to &lt;em&gt;serialize&lt;/em&gt; structured data that works across languages and platforms and can be expanded. Google developed protocol buffers, which are widely used at Google for storing and exchanging all kinds of structured information. It is the foundation for a custom remote procedure call (RPC) system that Google uses for almost all inter-machine (machine-to-machine) communication. Protocol Buffers are similar to the &lt;strong&gt;Apache Thrift&lt;/strong&gt;, &lt;strong&gt;Ion&lt;/strong&gt; (created by Amazon), or &lt;strong&gt;Microsoft Bond protocols&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;what-is-stub-in-distributed-computing&quot;&gt;What is “stub” in distributed computing?&lt;/h2&gt;
+
+&lt;p&gt;In distributed computing, a &lt;strong&gt;stub&lt;/strong&gt; is a piece of code that is used to convert parameters passed between client and server during a remote procedure call (RPC). An RPC allows a client or local computer to remotely call procedures on a server or different computer.&lt;/p&gt;
+
+&lt;p&gt;Since the client and server use different &lt;a href=&quot;/rpc/2022/introduction-to-grpc#what-does-address-space-mean&quot;&gt;address spaces&lt;/a&gt;, parameters used in a function (procedure) call have to be converted. Otherwise, the values of those parameters couldn’t be used because pointers to parameters in one computer’s memory would point to different data on the other computer. The client and server may also use different data representations, even for simple parameters (e.g., big-endian versus little-endian for integers). Stubs do this conversion so that the remote server computer perceives the RPC as a local function call.&lt;/p&gt;
+
+&lt;p&gt;Stub libraries must be installed on both the client and server side. Client stubs (sometimes called proxy) convert (marshalling) parameters used in function calls and reconvert the result obtained from the server after execution of the function. Server stubs, on the other hand, reconvert parameters passed by clients and convert results back after function execution. Stubs are generated either manually or automatically. Automatic stub generation (more commonly used) uses &lt;strong&gt;Interface Definition Language&lt;/strong&gt; (&lt;strong&gt;IDL&lt;/strong&gt;) to define client and server interfaces.&lt;/p&gt;
+
+&lt;h2 id=&quot;what-does-address-space-mean&quot;&gt;What does address space mean?&lt;/h2&gt;
+
+&lt;p&gt;An address space is a range of valid memory addresses that a program or process can use. That is, a program or process can access the memory. The memory can be physical or virtual, and it is used to store data and run instructions.&lt;/p&gt;
+
+&lt;p&gt;A memory management technique called “virtual memory” can be used to make the size of an address space bigger than the size of physical memory. A virtual memory, which is also called a &lt;strong&gt;page file&lt;/strong&gt;, is a physical file on the hard drive that acts like extra RAM or a RAM module. Thus, an address space consists of both physical memory and virtual memory.&lt;/p&gt;
+
+&lt;h2 id=&quot;what-is-endianness&quot;&gt;What is endianness?&lt;/h2&gt;
+
+&lt;p&gt;Texts in different languages are read in different orders. For example, English is read from left to right, but Arabic is read from right to left. In the same way, in computing, endianness is a way to specify the order in which bytes of a word are stored in memory. If one computer reads bytes from left to right and another from right to left, it will be hard for them to talk to each other.&lt;/p&gt;
+
+&lt;p&gt;Endianness is represented two ways:&lt;/p&gt;
+
 &lt;ul&gt;
-  &lt;li&gt;It adds a factory method, &lt;code&gt;apply()&lt;/code&gt; for creating new instances, so we don’t need to use the keyword &lt;code&gt;new&lt;/code&gt; to instantiate a class.&lt;/li&gt;
-  &lt;li&gt;Unless all arguments in the parameter list of a case class are declared as &lt;code&gt;var&lt;/code&gt;, all arguments implicitly get a &lt;code&gt;val&lt;/code&gt; prefix, and thus the &lt;code&gt;val&lt;/code&gt; keyword is optional. To put it another way, by default, case classes automatically transform arguments to value fields (&lt;code&gt;val&lt;/code&gt; fields), therefore the &lt;code&gt;val&lt;/code&gt; keyword is not required to prefix them. If we require a variable field, we can still use the &lt;code&gt;var&lt;/code&gt; keyword, but this is not what the case class was intended for.&lt;/li&gt;
-  &lt;li&gt;The compiler automatically implements the following methods for the class:
+  &lt;li&gt;Big-endian (BE)&lt;/li&gt;
+  &lt;li&gt;Little-endian (LE)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;TODO&lt;/p&gt;
+
+&lt;h2 id=&quot;what-is--interface-definition-language-idl&quot;&gt;What is  interface definition language (IDL)?&lt;/h2&gt;
+
+&lt;p&gt;An interface description or definition language (IDL) is a language that is used to define the interface between a client and server process in a distributed system. It makes it possible for two programs written in different languages to talk to each other. IDLs describe an interface in a way that doesn’t depend on the language being used (language-independent way). This lets software components that don’t use the same language talk to each other.&lt;/p&gt;
+
+&lt;h2 id=&quot;how-http2-differs-from-http11-in-terms-of-performance&quot;&gt;How HTTP/2 differs from HTTP/1.1 in terms of performance?&lt;/h2&gt;
+
+&lt;p&gt;At a high level, HTTP/2:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;It’s &lt;strong&gt;binary&lt;/strong&gt;, instead of textual
     &lt;ul&gt;
-      &lt;li&gt;&lt;code&gt;apply&lt;/code&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;code&gt;unapply&lt;/code&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;code&gt;copy&lt;/code&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;code&gt;equals&lt;/code&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;code&gt;hashCode&lt;/code&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;code&gt;toString&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;Binary protocols are more efficient to parse&lt;/li&gt;
+      &lt;li&gt;It’s more compact on the wire&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;Every case class has a method named &lt;code&gt;copy&lt;/code&gt; that allows us to easily create a same or a modified copy of the class’s instance.&lt;/li&gt;
-  &lt;li&gt;A &lt;em&gt;companion object&lt;/em&gt; is created automatically with the appropriate &lt;code&gt;apply&lt;/code&gt; and &lt;code&gt;unapply&lt;/code&gt; methods.&lt;/li&gt;
+  &lt;li&gt;It’s fully &lt;strong&gt;multiplexed&lt;/strong&gt;, instead of ordered and blocking
+    &lt;ul&gt;
+      &lt;li&gt;Unlike HTTP/1.1, HTTP/2 allows multiple request and response messages to be in flight at the same time&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Uses &lt;strong&gt;one connection&lt;/strong&gt; for parallelism
+    &lt;ul&gt;
+      &lt;li&gt;With HTTP/1, browsers open between four and eight connections per origin and each connection will start a flood of data in the response&lt;/li&gt;
+      &lt;li&gt;HTTP/2 allows a client to use just one connection per origin to load a page&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Uses &lt;strong&gt;header compression&lt;/strong&gt; to reduce overhead&lt;/li&gt;
+  &lt;li&gt;Allows &lt;strong&gt;servers to push&lt;/strong&gt; responses proactively into client caches
+    &lt;ul&gt;
+      &lt;li&gt;Server push potentially allows the server to avoid this round trip of delay by “pushing” the responses it thinks the client will need into its cache&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
 &lt;/ul&gt;
+</description>
+        <pubDate>Tue, 16 Jan 2024 00:00:00 +0530</pubDate>
+        <link>http://localhost:4000/rpc/2024/introduction-to-grpc</link>
+        <guid isPermaLink="true">http://localhost:4000/rpc/2024/introduction-to-grpc</guid>
+        
+        <category>rpc</category>
+        
+        <category>remote-procedure-call</category>
+        
+        <category>grpc</category>
+        
+        <category>inter-process-communication</category>
+        
+        
+        <category>rpc</category>
+        
+      </item>
+    
+      <item>
+        <title>Terraform Basics</title>
+        <description>&lt;h1 id=&quot;introducing-infrastructure-as-code-iac&quot;&gt;Introducing infrastructure as code (IaC)&lt;/h1&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;The methods generated by the Scala compiler for case classes aren’t special in any way, other than that they are automatically generated for us. By adding the methods and companion objects ourselves, we may avoid using case classes. Because it would take a lot of time and effort to write each of these methods appropriately for every data-storage class, case classes have the advantage of being more convenient.&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p&gt;Infrastructure as Code (IaC) refers to the &lt;em&gt;process of managing and provisioning infrastructure using code&lt;/em&gt; rather than manual processes. When we talk about “infrastructure as code,” we mean that we manage our IT infrastructure with code in the form of configuration files.&lt;/p&gt;
 
-&lt;p&gt;Like a regular class, a case class can extend other classes, including trait and case classes. Case classes are Scala’s way of allowing pattern matching on objects without requiring a large amount of boilerplate code.&lt;/p&gt;
+&lt;p&gt;Configuration files that describe our infrastructure are produced by IaC. Changes and sharing of configurations are made simpler as a result. An IaC process produces the same environment every time it deploys, just as the same source code always generates the same binary.&lt;/p&gt;
 
-&lt;p&gt;Let’s explore the advantages of a case class in action:&lt;/p&gt;
+&lt;h2 id=&quot;its-a-version-control&quot;&gt;It’s a version control&lt;/h2&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-text&quot;&gt;scala&amp;gt; case class Person(name: String, age: Int)
-defined case class Person
+&lt;p&gt;Version control is an important aspect of IaC, and our configuration files, like any other software source code file, can be under source control.&lt;/p&gt;
 
-scala&amp;gt; val person = Person(&quot;John&quot;, 36)
-val person: Person = Person(John,36)
+&lt;h2 id=&quot;the-difficulty-of-manually-managing-infrastructure&quot;&gt;The difficulty of manually managing infrastructure&lt;/h2&gt;
 
-scala&amp;gt; val otherPerson = person.copy(name = &quot;Robert&quot;)
-val otherPerson: Person = Person(Robert,36)
+&lt;p&gt;Managing IT infrastructure was traditionally a manual process where the deployment team would physically install and configure servers. Unsurprisingly, this manual process would frequently result in several issues.&lt;/p&gt;
 
-scala&amp;gt; val someOtherPerson = person.copy()
-val someOtherPerson: Person = Person(John,36)
-scala&amp;gt; println(person.equals(someOtherPerson))
-true
+&lt;h2 id=&quot;uses-declarative-definition-files&quot;&gt;Uses “declarative” definition files&lt;/h2&gt;
 
-scala&amp;gt; person == otherPerson
-val res0: Boolean = false
+&lt;p&gt;IaC uses &lt;em&gt;declarative&lt;/em&gt; definition files, which are simply configuration files. It’s worth noting that in the declarative approach, we only specify the “what” but not the “how” in our definition files. A definition file specifies the parts and settings required by an environment, but it does not always specify how to obtain those settings. For example, the definition file may specify the required server version and configuration but not the process for installing and configuring the server—we specify the “what” part but not the “how” part.&lt;/p&gt;
 
-scala&amp;gt; person match {
-     |     case Person(x, 36) =&amp;gt; s&quot;$x is a younger person&quot;
-     |     case Person(x, 50) =&amp;gt; s&quot;$x is a older person&quot;
-     | }
-val res1: String = John is a younger person
+&lt;h2 id=&quot;benefits-of-infrastructure-as-code&quot;&gt;Benefits of infrastructure as code&lt;/h2&gt;
+
+&lt;p&gt;Because IaC is text-based, we can easily edit, copy, version, and distribute it.&lt;/p&gt;
+
+&lt;h3 id=&quot;speed&quot;&gt;Speed&lt;/h3&gt;
+
+&lt;p&gt;The first major benefit of IaC is its speed. We can quickly set up your entire infrastructure by running a script with infrastructure as code. That is something we can do for any environment, from development to production.&lt;/p&gt;
+
+&lt;h3 id=&quot;consistency-with-reduced-errors&quot;&gt;Consistency with reduced errors&lt;/h3&gt;
+
+&lt;p&gt;Manual processes are prone to errors. Infrastructure as a code solves this problem by making the configuration files the single source of truth. That way, we can be certain that the same configurations will be deployed repeatedly and without error.&lt;/p&gt;
+
+&lt;h3 id=&quot;traceability-with-the-help-of-a-version-control-system&quot;&gt;Traceability with the help of a version control system&lt;/h3&gt;
+
+&lt;p&gt;We have full traceability of the changes made to each configuration because we can version IaC configuration files like any other source code file, which allows us to save time troubleshooting the problem.&lt;/p&gt;
+
+&lt;h1 id=&quot;introduction-to-terraform&quot;&gt;Introduction to Terraform&lt;/h1&gt;
+
+&lt;p&gt;Terraform is an open-source &lt;em&gt;infrastructure as a code&lt;/em&gt; tool from HashiCorp. It enables us to define both cloud and on-premises resources in &lt;em&gt;human-readable declarative definition files&lt;/em&gt; (aka configuration files) that can be &lt;em&gt;versioned&lt;/em&gt;, &lt;em&gt;reused&lt;/em&gt;, and &lt;em&gt;shared&lt;/em&gt;. These definition files contain the steps required to provision and maintain our infrastructure. We can edit, review, and version these definition files &lt;em&gt;just like code&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Terraform can create infrastructure on a variety of cloud platforms such as AWS, Azure, Google Cloud, etc.&lt;/p&gt;
+
+&lt;h2 id=&quot;download-and-install&quot;&gt;Download and install&lt;/h2&gt;
+
+&lt;p&gt;Terraform distribution consists of a single binary file, which can be obtained for free from Hashicorp’s &lt;a href=&quot;https://www.terraform.io/downloads&quot; target=&quot;_blank&quot;&gt;download&lt;/a&gt; page. There are no dependencies, so we can just copy the executable binary to a folder of our choice and run it from there. HashiCorp also offers a managed solution known as &lt;a href=&quot;https://cloud.hashicorp.com/products/terraform&quot; target=&quot;_blank&quot;&gt;Terraform Cloud&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;After we finish the installation, we can run the following command to ensure that everything is working properly:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-shell&quot;&gt;$ terraform -v
+Terraform v1.2.7
+on darwin_amd64
 &lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;terraform-core-concepts&quot;&gt;Terraform core concepts&lt;/h2&gt;
+
+&lt;p&gt;Below are the core Terraform concepts:&lt;/p&gt;
+
+&lt;h3 id=&quot;blocks&quot;&gt;Blocks&lt;/h3&gt;
+
+&lt;p&gt;Blocks are &lt;em&gt;containers&lt;/em&gt; for other content, and they typically represent the configuration of an object, such as a &lt;em&gt;resource&lt;/em&gt;. The block body is delimited by the &lt;code&gt;{&lt;/code&gt; and &lt;code&gt;}&lt;/code&gt; characters.&lt;/p&gt;
+
+&lt;p&gt;Blocks have:&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;Line 1:&lt;/strong&gt; Able to instantiate without a new operator because of the companion object’s factory method, Person.apply().&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;Line 5:&lt;/strong&gt; The auto-generated toString method prints the fields in our instance.&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;Line 7:&lt;/strong&gt; The second instance (otherPerson) shares the same value for the second field, so we only need to specify a new value for the first field in the copy method.&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;Line 10:&lt;/strong&gt; Copies of case classes result in strict equivalence. Hence, the equals statement in line 12 results in true.&lt;/li&gt;
+  &lt;li&gt;A &lt;em&gt;block type&lt;/em&gt;&lt;/li&gt;
+  &lt;li&gt;Zero or more &lt;em&gt;labels&lt;/em&gt;&lt;/li&gt;
+  &lt;li&gt;A &lt;em&gt;body&lt;/em&gt; that contains any number of arguments and nested blocks. Top-level blocks in a configuration file control the majority of Terraform’s features.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;block-syntax&quot;&gt;Block syntax&lt;/h4&gt;
+
+&lt;p&gt;This is the Terraform block syntax:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-shell&quot;&gt;&amp;lt;BLOCK TYPE&amp;gt; &quot;&amp;lt;BLOCK NAME&amp;gt;&quot; &quot;&amp;lt;BLOCK LABEL&amp;gt;&quot; {
+  # Block body
+  &amp;lt;IDENTIFIER&amp;gt; = &amp;lt;EXPRESSION&amp;gt; # Argument
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;These are some of the Terraform blocks:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;providers&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;resources&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;variable&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;output&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;local&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;module&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;data&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;block-example&quot;&gt;Block example&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-plain&quot;&gt;resource &quot;aws_instance&quot; &quot;demo&quot; {
+  ami = &quot;ami-1fc93908a9403&quot;
+
+  network_interface {
+    # ...
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In the above example, a block has a &lt;em&gt;type&lt;/em&gt; as &lt;code&gt;resource&lt;/code&gt;. The &lt;code&gt;resource&lt;/code&gt; block type in our case expects two labels: &lt;code&gt;aws_instance&lt;/code&gt; and &lt;code&gt;demo&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The Terraform language uses a limited number of top-level block types, which are blocks that can appear outside of any other block in a configuration file. The majority of Terraform’s features, such as resources, input variables, output values, data sources, and so on, are implemented as top-level blocks.&lt;/p&gt;
+
+&lt;h3 id=&quot;providers&quot;&gt;Providers&lt;/h3&gt;
+
+&lt;p&gt;Terraform makes use of &lt;em&gt;providers&lt;/em&gt; to connect the Terraform engine to the supported cloud platform. Other than a cloud platform, other things can be considered a provider, such as platform-as-a-service (PaaS) (e.g., Kubernetes) and other software-as-a-service (SaaS).&lt;/p&gt;
+
+&lt;p&gt;It’s a &lt;em&gt;Terraform plugin&lt;/em&gt; that serves as a &lt;em&gt;translation layer&lt;/em&gt;, allowing Terraform to communicate with a variety of cloud providers, databases, and services.&lt;/p&gt;
+
+&lt;p&gt;Terraform’s most popular providers, including major cloud providers:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;AWS&lt;/li&gt;
+  &lt;li&gt;Azure&lt;/li&gt;
+  &lt;li&gt;Google Cloud Platform&lt;/li&gt;
+  &lt;li&gt;Kubernetes&lt;/li&gt;
+  &lt;li&gt;Oracle Cloud Infrastructure&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Each provider adds a set of &lt;em&gt;resource types&lt;/em&gt; and/or &lt;em&gt;data sources&lt;/em&gt; that Terraform can manage. Every resource type is implemented by a provider; Terraform cannot manage any infrastructure without providers.&lt;/p&gt;
+
+&lt;h4 id=&quot;where-do-providers-come-from&quot;&gt;Where do providers come from?&lt;/h4&gt;
+
+&lt;p&gt;The &lt;a href=&quot;https://registry.terraform.io/browse/providers&quot; target=&quot;_blank&quot;&gt;Terraform Registry&lt;/a&gt; is the primary directory of publicly available Terraform providers, hosting providers for the majority of major infrastructure platforms.&lt;/p&gt;
+
+&lt;h4 id=&quot;provider-syntax&quot;&gt;Provider syntax&lt;/h4&gt;
+
+&lt;p&gt;The general syntax is as follows:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-plain&quot;&gt;resource &quot;&amp;lt;PROVIDER&amp;gt;_&amp;lt;TYPE&amp;gt;&quot; &quot;&amp;lt;NAME&amp;gt;&quot; {
+ [CONFIG...]
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The PROVIDER above is the name of the &lt;em&gt;provider&lt;/em&gt; (e.g., aws). The TYPE is the type of &lt;em&gt;resource&lt;/em&gt; to create in that provider (e.g., instance, which represents an EC2 instance). The NAME is the &lt;em&gt;identifier&lt;/em&gt; we can use throughout the Terraform code to refer to this resource. The CONFIG consists of one or more arguments that are specific to that resource (e.g., ami = “ami-1fc93908a9403”).&lt;/p&gt;
+
+&lt;p&gt;For instance, the &lt;strong&gt;aws_instance&lt;/strong&gt; resource has many different arguments, but for now, we only need to set the following:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;&lt;code&gt;ami&lt;/code&gt;&lt;/strong&gt;: The Amazon Machine Image (AMI) to run on the EC2 instance.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;&lt;code&gt;instance_type&lt;/code&gt;&lt;/strong&gt;: The type of EC2 Instance that will be used. Each EC2 Instance type has a different amount of CPU, memory, disk space, and networking capacity. We use &lt;code&gt;t2.micro&lt;/code&gt; instance. T2 instances are available to use in the &lt;a href=&quot;http://aws.amazon.com/free&quot; target=&quot;_blank&quot;&gt;AWS Free Tier&lt;/a&gt;, which includes 750 hours of Linux and Windows &lt;code&gt;t2.micro&lt;/code&gt; instances each month for one year for new AWS customers.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;An example of a simple configuration is as follows:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-terraform&quot;&gt;resource &quot;aws_instance&quot; &quot;demo&quot; {
+  ami = &quot;ami-1fc93908a9403&quot;
+  instance_type = &quot;t2.micro&quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;variables-and-outputs&quot;&gt;Variables and outputs&lt;/h3&gt;
+
+&lt;p&gt;Variables in Terraform are an excellent way to define centrally managed, reusable values. Information contained in Terraform variables is stored independently of deployment plans. Terraform supports multiple variable formats. Based on their usage, the variables are generally divided into:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Input variables&lt;/strong&gt; - They serve as parameters for a Terraform module, allowing users to modify behavior without having to edit the source code.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Output values&lt;/strong&gt; - They serve as return values for a Terraform module.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Local values&lt;/strong&gt; - They are a convenience feature for assigning a short name to an expression.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;modules&quot;&gt;Modules&lt;/h3&gt;
+
+&lt;p&gt;Modules are &lt;em&gt;small&lt;/em&gt;, &lt;em&gt;reusable Terraform configurations&lt;/em&gt; that allow us to manage a &lt;em&gt;collection&lt;/em&gt; of related resources as if &lt;em&gt;they were one&lt;/em&gt;. A module serves as a &lt;em&gt;container&lt;/em&gt; for multiple resources that are used together. To put it simply, a module is a set of Terraform configuration files (&lt;code&gt;.tf&lt;/code&gt; files) in a &lt;em&gt;single directory&lt;/em&gt; as shown below:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;.
+├── main.tf
+├── outputes.tf
+└── variables.tf
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Even a single Terraform configuration file (.tf) in a directory becomes a module. When Terraform commands are executed directly from such a directory, the contents of that directory are considered the &lt;em&gt;root&lt;/em&gt; module.&lt;/p&gt;
+
+&lt;p&gt;Having said that, a module is a method for &lt;em&gt;packaging&lt;/em&gt; and &lt;em&gt;reusing&lt;/em&gt; configurations of resources.&lt;/p&gt;
+
+&lt;h4 id=&quot;what-does-a-module-do&quot;&gt;What does a module do?&lt;/h4&gt;
+
+&lt;p&gt;A module enables us to group related resources together and reuse them in the future, multiple times.&lt;/p&gt;
+
+&lt;p&gt;Let’s assume we need to repeatedly create a virtual machine with a set of resources such as IP, firewall, storage, etc. This is where modules come in handy; we don’t want to repeatedly write the same configuration code over and over again.&lt;/p&gt;
+
+&lt;p&gt;The below example demonstrates how our “server” module may be invoked. Here, we create &lt;em&gt;two&lt;/em&gt; instances of “server” using a single set of configurations:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-terraform&quot;&gt;module &quot;server&quot; {
+  count = 2
+  source = &quot;./module/server&quot;
+  ...
+  ...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;state&quot;&gt;State&lt;/h3&gt;
+
+&lt;p&gt;Terraform must keep track of what infrastructure it creates in a &lt;code&gt;terraform.tfstate&lt;/code&gt; Terraform state file-local state stored on the provisioning machine. Terraform uses this state to map real-world resources to our configuration. Terraform &lt;em&gt;state is stored locally by default&lt;/em&gt;, but it can also be stored remotely, which is preferable in a team environment.&lt;/p&gt;
+
+&lt;p&gt;This state file contains a custom JSON format that records a mapping from the Terraform resources in our templates to their real-world representation.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;Avoid directly manipulating the state file!&lt;/strong&gt; The state file is meant only for internal use within Terraform. This implies that we should never manually edit the Terraform state files or write code that directly reads them. If for some reason we need to manipulate the state file, use the &lt;code&gt;terraform import&lt;/code&gt; or &lt;code&gt;terraform state&lt;/code&gt; commands.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Terraform makes use of this local state to create plans and modify our infrastructure. Terraform performs a refresh prior to any operation to update the state with the real infrastructure.&lt;/p&gt;
+
+&lt;h4 id=&quot;remote-state&quot;&gt;Remote state&lt;/h4&gt;
+
+&lt;p&gt;When working with Terraform in a team, using a local file complicates Terraform usage because each user must ensure that they always have the most recent state data before running Terraform and that no one else runs Terraform at the same time.&lt;/p&gt;
+
+&lt;p&gt;A &lt;em&gt;remote state&lt;/em&gt; comes to our aid. Terraform writes the state data to a remote data store, which can then be shared by all team members.&lt;/p&gt;
+
+&lt;p&gt;Terraform can store state in a variety of storage platforms, including, but not limited to:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Terraform Cloud&lt;/li&gt;
+  &lt;li&gt;HashiCorp Consul&lt;/li&gt;
+  &lt;li&gt;Amazon S3&lt;/li&gt;
+  &lt;li&gt;Azure Blob Storage&lt;/li&gt;
+  &lt;li&gt;Google Cloud Storage&lt;/li&gt;
+  &lt;li&gt;Alibaba Cloud OSS&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Remote state is implemented by a &lt;a href=&quot;https://www.terraform.io/language/settings/backends/configuration&quot; target=&quot;_blank&quot;&gt;backend&lt;/a&gt; or by Terraform Cloud, both of which can be configured in the root module of our configuration.&lt;/p&gt;
+
+&lt;h3 id=&quot;data-sources&quot;&gt;Data sources&lt;/h3&gt;
+
+&lt;p&gt;Terraform can use data sources to get information about resources that are &lt;em&gt;set up outside of Terraform&lt;/em&gt; and use that information to set up Terraform resources. It’s a way of getting data from the outside world and making it available to your Terraform configuration.&lt;/p&gt;
+
+&lt;p&gt;A data source is accessed through a special type of resource called a &lt;em&gt;data resource&lt;/em&gt;, which is declared using a &lt;code&gt;data&lt;/code&gt; block.&lt;/p&gt;
+
+&lt;h4 id=&quot;data-source-example&quot;&gt;Data source example&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-terraform&quot;&gt;data &quot;azurerm_role_definition&quot; &quot;example&quot; {
+  name = &quot;Developer&quot;
+}
+
+resource &quot;azurerm_role_assignment&quot; &quot;example&quot; {
+  role_definition_id = data.azurerm_role_definition.example.id
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In the above example, we have defined two blocks: &lt;em&gt;data&lt;/em&gt; and &lt;em&gt;resource&lt;/em&gt; blocks. We are sending the data from the data source directly into a role assignment resource.&lt;/p&gt;
+
+&lt;h4 id=&quot;refreshing-data-sources&quot;&gt;Refreshing data sources&lt;/h4&gt;
+
+&lt;p&gt;By default, before creating a &lt;em&gt;plan&lt;/em&gt;, Terraform will refresh all data sources. Additionally, we can explicitly refresh all data sources by executing &lt;code&gt;terraform refresh&lt;/code&gt; command.&lt;/p&gt;
+
+&lt;h3 id=&quot;resources&quot;&gt;Resources&lt;/h3&gt;
+
+&lt;p&gt;The most important element of the Terraform language is resources. Each resource block describes one or more infrastructure objects, such as virtual networks, compute instances, and so on.&lt;/p&gt;
+
+&lt;h4 id=&quot;resource-syntax&quot;&gt;Resource syntax&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-terraform&quot;&gt;resource &quot;aws_instance&quot; &quot;web&quot; {
+  ami           = &quot;ami-a1b2c3d4&quot;
+  instance_type = &quot;t2.micro&quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In the above example, a &lt;code&gt;resource&lt;/code&gt; block declares a resource of a given &lt;em&gt;type&lt;/em&gt; (&lt;code&gt;aws_instance&lt;/code&gt;) with a given local &lt;em&gt;name&lt;/em&gt; (&lt;code&gt;web&lt;/code&gt;). The name is used to refer to this resource from within the same Terraform module, but it has no significance outside of the module. The combination of the resource type and name serves as an identifier for a given resource and must therefore be unique within a module.&lt;/p&gt;
+
+&lt;h3 id=&quot;command-line-interface&quot;&gt;Command line interface&lt;/h3&gt;
+
+&lt;p&gt;We can use the Terraform command line interface (CLI) to manage infrastructure, and interact with Terraform &lt;em&gt;state&lt;/em&gt;, &lt;em&gt;providers&lt;/em&gt;, &lt;em&gt;configuration files&lt;/em&gt;, and &lt;em&gt;Terraform Cloud&lt;/em&gt;.&lt;/p&gt;
+
+&lt;h4 id=&quot;terraform-cli-commands&quot;&gt;Terraform CLI commands&lt;/h4&gt;
+
+&lt;p&gt;Following shows some of the Terraform CLIs:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;terraform version&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;terraform init [option]&lt;/code&gt; - This command is used to &lt;em&gt;initialize a working directory&lt;/em&gt; containing Terraform configuration files and &lt;em&gt;install the required plugin&lt;/em&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;policy-libraries&quot;&gt;Policy libraries&lt;/h3&gt;
+
+&lt;p&gt;A library of policies that can be used within Terraform Cloud to accelerate our adoption of &lt;em&gt;policy as code&lt;/em&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;hashicorp-configuration-language-hcl&quot;&gt;HashiCorp Configuration Language (HCL)&lt;/h2&gt;
+
+&lt;p&gt;The HashiCorp Configuration Language (HCL) is a one-of-a-kind &lt;em&gt;configuration language&lt;/em&gt; created by HashiCorp. HCL was created to work with HashiCorp tools, specifically Terraform. The Terraform language’s primary function is to declare resources, which represent infrastructure artifacts.&lt;/p&gt;
+
+&lt;h3 id=&quot;configuration-syntax&quot;&gt;Configuration syntax&lt;/h3&gt;
+
+&lt;p&gt;HCL is intended to &lt;em&gt;support multiple syntaxes&lt;/em&gt; for configuration, but the native syntax is the primary format and is optimized for human authoring and maintenance rather than machine generation. The native configuration syntax of HCL is relatively easy for humans to read and write.&lt;/p&gt;
+
+&lt;p&gt;The file extension of the configuration file written in HCL syntax is &lt;code&gt;.tf&lt;/code&gt;. The Terraform language also allows us to define &lt;em&gt;resource dependencies&lt;/em&gt;. A configuration can consist of multiple files and directories.&lt;/p&gt;
+
+&lt;h3 id=&quot;declarative-configuration&quot;&gt;Declarative configuration&lt;/h3&gt;
+
+&lt;p&gt;As previously stated, this configuration language is declarative, which means that we only describe the infrastructure we want, and Terraform will figure out how to build it. In other words, it means that we describe our intended goals (what to be done) rather than the steps (how to be done) to achieve those goals.&lt;/p&gt;
+
+&lt;p&gt;The configuration files we write in the Terraform configuration language tell Terraform:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;What plugins to install?&lt;/li&gt;
+  &lt;li&gt;What infrastructure to create?&lt;/li&gt;
+  &lt;li&gt;What data to fetch?&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;basic-configuration-elements&quot;&gt;Basic configuration elements&lt;/h3&gt;
+
+&lt;p&gt;The syntax of the Terraform language consists of only a few basic elements:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Blocks&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Arguments&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Expressions&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;blocks-1&quot;&gt;Blocks&lt;/h4&gt;
+
+&lt;p&gt;Refer &lt;a href=&quot;/terraform/2022/terraform-basics#blocks&quot;&gt;above&lt;/a&gt; for more details.&lt;/p&gt;
+
+&lt;h4 id=&quot;arguments&quot;&gt;Arguments&lt;/h4&gt;
+
+&lt;p&gt;Arguments assign a &lt;em&gt;value&lt;/em&gt; to a &lt;em&gt;name&lt;/em&gt;. They can be found within &lt;em&gt;blocks&lt;/em&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-plain&quot;&gt;image_id = &quot;abc123&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The identifier before the equals sign is the argument &lt;em&gt;name&lt;/em&gt; (&lt;code&gt;image_id&lt;/code&gt; in our case), and the expression after the equals sign is the argument’s &lt;em&gt;value&lt;/em&gt; (&lt;code&gt;abc123&lt;/code&gt; in our case).&lt;/p&gt;
+
+&lt;h4 id=&quot;expressions&quot;&gt;Expressions&lt;/h4&gt;
+
+&lt;p&gt;Expressions represent a value in one of two ways: directly or by referencing and combining other values.&lt;/p&gt;
+
+&lt;h2 id=&quot;cdk-for-terraform-cdktf&quot;&gt;CDK for Terraform (CDKTF)&lt;/h2&gt;
+
+&lt;p&gt;The Cloud Development Kit for Terraform (CDKTF) enables us to define and provision infrastructure using familiar &lt;em&gt;programming languages&lt;/em&gt;. You might wonder why we need CDKTF when HCL can do the same thing. As mentioned above, CDKTF enables us to define and provision infrastructure using familiar programming languages other than HCL or JSON syntax.&lt;/p&gt;
+
+&lt;p&gt;At the time of writing this post, Terraform supports the following programming languages:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Typescript&lt;/li&gt;
+  &lt;li&gt;Python&lt;/li&gt;
+  &lt;li&gt;Java&lt;/li&gt;
+  &lt;li&gt;C#&lt;/li&gt;
+  &lt;li&gt;Go&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;CDKTF uses the Cloud Development Kit from AWS, which provides a set of language-native frameworks for defining infrastructure, as well as adapters that allow underlying provisioning tools to use those definitions.&lt;/p&gt;
+
+&lt;h3 id=&quot;install-cdktf&quot;&gt;Install CDKTF&lt;/h3&gt;
+
+&lt;p&gt;We can install CDKTF with &lt;code&gt;npm&lt;/code&gt; on most operating systems. We can also install CDKTF with Homebrew on MacOS.&lt;/p&gt;
+
+&lt;h4 id=&quot;install-cdktf-with-npm&quot;&gt;Install CDKTF with npm&lt;/h4&gt;
+
+&lt;p&gt;To install the most recent stable release of CDKTF, use &lt;code&gt;npm install&lt;/code&gt; with the &lt;code&gt;@latest&lt;/code&gt; tag as shown below:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-shell&quot;&gt;npm install --global cdktf-cli@latest
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&quot;install-cdktf-using-homebrew&quot;&gt;Install CDKTF using Homebrew&lt;/h4&gt;
+
+&lt;p&gt;We can also use the &lt;a href=&quot;https://brew.sh/&quot; target=&quot;_blank&quot;&gt;Homebrew package manager&lt;/a&gt; to install CDKTF on MacOS systems.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-shell&quot;&gt;brew install cdktf
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&quot;verify-the-cdktf-installation&quot;&gt;Verify the CDKTF installation&lt;/h4&gt;
+
+&lt;p&gt;Verify that you have CDKTF installed by running the &lt;code&gt;cdktf help&lt;/code&gt; command to show the available subcommands.&lt;/p&gt;
+
+&lt;h3 id=&quot;how-does-cdk-for-terraform-work&quot;&gt;How does CDK for Terraform work?&lt;/h3&gt;
+
+&lt;p&gt;On a high level, we will follow these steps:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Step 1 - Define infrastructure:&lt;/strong&gt; As a first step, define the infrastructure we want to provision on one or more providers using any of the supported programming languages. CDKTF works by translating configurations defined in an imperative programming language to JSON configuration files for Terraform.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Step 2 - Deploy:&lt;/strong&gt; Use &lt;code&gt;cdktf&lt;/code&gt; CLI commands to provision infrastructure with Terraform or synthesize (translate to other form) our code into a JSON configuration file that others can use with Terraform directly.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;cdktf-to-hcl&quot;&gt;CDKTF to HCL&lt;/h4&gt;
+
+&lt;p&gt;The &lt;code&gt;cdktf synth&lt;/code&gt; command synthesizes (generate code/configuration) Terraform configuration for the given app. CDKTF stores the synthesized configuration in the &lt;code&gt;cdktf.out&lt;/code&gt; directory, unless you use the &lt;code&gt;--output&lt;/code&gt; flag to specify a different location.&lt;/p&gt;
+
+&lt;p&gt;The output folder is ephemeral (short lived) and might be erased for each &lt;code&gt;synth&lt;/code&gt; that we run manually or that happens automatically when we run &lt;code&gt;deploy&lt;/code&gt;, &lt;code&gt;diff&lt;/code&gt;, or &lt;code&gt;destroy&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h4 id=&quot;hcl-to-cdktf&quot;&gt;HCL to CDKTF&lt;/h4&gt;
+
+&lt;p&gt;Use the &lt;code&gt;cdktf convert&lt;/code&gt; command to translate Terraform configuration written in HCL to the equivalent configuration in our preferred language.&lt;/p&gt;
+
+&lt;p&gt;Convert a local file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-shell&quot;&gt;cat main.tf | cdktf convert &amp;gt; imported.ts
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;cdktf-cli-commands&quot;&gt;CDKTF CLI commands&lt;/h3&gt;
+
+&lt;p&gt;The following are some of the CDKTF CLI commands:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;cdktf version&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;how-does-terraform-work&quot;&gt;How does Terraform work?&lt;/h1&gt;
+
+&lt;p&gt;As stated above, Terraform uses definition files to create and manage resources on cloud or on-premises platforms, as well as other services via their APIs. Terraform’s primary function is to &lt;em&gt;create&lt;/em&gt;, &lt;em&gt;modify&lt;/em&gt;, and &lt;em&gt;destroy&lt;/em&gt; infrastructure resources as described in a Terraform configuration.&lt;/p&gt;
+
+&lt;h2 id=&quot;definition-or-configuration-files&quot;&gt;Definition or configuration files&lt;/h2&gt;
+
+&lt;p&gt;Terraform requires infrastructure configuration or definition files written in either HashiCorp Configuration Language (HCL) or JSON syntax.&lt;/p&gt;
+
+&lt;h2 id=&quot;working-directories&quot;&gt;Working directories&lt;/h2&gt;
+
+&lt;p&gt;Terraform expects to be invoked from a &lt;em&gt;working directory&lt;/em&gt; containing Terraform language configuration files. Terraform uses configuration content from this working directory to store &lt;em&gt;settings&lt;/em&gt;, &lt;em&gt;cached plugins and modules&lt;/em&gt;, and occasionally &lt;em&gt;state data&lt;/em&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;working-directory-contents&quot;&gt;Working directory contents&lt;/h3&gt;
+
+&lt;p&gt;A Terraform working directory typically contains:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;A &lt;strong&gt;Terraform configuration&lt;/strong&gt; (&lt;code&gt;.tf&lt;/code&gt; files) that defines the resources that Terraform should manage. This configuration is likely to change over time.&lt;/li&gt;
+  &lt;li&gt;A hidden &lt;strong&gt;&lt;code&gt;.terraform&lt;/code&gt; directory&lt;/strong&gt;, which Terraform uses to manage cached provider plugins and modules, record which workspace is currently active, and record the last known backend configuration in case it needs to migrate state on the next run. This directory is automatically managed by Terraform, and is created during initialization.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;State data&lt;/strong&gt;, if the configuration uses the default &lt;code&gt;local&lt;/code&gt; backend. This is managed by Terraform in a &lt;code&gt;terraform.tfstate&lt;/code&gt; file (if the directory only uses the default workspace) or a &lt;code&gt;terraform.tfstate.d&lt;/code&gt; directory (if the directory uses multiple workspaces).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The following shows all the files in a working directory, including the hidden ones:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-shell&quot;&gt;$ tree -a
+
+├── .terraform
+│   └── providers
+│       └── registry.terraform.io
+│           └── hashicorp
+│               └── local
+│                   └── 1.4.0
+│                       └── darwin_amd64
+│                           └── terraform-provider-local_v1.4.0_x4
+├── .terraform.lock.hcl
+├── hello.txt
+├── main.tf
+└── terraform.tfstate
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;provisioning-infrastructure-with-terraform&quot;&gt;Provisioning infrastructure with Terraform&lt;/h2&gt;
+
+&lt;p&gt;The provisioning workflow (Terraform’s life cycle) in Terraform is based on the following commands:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;init&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;plan&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;apply&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;destroy&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/assets/images/posts/terraform-lifecycle.png&quot; alt=&quot;Terraform life cycle&quot; title=&quot;Created by Author&quot; /&gt;&lt;/th&gt;
+      &lt;th&gt; &lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;sup&gt;&lt;em&gt;Terraform life cycle.&lt;/em&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;br /&gt;&lt;br /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&quot;init&quot;&gt;Init&lt;/h3&gt;
+
+&lt;p&gt;Init command initializes the working directories. A working directory must be &lt;em&gt;initialized&lt;/em&gt; before Terraform can perform any operations on it, such as provisioning infrastructure or changing state.&lt;/p&gt;
+
+&lt;p&gt;Why do we need to initialize the working directory, and what happens during initialization? The &lt;code&gt;terraform&lt;/code&gt; binary contains the basic functionality of Terraform, but it does not include the code for any of the providers (e.g., the AWS provider, Azure provider, GCP provider, and so on), so when we first start using Terraform, we must run the &lt;code&gt;terraform init&lt;/code&gt; command to instruct Terraform to scan the code (configuration file), determine which providers we are using, and download the code from the &lt;a href=&quot;https://registry.terraform.io/browse/providers&quot; target=&quot;_blank&quot;&gt;Terraform Registry&lt;/a&gt;. The provider code is downloaded by default into a &lt;code&gt;.terraform&lt;/code&gt; directory.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; It’s safe to run init multiple times because the command is idempotent.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;After initialization, we will be able to perform other commands, like &lt;code&gt;terraform plan&lt;/code&gt; and &lt;code&gt;terraform apply&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;plan&quot;&gt;Plan&lt;/h3&gt;
+
+&lt;p&gt;After we’ve initialized the working directory, we’ll use the &lt;code&gt;plan&lt;/code&gt; command to see what actions Terraform will take to create our resources. This step works similar to the “dry run” feature found in other build systems. This is an excellent way to double-check our changes before releasing them.&lt;/p&gt;
+
+&lt;p&gt;The plan command’s output is similar to the diff command’s output:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Resources with a plus sign (&lt;code&gt;+&lt;/code&gt;) will be created.&lt;/li&gt;
+  &lt;li&gt;Resources with a minus sign (&lt;code&gt;-&lt;/code&gt;) will be deleted.&lt;/li&gt;
+  &lt;li&gt;Resources with a tilde sign (&lt;code&gt;~&lt;/code&gt;) will be modified in-place.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-shell&quot;&gt;$ terraform plan
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # local_file.hello will be created
+  + resource &quot;local_file&quot; &quot;hello&quot; {
+      + content              = &quot;Hello, Terraform&quot;
+      + directory_permission = &quot;0777&quot;
+      + file_permission      = &quot;0777&quot;
+      + filename             = &quot;hello.txt&quot;
+      + id                   = (known after apply)
+    }
+
+Plan: 1 to add, 0 to change, 0 to destroy.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Terraform’s &lt;code&gt;plan&lt;/code&gt; output indicates that it needs to create a new resource, which is expected given that it does not yet exist. We can also see the provided values that we’ve specified, as well as a pair of permission attributes. Because we did not include them in our resource definition, the provider will use the default values.&lt;/p&gt;
+
+&lt;h3 id=&quot;apply&quot;&gt;Apply&lt;/h3&gt;
+
+&lt;p&gt;We can now use the &lt;code&gt;apply&lt;/code&gt; command to create actual resources:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-shell&quot;&gt;$ terraform apply
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # local_file.hello will be created
+  + resource &quot;local_file&quot; &quot;hello&quot; {
+      + content              = &quot;Hello, Terraform&quot;
+      + directory_permission = &quot;0777&quot;
+      + file_permission      = &quot;0777&quot;
+      + filename             = &quot;hello.txt&quot;
+      + id                   = (known after apply)
+    }
+
+Plan: 1 to add, 0 to change, 0 to destroy.
+╷
+│ Warning: Version constraints inside provider configuration blocks are deprecated
+│
+│   on main.tf line 2, in provider &quot;local&quot;:
+│    2:   version = &quot;~&amp;gt; 1.4&quot;
+│
+│ Terraform 0.13 and earlier allowed provider version constraints inside the provider configuration block, but that is now deprecated and
+│ will be removed in a future version of Terraform. To silence this warning, move the provider version constraint into the
+│ required_providers block.
+╵
+
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only &apos;yes&apos; will be accepted to approve.
+
+  Enter a value: yes
+
+local_file.hello: Creating...
+local_file.hello: Creation complete after 0s [id=392b5481eae4ab2178340f62b752297f72695d57]
+
+Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We can now confirm that the file was created with the desired content:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-shell&quot;&gt;$ cat hello.txt
+Hello, Terraform
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Also, after running &lt;code&gt;terraform apply&lt;/code&gt;, the &lt;code&gt;terraform.tfstate&lt;/code&gt; file has been created with the following content:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-shell&quot;&gt;$ cat terraform.tfstate
+
+{
+  &quot;version&quot;: 4,
+  &quot;terraform_version&quot;: &quot;1.2.7&quot;,
+  &quot;serial&quot;: 1,
+  &quot;lineage&quot;: &quot;bd8530c6-6781-a52a-2c26-dd1164afc7cd&quot;,
+  &quot;outputs&quot;: {},
+  &quot;resources&quot;: [
+    {
+      &quot;mode&quot;: &quot;managed&quot;,
+      &quot;type&quot;: &quot;local_file&quot;,
+      &quot;name&quot;: &quot;hello&quot;,
+      &quot;provider&quot;: &quot;provider[\&quot;registry.terraform.io/hashicorp/local\&quot;]&quot;,
+      &quot;instances&quot;: [
+        {
+          &quot;schema_version&quot;: 0,
+          &quot;attributes&quot;: {
+            &quot;content&quot;: &quot;Hello, Terraform&quot;,
+            &quot;content_base64&quot;: null,
+            &quot;directory_permission&quot;: &quot;0777&quot;,
+            &quot;file_permission&quot;: &quot;0777&quot;,
+            &quot;filename&quot;: &quot;hello.txt&quot;,
+            &quot;id&quot;: &quot;392b5481eae4ab2178340f62b752297f72695d57&quot;,
+            &quot;sensitive_content&quot;: null
+          },
+          &quot;sensitive_attributes&quot;: [],
+          &quot;private&quot;: &quot;bnVsbA==&quot;
+        }
+      ]
+    }
+  ]
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;destroy&quot;&gt;Destroy&lt;/h3&gt;
+
+&lt;p&gt;When we’re finished experimenting with Terraform, we should delete all of the resources we created so the cloud service provider doesn’t charge us for them.&lt;/p&gt;
+
+&lt;p&gt;Cleanup is simple because Terraform keeps track of what resources we created. All we have to do is execute the destroy command.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-shell&quot;&gt;$ terraform destroy
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;When we type “yes” and press enter, Terraform will create the dependency graph and delete all the resources in the correct order, using as much parallelism as possible.&lt;/p&gt;
+
+&lt;h2 id=&quot;terraform-in-action&quot;&gt;Terraform in action&lt;/h2&gt;
+
+&lt;p&gt;In this section, let’s perform a series of exercises.&lt;/p&gt;
+
+&lt;h3 id=&quot;exercise-1---create-an-aws-ec2-instance&quot;&gt;Exercise #1 - Create an AWS EC2 instance&lt;/h3&gt;
+
+&lt;p&gt;Create a Terraform configuration file with the content as shown below and save it in the &lt;code&gt;main.tf&lt;/code&gt; file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-terraform&quot;&gt;provider &quot;aws&quot; {
+  profile    = &quot;default&quot;
+  region     = &quot;us-east-1&quot;
+}
+
+resource &quot;aws_instance&quot; &quot;example&quot; {
+  ami           = &quot;ami-2757f631&quot;
+  instance_type = &quot;t2.micro&quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The above definition file uses two blocks: &lt;em&gt;provider&lt;/em&gt; followed by &lt;em&gt;resource&lt;/em&gt; blocks.&lt;/p&gt;
+
+&lt;p&gt;In the provider block, we use AWS as our cloud provider and the default AWS profile, which indicates the use of the default credentials (ACCESS KEY ID and SECRET ACCESS KEY) from the &lt;code&gt;/.aws/credentials&lt;/code&gt; file.&lt;/p&gt;
+
+&lt;p&gt;In the resource block, the AWS resource (resource type) to be created has been specified. In this example, we specified &lt;code&gt;aws_instance&lt;/code&gt;, which represents the EC2 instance. Also, we specified additional parameters such as &lt;code&gt;ami&lt;/code&gt; and &lt;code&gt;instance_type&lt;/code&gt; that might be required for the creation of an EC2 instance.&lt;/p&gt;
+
+&lt;p&gt;The following steps will be performed in order to create an EC2 instance:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Step 1:&lt;/strong&gt; Initialize the working directory by executing the command &lt;code&gt;terraform init&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Step 2:&lt;/strong&gt; (Optional) Validate the configuration file (&lt;code&gt;main.tf&lt;/code&gt;) by executing the command &lt;code&gt;terraform validate&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Step 3:&lt;/strong&gt; Perform a dry run to see what changes occur when the command &lt;code&gt;terraform plan&lt;/code&gt; is executed.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Step 4:&lt;/strong&gt; Execute Terraform by running the command &lt;code&gt;terraform apply&lt;/code&gt;. This is the &lt;em&gt;actual execution step&lt;/em&gt; where Terraform, after successfully authenticating, creates an EC2 instance.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Step 5:&lt;/strong&gt; (Optional) Destroys the instance we created in the above step by executing the command &lt;code&gt;terraform destroy -target aws_instance.example&lt;/code&gt;.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;blockquote&gt;
-  &lt;p&gt;&lt;strong&gt;Case class extends other class:&lt;/strong&gt; If our case class had extended another class with its own fields but we hadn’t added the fields as case class parameters, the generated methods wouldn’t have been able to make use of them. Before using case classes, it’s necessary to be aware of this important caution.&lt;/p&gt;
+  &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; As previously mentioned, Terraform keeps track of the infrastructure it creates in a state file called &lt;code&gt;terraform.tfstate&lt;/code&gt;, which is stored locally on the provisioning machine by default. This state file is generated during the execution of Terraform, i.e., when the &lt;code&gt;apply&lt;/code&gt; command is executed.&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;h1 id=&quot;copy-vs-clone&quot;&gt;Copy vs. clone&lt;/h1&gt;
-&lt;p&gt;The case class’s &lt;code&gt;copy&lt;/code&gt; method lets us make a &lt;code&gt;copy&lt;/code&gt; of an object. Remember that a &lt;code&gt;copy&lt;/code&gt; method differs from a &lt;code&gt;clone&lt;/code&gt; method in that a &lt;code&gt;copy&lt;/code&gt; allows us to modify fields at any time while it is being copied.&lt;/p&gt;
+&lt;p&gt;Once Terraform has been successfully executed, a new EC2 instance is created in our AWS account as shown below:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-scala&quot;&gt;case class Worker(name: String, department: String)
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/assets/images/posts/terraform-new-ec2-instance-created.png&quot; alt=&quot;New EC2 instance created&quot; /&gt;&lt;/th&gt;
+      &lt;th&gt; &lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;sup&gt;&lt;em&gt;A new EC2 instance created.&lt;/em&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;br /&gt;&lt;br /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
 
-object CaseClassCopyMethod extends App {
-  val john = Worker(&quot;John&quot;, &quot;Sales&quot;)
-  val mike = john.copy(name=&quot;Mike&quot;)
+&lt;p&gt;As shown in the screenshot, an EC2 instance was created with the given instance type &lt;code&gt;t2.mirco&lt;/code&gt; and the AMI ID specified in our definition file.&lt;/p&gt;
+
+&lt;h3 id=&quot;exercise-2---create-a-compute-engine-in-gcp&quot;&gt;Exercise #2 - Create a compute engine in GCP&lt;/h3&gt;
+
+&lt;p&gt;In this exercise, a compute engine instance will be created.&lt;/p&gt;
+
+&lt;h4 id=&quot;pre-requisites&quot;&gt;Pre-requisites&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;GCP account&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;gcloud&lt;/code&gt; CLI must be installed.&lt;/li&gt;
+  &lt;li&gt;Ensure we have a IAM &lt;em&gt;service account&lt;/em&gt; with role as &lt;em&gt;Owner&lt;/em&gt;. To verify, use the following command to list the service-accounts: &lt;code&gt;gcloud iam service-accounts list&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Create a key for the service account so that Terraform can connect to GCP using this key. Use the following command for the same: &lt;code&gt;gcloud iam service-accounts keys create google-key.json --iam-account &amp;lt;service account email id&amp;gt;&lt;/code&gt;. This would create a new key file named &lt;code&gt;google-key.json&lt;/code&gt; in the current directory. We can also generate key via Google Cloud web console.&lt;/li&gt;
+  &lt;li&gt;We must enable &lt;em&gt;Compute Engine API&lt;/em&gt; by visiting the Google Cloud console’s Compute Engine page.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Create a Terraform configuration file with the content as shown below and save it in the &lt;code&gt;main.tf&lt;/code&gt; file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-terraform&quot;&gt;provider &quot;google&quot; {
+	credentials = file(&quot;proud-sweep-359704-f460da53c31e.json&quot;)
+	project = &quot;proud-sweep-359704&quot;
+	region = &quot;us-central1&quot;
+	zone = &quot;us-central1-c&quot;
+}
+
+resource &quot;google_compute_network&quot; &quot;vpc_network&quot; {
+	name = &quot;demo-network&quot;
+}
+
+resource &quot;google_compute_instance&quot; &quot;dev_instance&quot; {
+	name = &quot;dev-instance&quot;
+	machine_type = &quot;f1-micro&quot;
+	zone = &quot;us-central1-c&quot;
+	boot_disk {
+		initialize_params {
+			image = &quot;centos-cloud/centos-7&quot;
+		}	
+	}
+	network_interface {
+		network = &quot;default&quot;  // This enable private IP address
+		access_config {  // This enable private IP address
+		}
+	}
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&quot;abstract-case-class&quot;&gt;Abstract case class&lt;/h1&gt;
-&lt;p&gt;When we declare an abstract case class, Scala won’t generate the apply method in the companion object, which makes sense as we can’t create an instance of an abstract class.&lt;/p&gt;
+&lt;p&gt;To create a Compute Engine instance (it’s a VM) in GCP, the following steps will be performed:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-scala&quot;&gt; abstract case class PositiveInt(value: Int)
-&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Step 1:&lt;/strong&gt; &lt;code&gt;terraform init&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Step 2:&lt;/strong&gt; (Optional) &lt;code&gt;terraform validate&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Step 3:&lt;/strong&gt; &lt;code&gt;terraform plan&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Step 4:&lt;/strong&gt; &lt;code&gt;terraform apply&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Step 5:&lt;/strong&gt; (Optional) &lt;code&gt;terraform destroy -target google_compute_instance.dev_instance&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;h1 id=&quot;case-object&quot;&gt;Case object&lt;/h1&gt;
-&lt;p&gt;We can also create case objects. Just like a regular object, a case object inherits all the features of a regular object. Note that a case object is serialisable by default, whereas a regular object is not.&lt;/p&gt;
+&lt;p&gt;Once Terraform has been successfully executed, a new Google Compute Engine (GCE) instance is created in our GCP account as shown below:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-scala&quot;&gt; case object Fruit {
-    val costPerKg = 10
-}
-&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/assets/images/posts/terraform-new-gce-instance-created.png&quot; alt=&quot;New EC2 instance created&quot; /&gt;&lt;/th&gt;
+      &lt;th&gt; &lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;sup&gt;&lt;em&gt;A new GCE instance created in GCP.&lt;/em&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;br /&gt;&lt;br /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
 
-&lt;p&gt;We must extend the &lt;code&gt;Serializable&lt;/code&gt; trait in order to make a case object serialisable.&lt;/p&gt;
+&lt;h1 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h1&gt;
+
+&lt;p&gt;This should help you understand the fundamentals of Terraform and how infrastructure as code can be set up quickly and efficiently. The declarative language simplifies the process of describing the infrastructure we intend to build, as opposed to describing how to build it. Before putting our changes into action, we use the &lt;code&gt;plan&lt;/code&gt; command to test them and look for potential bugs.&lt;/p&gt;
+
+&lt;p&gt;This is merely a summary of how efficiently infrastructure as code can be implemented with Terraform. I attempted to make this post as clear as possible while still providing sufficient detail for you to understand the ideas. For more details, check out their online &lt;a href=&quot;https://learn.hashicorp.com/terraform&quot; target=&quot;_blank&quot;&gt;documentation&lt;/a&gt;.&lt;/p&gt;
 </description>
-        <pubDate>Wed, 20 Dec 2023 00:00:00 +0530</pubDate>
-        <link>http://localhost:4000/scala/2023/case-class</link>
-        <guid isPermaLink="true">http://localhost:4000/scala/2023/case-class</guid>
+        <pubDate>Tue, 16 Jan 2024 00:00:00 +0530</pubDate>
+        <link>http://localhost:4000/terraform/2024/terraform-basics</link>
+        <guid isPermaLink="true">http://localhost:4000/terraform/2024/terraform-basics</guid>
         
-        <category>object-oriented-programming</category>
+        <category>terraform</category>
         
-        <category>oops</category>
+        <category>infrastructure-as-code</category>
         
-        <category>dto</category>
+        <category>iac</category>
         
         
-        <category>scala</category>
+        <category>terraform</category>
+        
+      </item>
+    
+      <item>
+        <title>SOLID Design Principles</title>
+        <description>&lt;h1 id=&quot;overview&quot;&gt;Overview&lt;/h1&gt;
+
+&lt;p&gt;The term “SOLID” in software engineering refers to a group of five design principles that are meant to improve the &lt;em&gt;readability&lt;/em&gt;, &lt;em&gt;flexibility&lt;/em&gt;, and &lt;em&gt;maintainability&lt;/em&gt; of object-oriented designs.&lt;/p&gt;
+
+&lt;p&gt;The SOLID design principle includes the following five principles:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;S&lt;/strong&gt;ingle-responsibility principle&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;O&lt;/strong&gt;pen-closed principle&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;L&lt;/strong&gt;iskov substitution principle&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;I&lt;/strong&gt;nterface segregation principle&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;D&lt;/strong&gt;ependency inversion principle&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;American software engineer and instructor &lt;strong&gt;Robert C. Martin&lt;/strong&gt; (popularly known as &lt;strong&gt;Uncle Bob&lt;/strong&gt;) introduced these design principles in his 2000 paper &lt;em&gt;Design Principles and Design Patterns&lt;/em&gt;. &lt;strong&gt;Michael Feathers&lt;/strong&gt; later transformed these principles into an acronym.&lt;/p&gt;
+
+&lt;p&gt;We will examine each of them to learn how these principles can aid in the creation of software that is well-designed.&lt;/p&gt;
+
+&lt;h1 id=&quot;single-responsibility-principle-srp&quot;&gt;Single-Responsibility Principle (SRP)&lt;/h1&gt;
+
+&lt;p&gt;Robert C. Martin, the originator of this principle, put it this way: “&lt;em&gt;A class should have only one reason to change.&lt;/em&gt;” It means that every module, class, or method should only have one (single) responsibility or job.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/assets/images/posts/solid-srp.jpg&quot; alt=&quot;Single-Reponsibility Principle&quot; /&gt;&lt;/th&gt;
+      &lt;th&gt; &lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;sub&gt;&lt;em&gt;SOLID - Single-Reponsibility Principle.&lt;/em&gt;&lt;/sub&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;br /&gt;&lt;br /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Uncle Bob defines &lt;em&gt;responsibility&lt;/em&gt; as a &lt;em&gt;reason to change&lt;/em&gt;, and he suggests breaking down components such as classes, modules, and methods until each has a &lt;strong&gt;single reason&lt;/strong&gt; to change.&lt;/p&gt;
+
+&lt;p&gt;Why do we need to do this, and &lt;em&gt;what benefits will be gained&lt;/em&gt; by breaking a component into subcomponents where each must have a single responsibility? The idea is that each class or method is responsible for a single part of the product’s functionality, i.e., each class or method does just &lt;strong&gt;one job&lt;/strong&gt;. This &lt;em&gt;keeps the design as simple as possible&lt;/em&gt; and makes it easier and less disruptive to make changes in the future. Furthermore, it improves the quality of the codebase in general.&lt;/p&gt;
+
+&lt;p&gt;What if our class has multiple responsibilities to fulfill? A class with multiple responsibilities has a higher chance of having bugs since altering one of those responsibilities might have unintended effects (side-effects) on the others.&lt;/p&gt;
+
+&lt;p&gt;Having said that, utilising SRP principle makes code easier to maintain and test.&lt;/p&gt;
+
+&lt;h2 id=&quot;motivation&quot;&gt;Motivation&lt;/h2&gt;
+</description>
+        <pubDate>Tue, 16 Jan 2024 00:00:00 +0530</pubDate>
+        <link>http://localhost:4000/design-patterns-and-coding-principles/2024/solid</link>
+        <guid isPermaLink="true">http://localhost:4000/design-patterns-and-coding-principles/2024/solid</guid>
+        
+        <category>design-patterns</category>
+        
+        <category>singleton-pattern</category>
+        
+        <category>coding-principles</category>
+        
+        <category>solid</category>
+        
+        
+        <category>design-patterns-and-coding-principles</category>
+        
+      </item>
+    
+      <item>
+        <title>Singleton Pattern</title>
+        <description>&lt;p&gt;A singleton pattern limits the number of instances of a class to one. It falls under a &lt;em&gt;creational design pattern&lt;/em&gt; because it deals with an object creation procedure. The singleton pattern ensures that a class has only one instance and provides a &lt;em&gt;global access point&lt;/em&gt; to it.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;Design patterns:&lt;/strong&gt; In software engineering, a &lt;em&gt;design pattern&lt;/em&gt; is a general, reusable solution to a commonly occurring problem in software design. It’s not a fully finished design that can be put into source code right away. Instead, it serves as a description, model, or template for problem-solving that may be used in a variety of situations.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Except for the special creation method (magic method in Python), the singleton pattern prevents the creation of objects via any other means. If an object has already been created, this method either returns it or creates a new one if needed.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;Dunder methods:&lt;/strong&gt; The dunder methods are special methods that start and end with double underscores. These double underscores are referred by the acronym “dunder.”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h1 id=&quot;use-cases&quot;&gt;Use cases&lt;/h1&gt;
+
+&lt;p&gt;Who would want to limit the number of instances a class has? The most common justification for this is to manage access to a shared resource, such a file or database.&lt;/p&gt;
+
+&lt;h1 id=&quot;creation-of-a-singleton-object&quot;&gt;Creation of a singleton object&lt;/h1&gt;
+
+&lt;h2 id=&quot;singleton-in-python&quot;&gt;Singleton in Python&lt;/h2&gt;
+
+&lt;p&gt;The following shows the creation of a singleton object in Python. Here, &lt;code&gt;__new__&lt;/code&gt; is a special or magic method (aka the dunder method). This method is invoked every time a class is instantiated. Note that the &lt;code&gt;__new__&lt;/code&gt; method is invoked before the &lt;code&gt;__init__&lt;/code&gt; method gets called.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;When we attempt to create an object inside of the &lt;code&gt;__new__&lt;/code&gt; method in the usual way &lt;code&gt;(ClassName())&lt;/code&gt;, it runs recursively. It loops back on itself until the maximum recursion depth is reached and a &lt;code&gt;RecursionError&lt;/code&gt; error is thrown.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;class Singleton(object):
+    &quot;&quot;&quot;Represents Singleton class.&quot;&quot;&quot;
+
+    __instance = None
+
+    # This __new__ method is invoked every time a class is instantiated.
+    # It&apos;s invoked before the __init__ method gets called.
+    def __new__(cls, *args, **kwargs):
+        if not cls.__instance:
+            print(&quot;Creating singleton object...&quot;)
+            cls.__instance = super(Singleton, cls).__new__(cls, *args, **kwargs)
+            # cls.__instance = object.__new__(cls, *args, **kwargs)  # Other way of creating an object
+            # cls.__instance = Singleton() #  Will get into a RecursionError error
+        return cls.__instance
+
+def main():
+    singleton_object_1 = Singleton()
+    singleton_object_2 = Singleton()
+
+if __name__ == &apos;__main__&apos;:
+    main()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Output:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-text&quot;&gt;Creating singleton object...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The output shows that the new object is created just once.&lt;/p&gt;
+</description>
+        <pubDate>Tue, 16 Jan 2024 00:00:00 +0530</pubDate>
+        <link>http://localhost:4000/design-patterns-and-coding-principles/2024/singleton-pattern-or-object</link>
+        <guid isPermaLink="true">http://localhost:4000/design-patterns-and-coding-principles/2024/singleton-pattern-or-object</guid>
+        
+        <category>design-patterns</category>
+        
+        <category>singleton-pattern</category>
+        
+        <category>coding-principles</category>
+        
+        
+        <category>design-patterns-and-coding-principles</category>
+        
+      </item>
+    
+      <item>
+        <title>Anti-Pattern</title>
+        <description>&lt;h2 id=&quot;what-is-an-anti-pattern&quot;&gt;What is an anti-pattern?&lt;/h2&gt;
+
+&lt;p&gt;The term “anti-pattern” was first used in 1995 by a computer programmer, Andrew Koenig, in an article called “Journal of Object-Oriented Programming.”&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;An antipattern is just like a pattern, except that instead of a solution it gives something that looks superficially like a solution but isn’t one. - &lt;strong&gt;Andrew Koenig&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Anti-patterns in software engineering are a commonly used, simple-to-implement solution to recurring issues that is often inefficient and has the potential of being incredibly counterproductive. It demonstrates how to go from a problem to a bad solution. We just call these &lt;em&gt;bad ideas&lt;/em&gt; or &lt;em&gt;design smells&lt;/em&gt;. Avoid them at all costs!&lt;/p&gt;
+
+&lt;h3 id=&quot;anti-patterns-are-undesirable-counterparts-to-design-patterns&quot;&gt;Anti-patterns are undesirable counterparts to design-patterns&lt;/h3&gt;
+
+&lt;p&gt;Anti-patterns are the undesirable opposites of &lt;em&gt;design patterns&lt;/em&gt;, which are formalized solutions to frequent issues and are usually viewed as acceptable development practice. Although anti-patterns at first seem to be quick and reasonable, they typically have adverse effects in the future. We will eventually come to understand that anti-pattern results in more negative outcomes than positive ones.&lt;/p&gt;
+
+&lt;h3 id=&quot;anti-patterns-might-result-in-technical-debt&quot;&gt;Anti-patterns might result in technical debt&lt;/h3&gt;
+
+&lt;p&gt;It affects our software badly and adds &lt;em&gt;technical debt&lt;/em&gt;! Technical debt is a development decision taken for short-term gains that has long-term consequences. If we let our unintentional technical debt to grow wildly, it may result in dissatisfied developers and encourage staff attrition. IT leaders see technical debt as a significant threat to their organizations’ capabilities.&lt;/p&gt;
+
+&lt;h3 id=&quot;what-do-anti-patterns-reveal-to-us&quot;&gt;What do anti-patterns reveal to us?&lt;/h3&gt;
+
+&lt;p&gt;A well formulated anti-pattern reveals us:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Why does the poor solution seem appealing?&lt;/li&gt;
+  &lt;li&gt;Why it ends up being bad?&lt;/li&gt;
+  &lt;li&gt;What best patterns are available to replace it?&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;The issue that the anti-pattern is attempting to solve already has a better alternative solution in place that is proven to be effective in contrast to the anti-pattern.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;in-one-aspect-the-bad-is-perceived-as-the-good&quot;&gt;In one aspect, the bad is perceived as the good&lt;/h3&gt;
+
+&lt;p&gt;In general, developers are not too concerned about identifying design and code smells. However, it’s important to keep in mind that identifying bad practices can be as valuable as identifying good practices.&lt;/p&gt;
+
+&lt;h3 id=&quot;examples-of-anti-patterns&quot;&gt;Examples of anti-patterns&lt;/h3&gt;
+
+&lt;p&gt;Here are some examples of anti-patterns:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Spaghetti code&lt;/strong&gt; - It’s an unstructured and difficult-to-maintain source code.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Golden hammer&lt;/strong&gt; - It is the practice of applying a known strategy to a variety of issues.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;God object/class&lt;/strong&gt; - This class or object is responsible for too many things.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Boat anchor&lt;/strong&gt; - It is future code that has no use inside the present context.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Magic numbers and strings&lt;/strong&gt; - Using unnamed numbers or string literals instead of named constants in code.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Lastly, it should be noted that the same solution may act as both a pattern and an anti-pattern, depending on the context.&lt;/p&gt;
+</description>
+        <pubDate>Tue, 16 Jan 2024 00:00:00 +0530</pubDate>
+        <link>http://localhost:4000/design-patterns-and-coding-principles/2024/anti-pattern</link>
+        <guid isPermaLink="true">http://localhost:4000/design-patterns-and-coding-principles/2024/anti-pattern</guid>
+        
+        <category>anti-pattern</category>
+        
+        <category>design-patterns</category>
+        
+        
+        <category>design-patterns-and-coding-principles</category>
+        
+      </item>
+    
+      <item>
+        <title>Apache Pinot joins hands with Kafka and Presto to provide low-latency, high-throughput user-facing analytics</title>
+        <description>&lt;p&gt;This post is for you if you are curious about Apache Pinot but are just getting started with it. We’ll go a little deeper into Apache Pinot to help you understand the components that make up a Pinot cluster. We will also get hands-on experience by running samples that include both streaming and batch data imports into Pinot and then analytical query executions.&lt;/p&gt;
+
+&lt;h1 id=&quot;the-evolution-of-analytics&quot;&gt;The evolution of analytics&lt;/h1&gt;
+
+&lt;h2 id=&quot;batch-analytics&quot;&gt;Batch analytics&lt;/h2&gt;
+
+&lt;p&gt;In the past, analytics were often performed in batches, resulting in high-latency analytics where queries returned responses based on data that was at least minutes, hours, or even days old, depending on the volume of data and available computing resources. The generation of &lt;strong&gt;business intelligence&lt;/strong&gt; (&lt;strong&gt;BI&lt;/strong&gt;) reports is one use case of batch analytics. Business intelligence uses historical data to report on business trends and answer strategic questions. In batch-style analytics, jobs are generally scheduled to run at night or during non-business hours. So, it often provides us with insights &lt;em&gt;after the fact&lt;/em&gt;. Most of the time, these batch-type insights are based on stale data (old information), so we can’t rely on them. So no one anymore wants to do analytics in batches.&lt;/p&gt;
+
+&lt;h2 id=&quot;real-time-analytics&quot;&gt;Real-time analytics&lt;/h2&gt;
+
+&lt;p&gt;Real-time analytics has now become something that every business ought to do. It’s the process of applying logic to data to get insights or draw conclusions &lt;em&gt;right away&lt;/em&gt; so that better decisions can be made at the right time. Put simply, it aids in helping us make the &lt;em&gt;right decisions at the right time&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;“Real-time” in real-time analytics means being able to get business insights &lt;em&gt;as soon as possible&lt;/em&gt; after data (transactions) enters the system. Having access to analytics in real-time is important for day-to-day operations, financial intelligence, triaging incidents, and allowing businesses to act quickly. The most crucial benefit of real-time analytics is that it allows us to take opportunities and stop problems before they happen.&lt;/p&gt;
+
+&lt;h2 id=&quot;user-facing-analytics&quot;&gt;User-facing analytics&lt;/h2&gt;
+
+&lt;p&gt;In the world we live in now, everyone needs real-time analytical data, not just business analysts or top-level executives. We call this kind of analytics “&lt;strong&gt;user-facing analytics&lt;/strong&gt;” also known as “&lt;strong&gt;customer-facing analytics&lt;/strong&gt;.” One good example of this is LinkedIn’s “Who viewed your profile” feature, which lets all of its more than 700 million users slice and dices the information about who looked at their pages. Uber created the UberEats Restaurant Manager app to give restaurant owners real-time insights into their order data. This is yet another excellent example of how the best use of user-facing real-time analytics improved the end-user experience. &lt;/p&gt;
+
+&lt;p&gt;In user-facing analytics, users won’t put up with painfully slow analytics. When they can find insights in real-time, they are more open to a data-driven culture. So, we need a solution that can scale to millions of users and offer fast, real-time insights. Businesses are working hard to speed up the steps needed to get enough data to answer everyone’s questions. One such solution that comes to our rescue is “&lt;strong&gt;Apache Pinot&lt;/strong&gt;.”&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/assets/images/posts/batch-analytics-to-user-facing-analytics.png&quot; alt=&quot;The Evolution of Analytics&quot; /&gt;&lt;/th&gt;
+      &lt;th&gt; &lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;sup&gt;&lt;em&gt;Figure 1: The Evolution of Analytics.&lt;/em&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;br /&gt;&lt;br /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;a-brief-introduction-to-apache-pinot&quot;&gt;A brief introduction to Apache Pinot&lt;/h1&gt;
+
+&lt;p&gt;Apache Pinot is a &lt;strong&gt;real-time&lt;/strong&gt;, &lt;strong&gt;distributed OLAP datastore&lt;/strong&gt; that was built for low-latency, high-throughput analytics, making it perfect for user-facing analytical workloads.&lt;/p&gt;
+
+&lt;p&gt;It can ingest directly from streaming data sources like Apache Kafka and Amazon Kinesis and make the events available for querying right away. It can also ingest from batch data sources such as Hadoop HDFS, Amazon S3, Azure ADLS, and Google Cloud Storage.&lt;/p&gt;
+
+&lt;p&gt;At the heart of the system is a &lt;em&gt;columnar store&lt;/em&gt; equipped with advanced indexing and pre-aggregation techniques for low latency. This makes Pinot the best choice for real-time analytics.&lt;/p&gt;
+
+&lt;p&gt;One of the best things about Pinot is that it has a pluggable architecture. The plugins make it easy to add support for any third-party system, such as an &lt;em&gt;execution framework&lt;/em&gt;, a &lt;em&gt;filesystem&lt;/em&gt;, or an &lt;em&gt;input format&lt;/em&gt;. For example, some plugins make it easy to ingest data and push it to our Pinot cluster:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;pinot-batch-ingestion-spark&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;pinot-s3&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;pinot-parquet&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/assets/images/posts/pinot-overview.png&quot; alt=&quot;Apache Pinot Overview&quot; /&gt;&lt;/th&gt;
+      &lt;th&gt; &lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;sup&gt;&lt;em&gt;Figure 2: Apache Pinot Overview. Image Courtesy: https://docs.pinot.apache.org.&lt;/em&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;br /&gt;&lt;br /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;pinot-joins-hands-with-presto-and-kafka&quot;&gt;Pinot joins hands with Presto and Kafka&lt;/h1&gt;
+
+&lt;p&gt;Now, the question comes: &lt;strong&gt;Can’t Pinot just do what it’s supposed to do without help from Kafka and Presto?&lt;/strong&gt; Due to some limitations, Pinot depends on Kafka and Presto to provide user-facing analytics with high throughput and low latency. We’ll go through the reasons for using Kafka and Presto with Pinot, and how they complement each other.&lt;/p&gt;
+
+&lt;h2 id=&quot;need-for-presto&quot;&gt;Need for Presto&lt;/h2&gt;
+
+&lt;p&gt;Presto and Pinot are distinct technologies, yet they complement each other quite well for conducting and storing ad-hoc data analytics. Presto supports SQL, but users can’t use it to get fresh aggregated data. Pinot, on the other hand, can give us &lt;em&gt;second-level data freshness&lt;/em&gt;, but it doesn’t support flexible queries.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;Second-level data freshness:&lt;/strong&gt; Second-level data freshness is the amount of time between when the organisation gets the data and when it can be used for in-depth analytics.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/assets/images/posts/pinot-vs-presto.png&quot; alt=&quot;Pinot vs. Presto&quot; /&gt;&lt;/th&gt;
+      &lt;th&gt; &lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;sup&gt;&lt;em&gt;Figure 3: Pinot vs. Presto.&lt;/em&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;br /&gt;&lt;br /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&quot;need-for-kafka&quot;&gt;Need for Kafka&lt;/h2&gt;
+
+&lt;p&gt;Apache Kafka has become the industry standard for real-time event streaming because it flawlessly addresses the issue of real-time ingestion of data with high velocity, volume, and variability. Integrating Kafka with Pinot makes the event streams available for querying in real-time. This allows segments to be available for query processing as they’re being built.&lt;/p&gt;
+
+&lt;p&gt;In the following sections, we will go over how Pinot leverages Kafka and Presto, making it perfect for user-facing analytical workloads at scale.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;taking-a-closer-look-into-pinot-and-its-components&quot;&gt;Taking a closer look into Pinot and its components&lt;/h1&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/assets/images/posts/apache-pinot-architecture.png&quot; alt=&quot;Pinot Architecture&quot; /&gt;&lt;/th&gt;
+      &lt;th&gt; &lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;sup&gt;&lt;em&gt;Figure 4: Pinot Architecture.&lt;/em&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;br /&gt;&lt;br /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Pinot has two kinds of components:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Logical components&lt;/li&gt;
+  &lt;li&gt;Architectural components&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;logical-components&quot;&gt;Logical components&lt;/h2&gt;
+
+&lt;p&gt;Pinot cluster has the following logical components:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Tenant&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Table&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Segment&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;A logical view is another way to see what the cluster looks like:&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/assets/images/posts/apache-pinot-cluster-logical-view.png&quot; alt=&quot;Pinot Cluster&apos;s Logical View&quot; /&gt;&lt;/th&gt;
+      &lt;th&gt; &lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;sup&gt;&lt;em&gt;Figure 5: Pinot Cluster’s Logical View.&lt;/em&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;br /&gt;&lt;br /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;A cluster contains tenants&lt;/li&gt;
+  &lt;li&gt;Tenants contain tables&lt;/li&gt;
+  &lt;li&gt;Tables contain segments&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;tenant&quot;&gt;Tenant&lt;/h3&gt;
+
+&lt;p&gt;A tenant is a &lt;em&gt;logical&lt;/em&gt; component of Apache Pinot. It’s simply a logical grouping of resources (servers and brokers) with the same Helix tag. So, tenant enable us to group resources that are used for isolation. In our cluster, we have a default tenant called “default tenant.” When nodes are created in the cluster, they automatically get added to the default tenant.&lt;/p&gt;
+
+&lt;p&gt;Pinot has top-notch support for tenants so that &lt;em&gt;multi-tenancy&lt;/em&gt; can work. Every table is associated with a server tenant and a broker tenant. This sets the nodes that will be used as servers and brokers by this table. This lets all of the tables for a certain use case be put together under a single tenant name.&lt;/p&gt;
+
+&lt;p&gt;The idea of tenants is very important when Pinot is used for many different purposes and there is a need to set limits or separate tenants (isolation) in some way.&lt;/p&gt;
+
+&lt;h3 id=&quot;table&quot;&gt;Table&lt;/h3&gt;
+
+&lt;p&gt;A table is a logical abstraction that represents a &lt;em&gt;collection of related data&lt;/em&gt;. It is made up of rows and columns (known as documents in Pinot). This concept is similar to that of other databases. A schema defines the table’s columns, data types, and other metadata.&lt;/p&gt;
+
+&lt;p&gt;Pinot supports the following types of table:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Offline&lt;/strong&gt; - Offline tables ingest pre-built pinot-segments from external data stores. This is generally used for &lt;em&gt;batch ingestion&lt;/em&gt;.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Real-time&lt;/strong&gt; - Real-time tables ingest data from streams such as Kafka and build segments from the consumed data.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Hybrid&lt;/strong&gt; - Under the hood, a hybrid Pinot table is made up of both real-time and offline tables. All tables in Pinot are of the hybrid type by default.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;The user who is querying the database doesn’t need to know what kind of table it is. In the query, they only need to say the name of the table. Regardless of whether we have an offline table &lt;code&gt;myTable_OFFLINE&lt;/code&gt;, a real-time table &lt;code&gt;myTable_REALTIME&lt;/code&gt;, or a hybrid table containing both of these, the query will be:&lt;br /&gt;&lt;br /&gt;&lt;code&gt;select count(*) from myTable&lt;/code&gt;.&lt;br /&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;strong&gt;Table configuration&lt;/strong&gt; is used to define the table properties, such as &lt;strong&gt;name&lt;/strong&gt;, &lt;strong&gt;type&lt;/strong&gt;, &lt;strong&gt;indexing&lt;/strong&gt;, &lt;strong&gt;routing&lt;/strong&gt;, &lt;strong&gt;retention&lt;/strong&gt;, etc. It is written in JSON format and is stored in ZooKeeper, along with the table schema.&lt;/p&gt;
+
+&lt;h3 id=&quot;segment&quot;&gt;Segment&lt;/h3&gt;
+
+&lt;p&gt;Pinot breaks a table into multiple small &lt;em&gt;chunks of data&lt;/em&gt; known as &lt;strong&gt;segments&lt;/strong&gt; that are distributed across Pinot servers. These segments can also be stored in a &lt;strong&gt;deep store&lt;/strong&gt; such as HDFS. Pinot segment is a unit of &lt;em&gt;partitioning&lt;/em&gt;, &lt;em&gt;replication&lt;/em&gt;, and &lt;em&gt;query processing&lt;/em&gt; that represents a subset of the input data along with the specified indices. By using Apache Helix, the Pinot controller defines how data is partitioned and replicated across servers. Using this information, the Pinot broker disperses queries to individual servers and gather them back together.&lt;/p&gt;
+
+&lt;p&gt;There are two types of segments:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Mutable segments&lt;/li&gt;
+  &lt;li&gt;Immutable segments&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4 id=&quot;mutable-segments&quot;&gt;Mutable segments&lt;/h4&gt;
+
+&lt;p&gt;Mutable segments are those that are being stored in memory in the &lt;code&gt;CONSUMING&lt;/code&gt; state. Each mutable segment organizes the incoming data into a columnar format and updates the needed indices, such as inverted or text indexes, in real time. The mutable segments are available for query processing right away, as they’re being built. Therefore, given the low ingestion overhead, Pinot provides the same level of data freshness as Kafka.&lt;/p&gt;
+
+&lt;h4 id=&quot;immutable-segments&quot;&gt;Immutable segments&lt;/h4&gt;
+
+&lt;p&gt;Each server decides on its own when it is time to save the in-memory segments to disk, based on a set of criteria. Such on-disk segments are referred to as immutable segments.&lt;/p&gt;
+
+&lt;p&gt;The criteria used for creating immutable segments can either be:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;the amount of time elapsed since the segment was initially created&lt;/li&gt;
+  &lt;li&gt;the number of rows consumed&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; For offline tables, segments are built outside of pinot and uploaded using a distributed executor such as Apache Spark or Hadoop. For real-time tables, segments are built in a specific interval inside Pinot.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;A table is represented as a &lt;a href=&quot;https://helix.apache.org/Concepts.html&quot; target=&quot;_blank&quot;&gt;&lt;strong&gt;Helix resource&lt;/strong&gt;&lt;/a&gt; in the Pinot cluster, and each segment of a table is represented as a &lt;a href=&quot;https://helix.apache.org/Concepts.html&quot; target=&quot;_blank&quot;&gt;&lt;strong&gt;Helix Partition&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/assets/images/posts/apache-pinot-tenant-table-segment.png&quot; alt=&quot;Tenant -&amp;gt; Tables -&amp;gt; Segments&quot; /&gt;&lt;/th&gt;
+      &lt;th&gt; &lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;sup&gt;&lt;em&gt;Figure 6: Tenant -&amp;gt; Tables -&amp;gt; Segments.&lt;/em&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;br /&gt;&lt;br /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&quot;architectural-components&quot;&gt;Architectural components&lt;/h2&gt;
+
+&lt;p&gt;A Pinot cluster is a set of nodes comprising of:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Server&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Broker&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Controller&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Minion&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Pinot uses &lt;a href=&quot;https://helix.apache.org/&quot; target=&quot;_blank&quot;&gt;&lt;strong&gt;Apache Helix&lt;/strong&gt;&lt;/a&gt; for cluster management. Helix handles resources that are replicated and partitioned in a distributed system. Helix uses &lt;strong&gt;ZooKeeper&lt;/strong&gt; to store cluster state and metadata.&lt;/p&gt;
+
+&lt;h3 id=&quot;server&quot;&gt;Server&lt;/h3&gt;
+
+&lt;p&gt;Servers host (store) the data segments and serve queries based on the data they host. Pinot servers consume data directly from the Kafka topic. They are also indexing the data as they ingest it, and they serve queries on the data that they have.&lt;/p&gt;
+
+&lt;p&gt;There are two types of servers:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Offline server&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Real-time server&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;offline-server&quot;&gt;Offline server&lt;/h4&gt;
+
+&lt;p&gt;Offline servers download segments from the segment store so that they can host and serve queries. When a new segment is uploaded to the controller, the controller decides which servers will host the new segment and notifies them to download the segment from the segment store. When the servers get this notification, they download the segment file and put the segment on the server so that they can handle queries.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/assets/images/posts/apache-pinot-batch-ingestion.png&quot; alt=&quot;Offline Server shows Batch Ingestion&quot; /&gt;&lt;/th&gt;
+      &lt;th&gt; &lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;sup&gt;&lt;em&gt;Figure 7: Offline Server shows Batch Ingestion.&lt;/em&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;br /&gt;&lt;br /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&quot;real-time-server&quot;&gt;Real-time server&lt;/h4&gt;
+
+&lt;p&gt;Real-time servers ingest directly from a real-time stream like Kafka. Based on certain thresholds, they make segments of the data that has been stored in-memory from time to time. Then, this segment is saved to the segment store.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/assets/images/posts/apache-pinot-realtime-ingestion.png&quot; alt=&quot;Real-time Ingestion&quot; /&gt;&lt;/th&gt;
+      &lt;th&gt; &lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;sup&gt;&lt;em&gt;Figure 8: Real-time Ingestion.&lt;/em&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;br /&gt;&lt;br /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&quot;broker&quot;&gt;Broker&lt;/h3&gt;
+
+&lt;p&gt;Broker handles Pinot queries. They accept queries from clients and forward them to the right Pinot servers. They gather results from the servers and combine them into a single response to send back to the client.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/assets/images/posts/apache-pinot-broker-interactions.png&quot; alt=&quot;Broker interaction with other components&quot; /&gt;&lt;/th&gt;
+      &lt;th&gt; &lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;sup&gt;&lt;em&gt;Figure 9: Broker interaction with other components.&lt;/em&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;br /&gt;&lt;br /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&quot;controller&quot;&gt;Controller&lt;/h3&gt;
+
+&lt;p&gt;The node that observes and controls the participant nodes. In other words, the Pinot controller manages all the components of the Pinot cluster with the help of Apache Helix. It is in charge of coordinating all cluster transitions and making sure that state constraints are met while keeping the cluster stable. &lt;strong&gt;Pinot controllers&lt;/strong&gt; are modeled as controllers.&lt;/p&gt;
+
+&lt;p&gt;The Pinot controller is really the brains of the cluster, and it takes care of cluster membership, figuring out what data is located on which server, and performing query routing. Pinot controller hosts Apache Helix (for cluster management), and together they are responsible for managing all the other components of the cluster.&lt;/p&gt;
+
+&lt;p&gt;The Pinot controller has a user interface that lets us access and query Pinot tables. We can also use this user interface to add, edit, or delete schema and table configurations. We can access the user interface via controller’s port (&lt;code&gt;http://localhost:9000&lt;/code&gt;); port &lt;code&gt;9000&lt;/code&gt; is the default controller’s port.&lt;/p&gt;
+
+&lt;h3 id=&quot;minion&quot;&gt;Minion&lt;/h3&gt;
+
+&lt;p&gt;I’m not going into Minion details here. If you’d like to learn more about Minion, check out the official document &lt;a href=&quot;https://docs.pinot.apache.org/basics/components/minion&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;!--Helix divides nodes into logical components based on their responsibilities:
+
+#### Participant
+
+The nodes that host resources (tasks) that are distributed and partitioned. **Pinot servers** are modeled as participants.
+
+#### Spectator
+
+The nodes that keep track of *current state* of each participant and use this information to access the resources. Spectators are notified when the state of the cluster changes (state of a participant, or that of a partition in a participant). **Pinot brokers** are modeled as spectators.
+
+
+
+## Table
+
+A table refers to a collection of data consisting of rows and columns. This concept is similar to that of other databases.
+
+Let&apos;s look at a sample table config file shown below. The table config file has a `tableName`, a `tableType`, which in this case is &quot;OFFLINE,&quot; and some other information such as `schemaName`, `timeColumnName` and `replication`.
+
+The `tenants` section is where we define which tenant this table will belong to. It implies that this table&apos;s data and queries only use the brokers and servers tagged `DefaultTenant`. This allows us to achieve isolation between tables if necessary and eliminates the need to create multiple clusters for every use case.
+
+```json
+{
+  &quot;tableName&quot;: &quot;sample&quot;,
+  &quot;segmentsConfig&quot;: {
+    &quot;timeColumnName&quot;: &quot;timestamp&quot;,
+    &quot;timeType&quot;: &quot;MILLISECONDS&quot;,
+    &quot;replication&quot;: &quot;2&quot;,
+    &quot;schemaName&quot;: &quot;sample&quot;
+  },
+  &quot;tableIndexConfig&quot;: {
+    &quot;invertedIndexColumns&quot;: [
+      
+    ],
+    &quot;loadMode&quot;: &quot;MMAP&quot;
+  },
+  &quot;tenants&quot;: {
+    &quot;broker&quot;: &quot;DefaultTenant&quot;,
+    &quot;server&quot;: &quot;DefaultTenant&quot;
+  },
+  &quot;tableType&quot;: &quot;OFFLINE&quot;,
+  &quot;metadata&quot;: {
+    
+  }
+}
+ ```
+ --&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;pinots-use-cases-and-limitations&quot;&gt;Pinot’s use cases and limitations&lt;/h1&gt;
+
+&lt;h2 id=&quot;use-cases&quot;&gt;Use cases&lt;/h2&gt;
+
+&lt;p&gt;Pinot was built to execute real-time OLAP queries on massive amounts of streaming data and events with low latency. Pinot also supports batch use cases with a similar guarantee of low latency. It works well in situations where we need to do quick analytics, such as aggregations, on immutable data that’s being received via real-time data ingestion. Also, Pinot is a great choice for querying time series data with lots of dimensions and metrics.&lt;/p&gt;
+
+&lt;h2 id=&quot;limitations&quot;&gt;Limitations&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Pinot is not a replacement for a database and should not be used as a source of truth. Pinot is not a replacement for a search engine.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;sql-query-limitations&quot;&gt;SQL query limitations:&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Pinot does not fully support ANI-SQL at this time.&lt;/li&gt;
+  &lt;li&gt;It doesn’t allow cross-table queries (using JOINs) as well as nested queries.&lt;/li&gt;
+  &lt;li&gt;It also cannot handle a large amount of data shuffle. &lt;/li&gt;
+  &lt;li&gt;Table joins and other operations, such as a large amount of data shuffling, may be accomplished using either the Trino-Pinot connector or the Presto-Pinot connector.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;getting-started-with-pinot&quot;&gt;Getting started with Pinot&lt;/h1&gt;
+
+&lt;p&gt;This section describes how to launch a Pinot cluster and ingest data into it.&lt;/p&gt;
+
+&lt;h2 id=&quot;running-pinot-components&quot;&gt;Running Pinot components&lt;/h2&gt;
+
+&lt;p&gt;Apache Pinot can be run in any of the following environments:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;locally&lt;/strong&gt; on our own computer&lt;/li&gt;
+  &lt;li&gt;in &lt;strong&gt;Docker&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;in &lt;strong&gt;Kubernetes&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&quot;/apache-pinot/2022/running-apache-pinot-locally&quot; target=&quot;_blank&quot;&gt;Read more&lt;/a&gt; to find out how to deploy and run Apache Pinot locally on our computer.&lt;/p&gt;
+
+&lt;h2 id=&quot;getting-data-into-pinot&quot;&gt;Getting data into Pinot&lt;/h2&gt;
+
+&lt;p&gt;There are multiple ways of importing data into Pinot. &lt;a href=&quot;/apache-pinot/2022/getting-data-into-pinot&quot; target=&quot;_blank&quot;&gt;Read more&lt;/a&gt;.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;frequently-asked-questions-faq&quot;&gt;Frequently asked questions (FAQ)&lt;/h1&gt;
+
+&lt;h2 id=&quot;what-are-the-challenges-that-user-facing-analytics-have-to-deal-with&quot;&gt;What are the challenges that user-facing analytics have to deal with?&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Latency:&lt;/strong&gt; Must be in the sub-second range.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Throughput:&lt;/strong&gt; Should support millions of concurrent users querying the data.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Data freshness:&lt;/strong&gt; Insights must be fresh (current), up to date, and relevant.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;what-is-queries-per-second-qps&quot;&gt;What is queries per second (QPS)?&lt;/h2&gt;
+
+&lt;p&gt;Queries per second (QPS) is a way to measure how many searches a system for obtaining information, like a search engine or a database, gets in one second. The term is often used for any request-response system, in which case it should be called &lt;strong&gt;requests per second&lt;/strong&gt; (&lt;strong&gt;RPS&lt;/strong&gt;).&lt;/p&gt;
+
+&lt;h2 id=&quot;what-is-the-ideal-state-and-exteral-view&quot;&gt;What is the Ideal State and Exteral View?&lt;/h2&gt;
+
+&lt;p&gt;Ideal State represents the &lt;em&gt;desired state&lt;/em&gt; of the table resource. The Exteral View represents the &lt;em&gt;actual state&lt;/em&gt;. Any cluster action usually updates the Ideal State, and then Helix sends state transitions to the right components.&lt;/p&gt;
+
+&lt;h2 id=&quot;how-does-pinot-use-zookeeper&quot;&gt;How does Pinot use ZooKeeper?&lt;/h2&gt;
+
+&lt;p&gt;The cluster management in Pinot is made with &lt;strong&gt;Apache Helix&lt;/strong&gt;, which is built on top of Zookeeper. Helix uses Zookeeper to store the cluster state, including Ideal State, External View, Participants, etc. Besides that, Pinot uses Zookeeper to store other information such as Table configs, schema, Segment Metadata, etc.&lt;/p&gt;
+
+&lt;h2 id=&quot;what-is-apache-helix&quot;&gt;What is Apache Helix?&lt;/h2&gt;
+
+&lt;p&gt;Apache Helix is a generic open-source cluster management framework developed by LinkedIn. It is used for the automatic management of &lt;em&gt;partitioned&lt;/em&gt;, &lt;em&gt;replicated&lt;/em&gt; and &lt;em&gt;distributed resources&lt;/em&gt; hosted on a cluster of nodes.&lt;/p&gt;
+
+&lt;p&gt;Helix automates:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Reassignment of resources when a node fails&lt;/li&gt;
+  &lt;li&gt;Cluster expansion&lt;/li&gt;
+  &lt;li&gt;Reconfiguration&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;what-is-helix-task&quot;&gt;What is Helix task?&lt;/h2&gt;
+
+&lt;p&gt;In Helix terminology, a task is referred to as a &lt;em&gt;resource&lt;/em&gt;. Helix is based on the idea that every task has the following attributes associated with it:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Location&lt;/strong&gt; (e.g. it is available on Node N1)&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;State&lt;/strong&gt; (e.g. it is running, stopped etc.)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;is-pinot-support-open-distributed-data-file-format-like-parquet&quot;&gt;Is Pinot support open distributed data file format like Parquet?&lt;/h2&gt;
+
+&lt;p&gt;No. A closed-file format is used by Pinot. In the future, they might be able to work with open file formats like Parquet.&lt;/p&gt;
+
+&lt;h2 id=&quot;what-input-file-formats-can-be-used-to-send-data-to-pinot&quot;&gt;What input file formats can be used to send data to Pinot?&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;CSV&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Parquet&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;ORC&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;AVRO&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;JSON&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Thrift&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Protocol Buffers&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;how-can-data-from-pinot-be-retrieved&quot;&gt;How can data from Pinot be retrieved?&lt;/h2&gt;
+
+&lt;p&gt;There are different ways to query for data from Pinot using:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Broker endpoint (REST API)&lt;/li&gt;
+  &lt;li&gt;Query console&lt;/li&gt;
+  &lt;li&gt;Pinot-admin&lt;/li&gt;
+  &lt;li&gt;Pinot clients&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;broker-endpoint&quot;&gt;Broker endpoint&lt;/h3&gt;
+
+&lt;p&gt;We can use the &lt;code&gt;/query/sql&lt;/code&gt; endpoint on a broker to access the Pinot REST API using the POST operation with a JSON body that includes the parameter sql.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;$ curl -H &quot;Content-Type: application/json&quot; -X POST \
+   -d &apos;{&quot;sql&quot;:&quot;select foo, count(*) from myTable group by foo limit 100&quot;}&apos; \
+   http://localhost:8099/query/sql
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;query-console&quot;&gt;Query console&lt;/h3&gt;
+
+&lt;p&gt;Query Console can be used for running ad-hoc queries. The Query Console can be accessed by entering the &lt;code&gt;&amp;lt;controller host&amp;gt;:&amp;lt;controller port&amp;gt;&lt;/code&gt; in our browser.&lt;/p&gt;
+
+&lt;h3 id=&quot;pinot-admin&quot;&gt;Pinot-admin&lt;/h3&gt;
+
+&lt;p&gt;We can also query using the pinot-admin script (&lt;code&gt;pinot-admin.sh&lt;/code&gt;).&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;cd pinot/pinot-tools/target/pinot-tools-pkg
+bin/pinot-admin.sh PostQuery \
+  -queryType sql \
+  -brokerPort 8000 \
+  -query &quot;select count(*) from baseballStats&quot;
+
+2020/03/04 12:46:33.459 INFO [PostQueryCommand] [main] Executing command: PostQuery -brokerHost localhost -brokerPort 8000 -queryType sql -query select count(*) from baseballStats
+2020/03/04 12:46:33.854 INFO [PostQueryCommand] [main] Result: {&quot;resultTable&quot;:{&quot;dataSchema&quot;:{&quot;columnDataTypes&quot;:[&quot;LONG&quot;],&quot;columnNames&quot;:[&quot;count(*)&quot;]},&quot;rows&quot;:[[97889]]},&quot;exceptions&quot;:[],&quot;numServersQueried&quot;:1,&quot;numServersResponded&quot;:1,&quot;numSegmentsQueried&quot;:1,&quot;numSegmentsProcessed&quot;:1,&quot;numSegmentsMatched&quot;:1,&quot;numConsumingSegmentsQueried&quot;:0,&quot;numDocsScanned&quot;:97889,&quot;numEntriesScannedInFilter&quot;:0,&quot;numEntriesScannedPostFilter&quot;:0,&quot;numGroupsLimitReached&quot;:false,&quot;totalDocs&quot;:97889,&quot;timeUsedMs&quot;:185,&quot;segmentStatistics&quot;:[],&quot;traceInfo&quot;:{},&quot;minConsumingFreshnessTimeMs&quot;:0}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;pinot-clients&quot;&gt;Pinot clients&lt;/h3&gt;
+
+&lt;p&gt;Here’s a list of the clients available to query Pinot from your application:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Java client&lt;/li&gt;
+  &lt;li&gt;Go client&lt;/li&gt;
+  &lt;li&gt;JDBC client (coming soon)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;what-are-the-key-takeaways-for-apache-pinot&quot;&gt;What are the key takeaways for Apache Pinot?&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;We may not need it at all.&lt;/li&gt;
+  &lt;li&gt;This isn’t our system of record.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Tue, 16 Jan 2024 00:00:00 +0530</pubDate>
+        <link>http://localhost:4000/apache-pinot/2024/introduction-to-apache-pinot</link>
+        <guid isPermaLink="true">http://localhost:4000/apache-pinot/2024/introduction-to-apache-pinot</guid>
+        
+        <category>apache-pinot</category>
+        
+        <category>pinot</category>
+        
+        <category>olap</category>
+        
+        <category>olap-datastore</category>
+        
+        
+        <category>apache-pinot</category>
+        
+      </item>
+    
+      <item>
+        <title>Data Product vs. Data as a Product</title>
+        <description>&lt;h1 id=&quot;overview&quot;&gt;Overview&lt;/h1&gt;
+
+&lt;p&gt;We live in a world full of data, but how can we best use it? It should come as no surprise that, when used wisely, &lt;em&gt;data is the most precious thing on the planet&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Be aware that a “data product” is not the same as “data as a product”. We might hear the term “data as a product” more often these days due to the current hot trend in the data industry known as “data mesh,” which claims to be able to solve many of the problems of its predecessors. One of the principles of the data mesh paradigm is to consider data as a product. This principle is sometimes shortened to “data product,” which leads to a misunderstanding between data product and data as a product.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/assets/images/posts/world-full-of-data.jpg&quot; alt=&quot;Worlf full of data!&quot; /&gt;&lt;/th&gt;
+      &lt;th&gt; &lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;sup&gt;&lt;em&gt;Data everywhere!&lt;/em&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;br /&gt;&lt;br /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Let’s explore the distinctions in detail between these two notions.&lt;/p&gt;
+
+&lt;h1 id=&quot;what-is-a-data-product&quot;&gt;What is a data product?&lt;/h1&gt;
+
+&lt;p&gt;Any product is called a &lt;em&gt;data product&lt;/em&gt; if data is the key enabler for its primary goal. This means that any digital product or feature that &lt;em&gt;relies on data&lt;/em&gt; to achieve its ultimate purpose or goal may be referred to as a data product.&lt;/p&gt;
+
+&lt;p&gt;The former chief data scientist of the United States, DJ Patil, defined a data product in his 2012 book Data Jujitsu: The Art of Turning Data into Product as “&lt;em&gt;a product that facilitates an end goal though the use of data.&lt;/em&gt;”&lt;/p&gt;
+
+&lt;p&gt;In general, a data product is any tool or application that processes data and produces outcomes. These outcomes may provide businesses with valuable insights.&lt;/p&gt;
+
+&lt;h2 id=&quot;various-types-of-data-products&quot;&gt;Various types of data products&lt;/h2&gt;
+
+&lt;p&gt;Typically, data products are categorized by type:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Raw data&lt;/li&gt;
+  &lt;li&gt;Derived data&lt;/li&gt;
+  &lt;li&gt;Algorithms&lt;/li&gt;
+  &lt;li&gt;Insights (Decision support)&lt;/li&gt;
+  &lt;li&gt;Automated decision-making&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;examples-of-data-products&quot;&gt;Examples of data products&lt;/h2&gt;
+
+&lt;p&gt;Examples of data products are:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Any online shopping page may be a data product if the featured products are dynamically displayed depending on my previous purchases and searches.&lt;/li&gt;
+  &lt;li&gt;Google analytics is a data product since the insights it presents to the end user are derived from data.&lt;/li&gt;
+  &lt;li&gt;A data warehouse - This data product is a mix of raw data, derived data and insights.&lt;/li&gt;
+  &lt;li&gt;A self-driving car - It’s of the type automated decision-making.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;what-value-does-it-provide&quot;&gt;What value does it provide?&lt;/h2&gt;
+
+&lt;p&gt;Data products can help organisations extract insight from their data in order to develop more accurate forecasts, reduce expenses, and increase revenue.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;data-as-a-product&quot;&gt;Data as a product&lt;/h1&gt;
+
+&lt;p&gt;Data as a product. In other words, data as a first-class product. This implies that &lt;em&gt;data is considered as a true product&lt;/em&gt;, as opposed to a by-product. The data being discussed is &lt;em&gt;organizational analytical data&lt;/em&gt; generated by several &lt;em&gt;domains&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;The goal is to make this data &lt;em&gt;discoverable&lt;/em&gt;, &lt;em&gt;addressable&lt;/em&gt;, &lt;em&gt;trustworthy&lt;/em&gt;, and &lt;em&gt;secure&lt;/em&gt; so that &lt;em&gt;other domains&lt;/em&gt; can make good use of it. This principle implies that there are data consumers outside of the domain. In other words, each domain team considers the &lt;em&gt;other domains as internal customers of their data, and they take on additional stewardship responsibilities for their data&lt;/em&gt; in order to meet the needs of other domains by providing high-quality data. This principle applies a &lt;em&gt;product-thinking&lt;/em&gt; mindset to analytic data.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;Product-thinking:&lt;/strong&gt; When it comes to identifying solutions, the design team must consider the whole picture in order to make the product effective for the user. Product-thinking places the focus on the product rather than the features.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;an-example-of-data-as-a-product&quot;&gt;An example of data as a product&lt;/h2&gt;
+
+&lt;p&gt;Well, what does data as a product look like? Consider data as a product to be a microservice for analytics or for the data world. Like a microservice, data as a product comprises the &lt;em&gt;code&lt;/em&gt; (to perform data computation), its &lt;em&gt;data&lt;/em&gt; and &lt;em&gt;metadata&lt;/em&gt;, and the &lt;em&gt;infrastructure&lt;/em&gt; required for its operation.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;data-product-vs-data-as-a-product&quot;&gt;Data product vs. data as a product&lt;/h1&gt;
+
+&lt;p&gt;After understanding each of these concepts, it becomes clear that they all substantially depend on meticulously derived data. However, “data product” is a broad term, while “data as a product” is a subset of all possible “data products”. In other words, “data as a product” is formed from the data type “data product”.&lt;/p&gt;
+</description>
+        <pubDate>Tue, 16 Jan 2024 00:00:00 +0530</pubDate>
+        <link>http://localhost:4000/data-management/2024/data-product-vs-data-as-a-product</link>
+        <guid isPermaLink="true">http://localhost:4000/data-management/2024/data-product-vs-data-as-a-product</guid>
+        
+        <category>data-engineering</category>
+        
+        <category>data-management</category>
+        
+        <category>data-product</category>
+        
+        <category>data-as-a-product</category>
+        
+        
+        <category>data-management</category>
+        
+      </item>
+    
+      <item>
+        <title>Data Mesh</title>
+        <description>&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;Writing in progress:&lt;/strong&gt; If you have any suggestions for improving the content or notice any inaccuracies, please email me at &lt;a href=&quot;mailto:hello@senthilnayagan.com&quot;&gt;hello@senthilnayagan.com&lt;/a&gt;. Thanks!&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Before we go any farther in defining &lt;em&gt;data mesh&lt;/em&gt;, let’s first understand why it’s necessary.&lt;/p&gt;
+
+&lt;h3 id=&quot;existing-data-warehouse-or-data-lake-pain-points&quot;&gt;Existing data warehouse or data lake pain points&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;It does not scale well to an increasing variety of data sources (addressed in data lake).&lt;/li&gt;
+  &lt;li&gt;The effort required for central cleaning and quality control increases in lockstep with the growing amount of data.&lt;/li&gt;
+  &lt;li&gt;Existing centralized analytical data repositories, such as data warehouses and data lakes, create distance and anonymity between data producers and data consumers.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;why-are-we-not-yet-ready-to-adopt-data-mesh&quot;&gt;Why are we not yet ready to adopt data mesh?&lt;/h3&gt;
+
+&lt;p&gt;Data mesh is generating both excitement and concern at the moment. Some of us aren’t brave enough to change the current centralized data paradigm because we need a holistic view of data.&lt;/p&gt;
+
+&lt;h1 id=&quot;what-is-data-mesh&quot;&gt;What is data mesh?&lt;/h1&gt;
+
+&lt;p&gt;Data mesh is more than just another version of a centralization-based analytics data architecture. Rather, it is a new approach for acquiring, maintaining, and accessing data for large-scale analytical use cases. The kind of data that we are referring to is analytical data.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;Analytical data:&lt;/strong&gt; It’s a collection of data used for decision-making and research. It is historical data that is curated and optimised for data analysis.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;strong&gt;Zhamak Dehghani&lt;/strong&gt; came up with the term “data mesh” in 2019. It is based on four basic principles that bring together well-known concepts:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Decentralized domain ownership&lt;/li&gt;
+  &lt;li&gt;Data as a product&lt;/li&gt;
+  &lt;li&gt;Self-serve data infrastructure platform&lt;/li&gt;
+  &lt;li&gt;Federated computational data governance&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Data mesh demands a fundamental transformation in our assumptions, design, technical solutions, and social structure of our organisations in terms of how we handle, utilise, and own analytical data. It shifts the organisation’s data ownership model &lt;em&gt;from centralised to decentralised&lt;/em&gt;. Typically, the centralised data model is administered by data platform management specialists. This change returns data ownership and accountability to the business domains from where it originated.&lt;/p&gt;
+
+&lt;h1 id=&quot;data-consolidation&quot;&gt;Data consolidation&lt;/h1&gt;
+
+&lt;p&gt;Enterprises manage a wide variety of data from various sources to run their operations effectively. As enterprises expand, the size of their data stores grows, resulting in data silos inside them. In such enterprises, data is often siloed among departments or domains, making it difficult to get overall visibility while making business-critical decisions.&lt;/p&gt;
+
+&lt;p&gt;One way to get comprehensive visibility of the data is through “data consolidation”. Data consolidation is the act of gathering data from several systems and storing it in a single repository, where it may be utilized as the foundation for business analytics to derive strategic and operational insights. This method is most commonly associated with data warehousing. However, more modern variations on this concept include the data lake, which is best suited for storing unstructured data that presents itself more easily for analysis using AI and ML technologies. Unfortunately, the data consolidation approach is incapable of providing real-time insight into what is going on in the organization.&lt;/p&gt;
+
+&lt;h1 id=&quot;data-federation&quot;&gt;Data federation&lt;/h1&gt;
+
+&lt;p&gt;Data federation takes a different approach. Instead of bringing data from various sources together in one place, federation leaves an organization’s &lt;em&gt;data where it is&lt;/em&gt; but &lt;em&gt;gives a unified view&lt;/em&gt; of all through virtualization.&lt;/p&gt;
+</description>
+        <pubDate>Tue, 16 Jan 2024 00:00:00 +0530</pubDate>
+        <link>http://localhost:4000/data-engineering/2024/data-mesh</link>
+        <guid isPermaLink="true">http://localhost:4000/data-engineering/2024/data-mesh</guid>
+        
+        <category>data-engineering</category>
+        
+        <category>data-mesh</category>
+        
+        <category>data-as-a-product</category>
+        
+        
+        <category>data-engineering</category>
+        
+      </item>
+    
+      <item>
+        <title>Data Catalog</title>
+        <description>&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;Writing in progress:&lt;/strong&gt; If you have any suggestions for improving the content or notice any inaccuracies, please email me at &lt;a href=&quot;mailto:hello@senthilnayagan.com&quot;&gt;hello@senthilnayagan.com&lt;/a&gt;. Thanks!&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h1 id=&quot;what-is-a-data-catalog&quot;&gt;What is a data catalog?&lt;/h1&gt;
+&lt;p&gt;A catalog, in its literal sense, refers to a book or document containing a complete list of things, usually arranged &lt;em&gt;systematically&lt;/em&gt;. A data catalog, in the context of data management, is an organised inventory of all &lt;em&gt;data assets&lt;/em&gt; inside an organisation to help data professionals quickly and easily locate the most relevant data with the aim of gaining business insights.&lt;/p&gt;
+
+&lt;p&gt;With a data catalog, the entire organization is given the ability to see all the data it has. Data catalogs have emerged as a powerful tool for data management and data governance.&lt;/p&gt;
+
+&lt;h2 id=&quot;what-is-data-assets&quot;&gt;What is data assets?&lt;/h2&gt;
+
+&lt;p&gt;The data assets consist of, but are not limited to:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Files and folders&lt;/li&gt;
+  &lt;li&gt;Structured (tabular) data&lt;/li&gt;
+  &lt;li&gt;Unstructured data&lt;/li&gt;
+  &lt;li&gt;Reports and query results&lt;/li&gt;
+  &lt;li&gt;Data visualisations and dashboards&lt;/li&gt;
+  &lt;li&gt;Machine learning models&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;metadata-catalog&quot;&gt;Metadata catalog&lt;/h2&gt;
+&lt;p&gt;A data catalog, at its core, is a &lt;em&gt;collection of metadata&lt;/em&gt; combined with data management (e.g., access permissions) and search tools. We can also call it a &lt;em&gt;metadata catalog&lt;/em&gt;. When the data catalog gathers metadata about a data asset, it obtains information such as the asset’s creation date, owner, column names, schema name, and so on. Put it simply, the metadata summarises or describes the underlying data assets.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;Metadata Indexing:&lt;/strong&gt; The underlying data assets are not indexed by the data catalog. Only the metadata describing these data assets is indexed.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;organizes-metadata&quot;&gt;Organizes metadata&lt;/h2&gt;
+
+&lt;p&gt;We mentioned in the definition of a data catalog that it is &lt;em&gt;an “organized” inventory of all data assets&lt;/em&gt;. When it says “organized,” it signifies that the data catalog’s metadata is well organized based on domains and other parameters.&lt;/p&gt;
+
+&lt;p&gt;A domain is a collection of data assets that are conceptually related. Finance, sales, inventories, and so forth are examples of domains. It is up to the domain owners to specify which data assets get into their domain in a data catalog.&lt;/p&gt;
+
+&lt;h2 id=&quot;data-catalog-doesnt-reveal-actual-data&quot;&gt;Data catalog doesn’t reveal actual data&lt;/h2&gt;
+
+&lt;p&gt;The data catalog only provides an overview at the metadata level and does not expose any actual data. As a result, we can let everyone see everything without worry of exposing confidential or sensitive data.&lt;/p&gt;
+
+&lt;h2 id=&quot;what-kind-of-queries-may-be-sent-to-a-data-catalog&quot;&gt;What kind of queries may be sent to a data catalog?&lt;/h2&gt;
+
+&lt;p&gt;A data catalog should, at the very least, respond to:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Where can I get my data?&lt;/li&gt;
+  &lt;li&gt;Are these data relevant and important?&lt;/li&gt;
+  &lt;li&gt;What do these data indicates?&lt;/li&gt;
+  &lt;li&gt;How can I make use of this data?&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;what-can-be-accomplished-with-a-data-catalog&quot;&gt;What can be accomplished with a data catalog?&lt;/h2&gt;
+
+&lt;p&gt;Generally, the data catalog gives users access to tools that let them accomplish the following:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Search the catalog with flexible searching and filtering options&lt;/li&gt;
+  &lt;li&gt;Data discovery&lt;/li&gt;
+  &lt;li&gt;Data governance in compliance with organisational or governmental rules&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;how-does-a-data-catalog-get-created&quot;&gt;How does a data catalog get created?&lt;/h2&gt;
+
+&lt;p&gt;A data catalog can retrieve metadata from our IT landscape (data sources) using a built-in crawler. Crawler is a pull-based system, however data catalog may also be push-based.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;The data catalogs that crawl the data sources (i.e., that pull, not push) must have a wide variety of connectors to support various data sources.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The IT landscape that is reflected in our data catalog will get business terminology added to it as “tags”. We can also enhance our data catalog with additional information such as roles, supplementary descriptions, classifications, and so on.&lt;/p&gt;
+
+&lt;p&gt;A data catalog has various roles built into it, such as data steward, data owner, and others that all perform certain functions in the data catalog.&lt;/p&gt;
+
+&lt;h2 id=&quot;searchable-data-catalog&quot;&gt;Searchable data catalog&lt;/h2&gt;
+
+&lt;p&gt;Search is one of the most important features of a data catalog. A data catalog enables all data specialists in an organization to search for any data.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;Data discovery:&lt;/strong&gt; Searching and finding relevant data is called data discovery. It determines if the data exists or not, not what is contained inside it.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+</description>
+        <pubDate>Tue, 16 Jan 2024 00:00:00 +0530</pubDate>
+        <link>http://localhost:4000/data-management/2024/data-catalog</link>
+        <guid isPermaLink="true">http://localhost:4000/data-management/2024/data-catalog</guid>
+        
+        <category>data-engineering</category>
+        
+        <category>big-data</category>
+        
+        <category>data-lake</category>
+        
+        <category>data-catalog</category>
+        
+        <category>data-inventory</category>
+        
+        
+        <category>data-management</category>
         
       </item>
     

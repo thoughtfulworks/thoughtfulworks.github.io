@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<link rel="icon" href="/assets/images/logo/logo_square.png">
+
+<title>Introduction to Apache YARN | thoughtful works</title>
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Introduction to Apache YARN | thoughtful works</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Introduction to Apache YARN" />
+<meta name="author" content="senthil" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Introduction to Apache YARN" />
+<meta property="og:description" content="Introduction to Apache YARN" />
+<link rel="canonical" href="http://localhost:4000/apache-yarn/2023/introduction-to-apache-yarn" />
+<meta property="og:url" content="http://localhost:4000/apache-yarn/2023/introduction-to-apache-yarn" />
+<meta property="og:site_name" content="thoughtful works" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-01-01T00:00:00+05:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Introduction to Apache YARN" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"senthil"},"dateModified":"2023-01-01T00:00:00+05:30","datePublished":"2023-01-01T00:00:00+05:30","description":"Introduction to Apache YARN","headline":"Introduction to Apache YARN","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/apache-yarn/2023/introduction-to-apache-yarn"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/images/logo/logo_transparent.png"},"name":"senthil"},"url":"http://localhost:4000/apache-yarn/2023/introduction-to-apache-yarn"}</script>
+<!-- End Jekyll SEO tag -->
+
+    
+<link href="/assets/css/prism.css" rel="stylesheet">
+
+<link href="/assets/css/theme.css" rel="stylesheet">
+
+<script src="/assets/js/jquery.min.js"></script>
+
+<script src="https://kit.fontawesome.com/a04651ccb8.js" crossorigin="anonymous"></script>
+
+</head>
+
+
+
+
+<body class="line-numbers">
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="outer site-nav-main">
+                <div class="inner">
+                    <nav class="site-nav">
+                        <div class="site-nav-left-wrapper">
+                            <div class="site-nav-left">
+                                <!-- Site Logo/Name -->
+                                <a class="navbar-brand" href="/">
+                                    <img src="/assets/images/logo/logo_transparent.png" alt="thoughtful works">
+                                </a>
+                                &nbsp;&nbsp;
+                                <a href="https://twitter.com/thoughtfulwx" target="_blank" style="text-decoration: none;">
+                                    <span style="color:#000000; font-size: 25px;">
+                                        <i class="fa-brands fa-x-twitter"></i>
+                                    </span>
+                                </a>
+                                <a href="https://www.instagram.com/thoughtful.works/" target="_blank" style="text-decoration: none;">
+                                    <span style="color:#000000; font-size: 25px;">
+                                        <i class="fa-brands fa-square-instagram"></i>
+                                    </span>
+                                </a> 
+                                <a href="https://github.com/thoughtfulworks?tab=repositories" target="_blank" style="text-decoration: none;">
+                                    <span style="color:#000000; font-size: 25px;">
+                                        <i class="fa-brands fa-github"></i>
+                                    </span>
+                                </a>
+                                <span style="color: grey; font-size: 25px;"><i class="fa-solid fa-ellipsis-vertical"></i></span>
+                                <script src="/assets/js/lunr.js"></script>
+
+<style>
+    
+</style>
+
+<div class="wrap-search">
+    <div class="d-flex align-items-center ml-auto">
+        <i class="fas fa-search show-search"></i>
+        <form class="bd-search ml-3" onSubmit="return lunr_search(document.getElementById('lunrsearch').value);">
+            <input type="text" class="form-control bigradius text-small launch-modal-search" id="lunrsearch" name="q" maxlength="255" value="" placeholder="Type and enter..."/>
+        </form>
+    </div>
+</div>
+
+<div id="lunrsearchresults">
+    <ul></ul>
+</div>
+
+<script src="/assets/js/lunrsearchengine.js"></script>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </header>
+    </div>
+
+	<!-- Defer loading of font and font awesome -->
+	<noscript id="deferred-styles">
+		<link href="https://fonts.googleapis.com/css?family=Sen:400,700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+	</noscript>
+
+    <!-- Back to top icon/button -->
+    <script src="https://unpkg.com/vanilla-back-to-top@7.2.1/dist/vanilla-back-to-top.min.js"></script>
+    <!-- <script>addBackToTop()</script>     -->
+    <script>addBackToTop({
+        diameter: 50,
+        backgroundColor: 'rgba(22, 22, 23, .8)',
+        textColor: '#fff'
+        })
+    </script>
+
+    <!-- Begin Sidebar Navigation -->
+    <div class="sidebar">    
+    </div>   
+    <div class="nav-icon">
+        <div class="hamburger-bar"></div>
+    </div>
+    <div id="blackover-nav" class="blackover"></div>
+    <nav id="menu">
+        <ul>
+            <h4>Navigation</h4>
+            <li><a href="/tags">Tags</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/authors">Contributors</a></li>
+            <li><a href="/contact">Contact us</a></li>       
+        </ul>   
+    </nav>
+
+    <!-- <script src="/assets/js/lunr.js"></script>
+
+<style>
+    
+</style>
+
+<div class="wrap-search">
+    <div class="d-flex align-items-center ml-auto">
+        <i class="fas fa-search show-search"></i>
+        <form class="bd-search ml-3" onSubmit="return lunr_search(document.getElementById('lunrsearch').value);">
+            <input type="text" class="form-control bigradius text-small launch-modal-search" id="lunrsearch" name="q" maxlength="255" value="" placeholder="Type and enter..."/>
+        </form>
+    </div>
+</div>
+
+<div id="lunrsearchresults">
+    <ul></ul>
+</div>
+
+<script src="/assets/js/lunrsearchengine.js"></script> -->
+    <!-- End Sidebar Navigation -->
+
+    <div class="site-content ">
+
+    <div class="container">
+        <!-- Content -->
+        <div class="main-content">
+            <div class="entry-header">
+    <!-- Kicker -->
+    
+        <!--<h6 class="kicker">Resource Management</h6>-->
+        <span class="kicker">
+            <a href="/categories#resource-management">Resource Management</a>
+        </span>
+    
+
+    <!-- Post Title -->
+    <h1 class="posttitle">Introduction to Apache YARN</h1>
+
+    <!-- Author and Date -->
+    
+    
+        <div class="d-flex align-items-center mt-4" style="font-size: 100%">
+            <div>
+                
+                <img class="author-thumb" src="https://www.gravatar.com/avatar/6fc127cda8cd99830932538a58dc6173?s=250&d=mm&r=x" alt="Senthil Nayagan">
+                
+            </div>            
+            <div>
+                
+                    <!-- <a target="_blank" href="https://www.linkedin.com/in/senthilnayagan" style="color: black; border-bottom: 1px solid blue;"><b>Senthil Nayagan</b></a> -->
+                    <span class="author-name">
+                        <a target="_blank" href="https://www.linkedin.com/in/senthilnayagan">Senthil Nayagan</a>
+                    </span>
+                
+                
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <span class="social-connect-icon">
+                        <a target="_blank" href="https://senthilnayagan.com/">
+                            <i class="fa-solid fa-window-maximize"></i>
+                        </a>
+                    </span> 
+                                     
+                
+                    &nbsp;
+                    <span class="social-connect-icon">
+                        <a target="_blank" href="https://fosstodon.org/@towardsdata">
+                            <i class="fa-brands fa-mastodon"></i>
+                        </a>                         
+                    </span>
+                                
+                
+                    &nbsp;
+                    <span class="social-connect-icon">
+                        <a target="_blank" href="https://twitter.com/SenthilNayagan">
+                            <i class="fa-brands fa-x-twitter"></i>
+                        </a>                         
+                    </span>                    
+                
+                
+                    &nbsp;
+                    <span class="social-connect-icon">
+                        <a target="_blank" href="https://www.instagram.com/senthilnayagan">
+                            <i class="fa-brands fa-square-instagram"></i>
+                        </a>                         
+                    </span>                    
+                                                   
+                <br/> 
+                <span class="post-date-and-mins-read">           
+                    
+                        <i class="fa-regular fa-calendar-days"></i>&nbsp;<time datetime="2023-01-01T00:00:00+05:30">Jan 1, 2023</time>
+                    
+                    
+                    -&nbsp;<i class="fa-solid fa-clock"></i>&nbsp;2 Mins Read
+                </span>
+            </div>            
+        </div>
+    
+</div>
+
+<!-- Adsense under title if enabled from _config.yml (change your pub id and slot) -->
+<!---->
+
+<!-- Tags -->
+<div class="article-post">
+    <ul class="tags">
+        
+        
+        <li>
+            <a class="smoothscroll" href="/tags#apache-yarn">apache-yarn</a>
+        </li>
+        
+        <li>
+            <a class="smoothscroll" href="/tags#distributed-system">distributed-system</a>
+        </li>
+        
+        <li>
+            <a class="smoothscroll" href="/tags#resource-management">resource-management</a>
+        </li>
+        
+    </ul>
+</div>
+
+<!-- Summary -->
+<div class="summary">
+    
+        <p></p>
+        <span style="font-weight: 50;">???.</span>
+    
+    <hr class="grey_line"></hr>
+</div>
+
+<!-- Draft - Shows writing in progress -->
+<div class="draft">
+    
+</div>
+
+<!-- Featured Image -->
+
+
+<!-- Content -->
+<!-- Post, Page Content
+================================================== -->
+<div class="article-post">
+    <!-- Toc if any -->
+    
+    <!---->
+    <div class="toc mt-4 mb-4 lead" style="font-size: 85%">
+        <h5 class="font-weight-bold">Table of contents</h5>
+        <ul>
+  <li><a href="#introduction-to-apache-yarn">Introduction to Apache YARN</a></li>
+  <li><a href="#yarn-architecture">YARN architecture</a>
+    <ul>
+      <li><a href="#resource-manager-rm">Resource Manager (RM)</a>
+        <ul>
+          <li><a href="#scheduler">Scheduler</a></li>
+          <li><a href="#applicationsmanager">ApplicationsManager</a></li>
+        </ul>
+      </li>
+      <li><a href="#applicationmaster-am">ApplicationMaster (AM)</a></li>
+    </ul>
+  </li>
+</ul>
+    </div>
+    
+    <!-- End Toc -->
+    <h1 id="introduction-to-apache-yarn">Introduction to Apache YARN</h1>
+
+<p>The term “YARN” stands for “<strong>Y</strong>et <strong>A</strong>nother <strong>R</strong>esource <strong>N</strong>egotiator.” As the name implies, Apache YARN is a resource manager designed to <em>separate</em> the functions of <em>resource management</em> and <em>job scheduling/monitoring</em> into separate daemons. In other words, YARN separates resource management and processing engine. This not only improves Hadoop, but also makes YARN a standalone component that can be used with other data processing engines like Apache Spark.</p>
+
+<p>Hadoop 2.0 added Apache YARN to its ecosystem to provide a platform for processing data that doesn’t just use MapReduce but can also use other data processing engines. The YARN infrastructure is responsible for providing computational resources such as CPUs and memory that are required to run the various applications. The YARN infrastructure and HDFS are fundamentally separate entities. YARN provides resources for running an application, while HDFS provides storage.</p>
+
+<blockquote>
+  <p><strong>Backward compatibility with Hadoop 1.x:</strong> MapReduce in Hadoop 2 maintains API compatibility with previous stable release (Hadoop 1.x). This means that all MapReduce jobs should still run unchanged on top of YARN with just a recompile.</p>
+</blockquote>
+
+<h1 id="yarn-architecture">YARN architecture</h1>
+
+<p>There are three major components to the YARN architecture:</p>
+
+<ul>
+  <li><strong>Resource Manager (RM)</strong></li>
+  <li><strong>Node Manager (NM)</strong></li>
+  <li><strong>ApplicationMaster (AM)</strong></li>
+</ul>
+
+<h2 id="resource-manager-rm">Resource Manager (RM)</h2>
+
+<p>The ResourceManager, or RM is the master daemon of YARN, which is usually one per cluster. In other words, it’s the master server. RM is responsible for managing the global assignments of resources (CPU and memory) among all the applications. The DataNode’s location and available resources are both known (referred as rack awareness) to the RM.</p>
+
+<p>ResourceManager has two main components:</p>
+
+<ul>
+  <li><strong>Scheduler</strong></li>
+  <li><strong>ApplicationsManager</strong></li>
+</ul>
+
+<h3 id="scheduler">Scheduler</h3>
+
+<p>The Scheduler is responsible for allocating resources to the various running applications, using the standard limitations of capacity, queues, etc. Since it is exclusively dealing with task scheduling, it does not perform any tracking or monitoring of applications. Furthermore, it offers no guarantees about restarting failed tasks either due to application failure or hardware failures. The Scheduler performs its scheduling function based on the resource requirements of the applications.</p>
+
+<p>The Scheduler has a pluggable policy which is responsible for partitioning the cluster resources among the various queues, applications etc. The current schedulers such as the <strong>CapacityScheduler</strong> and the <strong>FairScheduler</strong> would be some examples of plug-ins.</p>
+
+<h3 id="applicationsmanager">ApplicationsManager</h3>
+
+<p>The ApplicationsManager is responsible for accepting job submissions, negotiating the first container for executing the application-specific <strong>ApplicationMaster</strong>, and providing the service for restarting the ApplicationMaster container on failure.</p>
+
+<h2 id="applicationmaster-am">ApplicationMaster (AM)</h2>
+
+<p>Every application has a specific ApplicationMaster associated with it, i.e., one AM is assigned to each application. AM negotiates resources with the Resource Manager and works with the Node Manager. Specifically, the ApplicationMaster has the responsibility of negotiating appropriate resource containers from the Scheduler, tracking their status, and monitoring progress.</p>
+
+
+</div>
+
+<!-- Rating -->
+
+
+<!-- Author Box if enabled from _config.yml -->
+<!-- Author Box -->
+
+
+
+
+<!-- Comments if not disabled with comments: false -->
+<!-- Comments
+================================================== -->
+ 
+<div class="comments mt-5">
+    <button class="btn btn-outline-dark py-3 px-5 d-block w-100 show-comments"><i class="fa fa-comments text-muted"></i> &nbsp; Show comments</button>         
+    <div id="comments">  
+        <h4 class="mb-4">Comments</h4>                 
+            <section class="disqus">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rustinaction'; 
+        var disqus_developer = 0;
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = window.location.protocol + '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</section>
+     
+    <div class="clearfix"></div>              
+    </div>    
+</div>       
+
+
+<!-- Share -->
+<div class="share">
+    <!-- <ul>
+        <li class="ml-1 mr-1">
+            <a href="/" ><i class="fas fa-home"></i></a>
+        </li>
+    </ul>
+    <hr> -->
+    <!---->
+    <span>Share</span>
+    <ul>
+        <li class="ml-1 mr-1">
+            <a target="_blank" href="https://twitter.com/intent/tweet?text=Introduction to Apache YARN&url=http://localhost:4000/apache-yarn/2023/introduction-to-apache-yarn" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                <i class="fa-brands fa-x-twitter"></i>
+            </a>
+        </li>
+        <li class="ml-1 mr-1">
+            <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url=http://localhost:4000/apache-yarn/2023/introduction-to-apache-yarn" onclick="window.open(this.href, 'width=550,height=435');return false;">
+                <i class="fab fa-linkedin-in"></i>
+            </a>
+        </li>
+        <!--<li class="ml-1 mr-1">
+            <a target="_blank" href="http://news.ycombinator.com/submitlink?u=http://localhost:4000/apache-yarn/2023/introduction-to-apache-yarn" onclick="window.open(this.href, 'width=550,height=435');return false;">
+                <i class="fab fa-y-combinator"></i>
+            </a>
+        </li>
+        <li class="ml-1 mr-1">
+            <a target="_blank" href="http://www.reddit.com/submit?url=http://localhost:4000/apache-yarn/2023/introduction-to-apache-yarn&title=Introduction to Apache YARN" onclick="window.open(this.href, 'width=550,height=435');return false;">
+                <i class="fab fa-reddit"></i>
+            </a>
+        </li>-->                 
+        <li class="ml-1 mr-1">
+            <a target="_blank" href="https://api.whatsapp.com/send?text=Introduction to Apache YARN%20http://localhost:4000/apache-yarn/2023/introduction-to-apache-yarn" onclick="window.open(this.href, 'width=550,height=435');return false;">
+                <i class="fab fa-whatsapp"></i>
+            </a>
+        </li>
+        <li class="ml-1 mr-1">
+            <a href="#" onclick="copyToClipboard()">
+                <i class="fas fa-link"></i>
+            </a>
+            <script>
+                function copyToClipboard() { 
+                   window.navigator.clipboard.writeText(`http://localhost:4000/apache-yarn/2023/introduction-to-apache-yarn`);
+                }
+            </script>
+        </li>         
+        <!--
+        
+            <ul>
+                <li>
+                <a class="small" href="#disqus_thread"></a>
+                </li>
+            </ul>
+           
+        -->
+    </ul>
+    <!---->
+</div>
+
+
+<!-- Related Post -->
+<!-- Related Posts
+================================================== -->
+<div class=" related-posts ">  
+
+    
+    <h2 class="text-center mb-4">Explore more like this</h2>
+    
+    
+    <div class="d-flex justify-content-center align-items-center">
+    
+    <!-- Categories -->
+    <!--
+    
+    
+    <a class="smoothscroll badge badge-primary text-capitalize" href="/categories#apache-yarn">apache-yarn</a>                
+    
+    -->
+
+    <!-- Tags -->  
+    
+                    
+    <a class="smoothscroll badge badge-primary text-lowercase" href="/tags#apache-yarn">apache-yarn</a>               
+                    
+    <a class="smoothscroll badge badge-primary text-lowercase" href="/tags#distributed-system">distributed-system</a>               
+                    
+    <a class="smoothscroll badge badge-primary text-lowercase" href="/tags#resource-management">resource-management</a>               
+    
+
+    </div>
+
+    
+    
+    
+    <div class="blog-grid-container">
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+        </div>        
+</div>
+
+<!-- Review with LD-JSON, adapt it for your needs if you like, but make sure you test the generated HTML source code first: 
+https://search.google.com/structured-data/testing-tool/u/0/
+================================================== -->
+
+        </div>
+
+        
+        <!-- Newsletter -->
+        <div class="newsletter text-center">
+            <span class="h4"><!--<img src="/assets/images/logo/logo_transparent.png" class="newsletter-logo" alt="thoughtful works"> &nbsp;-->If you like our posts and don't want to miss any of them, sign up for our newsletter.</span>
+            <form action="https://gmail.us17.list-manage.com/subscribe?u=155954fdd35cc37fcbfab134a&id=acc42a78d4" method="post" name="mc-embedded-subscribe-form" class="wj-contact-form validate" target="_blank" novalidate>
+                <div class="mc-field-group d-inline-flex">
+                <input type="email" placeholder="Your e-mail" name="EMAIL" class="required email" id="mce-EMAIL" autocomplete="on" required>
+                <input type="submit" value="Subscribe" name="subscribe" class="heart">
+                </div>
+            </form>
+        </div>
+        
+        
+    </div>
+
+    <!-- Begin Footer -->
+    <!-- <script>
+        const repoOwner = 'rust-lang';
+        const repoName = 'rust';
+
+        const apiUrlRelease = `https://api.github.com/repos/${repoOwner}/${repoName}/releases/latest`;
+      
+        fetch(apiUrlRelease)
+            .then(response => response.json())
+            .then(data => {
+            document.getElementById('current-release').innerText = `${data.tag_name}`;
+            document.getElementById('release-url').innerHTML = `<a href="${data.html_url}" target="_blank">${data.tag_name}</a>`;
+            })
+            .catch(error => console.error('Error fetching GitHub release information:', error));
+    </script>  -->
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-sm-12 text-center text-lg-left">
+                    Copyright © 2024 <b>thoughtful works</b> | <a href="/privacy-policy.html" target="_blank">Privacy Policy</a> | Made with <b>Jekyll</b> and hosted on <b>GitHub Pages</b> | This website DOES NOT use cookies.
+                </div>
+                <div class="col-md-6 col-sm-12 text-center text-lg-right">    
+                    <!-- <i class="fa-brands fa-rust"></i> <a href=`<span id="release-url"></span>`><span id="current-release"></span></a>&nbsp;<i class="fa-solid fa-tag"></i>&nbsp;(latest) -->
+                    <!-- - <i class="fa-solid fa-star"></i> <span id="repo-stars"></span> -->
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- End Footer -->
+
+    </div> <!-- /.site-content -->
+
+    <!-- Scripts (if you need bootstrap.js, please add it yourself. I didn't use it for performance reasons, it was not needed in this theme) -->
+
+    <script src="/assets/js/prism.js"></script>
+
+    <script src="/assets/js/theme.js"></script>
+
+    
+
+    
+    <script id="dsq-count-scr" src="//rustinaction.disqus.com/count.js"></script>
+    
+</body>
+</html>

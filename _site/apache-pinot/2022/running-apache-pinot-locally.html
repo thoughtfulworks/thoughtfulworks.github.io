@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<link rel="icon" href="/assets/images/logo/logo_square.png">
+
+<title>Running Apache Pinot Locally | thoughtful works</title>
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Running Apache Pinot Locally | thoughtful works</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Running Apache Pinot Locally" />
+<meta name="author" content="senthil" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Apache Pinot can be run in any of the following environments:" />
+<meta property="og:description" content="Apache Pinot can be run in any of the following environments:" />
+<link rel="canonical" href="http://localhost:4000/apache-pinot/2022/running-apache-pinot-locally" />
+<meta property="og:url" content="http://localhost:4000/apache-pinot/2022/running-apache-pinot-locally" />
+<meta property="og:site_name" content="thoughtful works" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-12-07T00:00:00+05:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Running Apache Pinot Locally" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"senthil"},"dateModified":"2022-12-07T00:00:00+05:30","datePublished":"2022-12-07T00:00:00+05:30","description":"Apache Pinot can be run in any of the following environments:","headline":"Running Apache Pinot Locally","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/apache-pinot/2022/running-apache-pinot-locally"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/images/logo/logo_transparent.png"},"name":"senthil"},"url":"http://localhost:4000/apache-pinot/2022/running-apache-pinot-locally"}</script>
+<!-- End Jekyll SEO tag -->
+
+    
+<link href="/assets/css/prism.css" rel="stylesheet">
+
+<link href="/assets/css/theme.css" rel="stylesheet">
+
+<script src="/assets/js/jquery.min.js"></script>
+
+<script src="https://kit.fontawesome.com/a04651ccb8.js" crossorigin="anonymous"></script>
+
+</head>
+
+
+
+
+<body class="line-numbers">
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="outer site-nav-main">
+                <div class="inner">
+                    <nav class="site-nav">
+                        <div class="site-nav-left-wrapper">
+                            <div class="site-nav-left">
+                                <!-- Site Logo/Name -->
+                                <a class="navbar-brand" href="/">
+                                    <img src="/assets/images/logo/logo_transparent.png" alt="thoughtful works">
+                                </a>
+                                &nbsp;&nbsp;
+                                <a href="https://twitter.com/thoughtfulwx" target="_blank" style="text-decoration: none;">
+                                    <span style="color:#000000; font-size: 25px;">
+                                        <i class="fa-brands fa-x-twitter"></i>
+                                    </span>
+                                </a>
+                                <a href="https://www.instagram.com/thoughtful.works/" target="_blank" style="text-decoration: none;">
+                                    <span style="color:#000000; font-size: 25px;">
+                                        <i class="fa-brands fa-square-instagram"></i>
+                                    </span>
+                                </a> 
+                                <a href="https://github.com/thoughtfulworks?tab=repositories" target="_blank" style="text-decoration: none;">
+                                    <span style="color:#000000; font-size: 25px;">
+                                        <i class="fa-brands fa-github"></i>
+                                    </span>
+                                </a>
+                                <span style="color: grey; font-size: 25px;"><i class="fa-solid fa-ellipsis-vertical"></i></span>
+                                <script src="/assets/js/lunr.js"></script>
+
+<style>
+    
+</style>
+
+<div class="wrap-search">
+    <div class="d-flex align-items-center ml-auto">
+        <i class="fas fa-search show-search"></i>
+        <form class="bd-search ml-3" onSubmit="return lunr_search(document.getElementById('lunrsearch').value);">
+            <input type="text" class="form-control bigradius text-small launch-modal-search" id="lunrsearch" name="q" maxlength="255" value="" placeholder="Type and enter..."/>
+        </form>
+    </div>
+</div>
+
+<div id="lunrsearchresults">
+    <ul></ul>
+</div>
+
+<script src="/assets/js/lunrsearchengine.js"></script>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </header>
+    </div>
+
+	<!-- Defer loading of font and font awesome -->
+	<noscript id="deferred-styles">
+		<link href="https://fonts.googleapis.com/css?family=Sen:400,700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+	</noscript>
+
+    <!-- Back to top icon/button -->
+    <script src="https://unpkg.com/vanilla-back-to-top@7.2.1/dist/vanilla-back-to-top.min.js"></script>
+    <!-- <script>addBackToTop()</script>     -->
+    <script>addBackToTop({
+        diameter: 50,
+        backgroundColor: 'rgba(22, 22, 23, .8)',
+        textColor: '#fff'
+        })
+    </script>
+
+    <!-- Begin Sidebar Navigation -->
+    <div class="sidebar">    
+    </div>   
+    <div class="nav-icon">
+        <div class="hamburger-bar"></div>
+    </div>
+    <div id="blackover-nav" class="blackover"></div>
+    <nav id="menu">
+        <ul>
+            <h4>Navigation</h4>
+            <li><a href="/tags">Tags</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/authors">Contributors</a></li>
+            <li><a href="/contact">Contact us</a></li>       
+        </ul>   
+    </nav>
+
+    <!-- <script src="/assets/js/lunr.js"></script>
+
+<style>
+    
+</style>
+
+<div class="wrap-search">
+    <div class="d-flex align-items-center ml-auto">
+        <i class="fas fa-search show-search"></i>
+        <form class="bd-search ml-3" onSubmit="return lunr_search(document.getElementById('lunrsearch').value);">
+            <input type="text" class="form-control bigradius text-small launch-modal-search" id="lunrsearch" name="q" maxlength="255" value="" placeholder="Type and enter..."/>
+        </form>
+    </div>
+</div>
+
+<div id="lunrsearchresults">
+    <ul></ul>
+</div>
+
+<script src="/assets/js/lunrsearchengine.js"></script> -->
+    <!-- End Sidebar Navigation -->
+
+    <div class="site-content ">
+
+    <div class="container">
+        <!-- Content -->
+        <div class="main-content">
+            <div class="entry-header">
+    <!-- Kicker -->
+    
+        <!--<h6 class="kicker">APACHE PINOT</h6>-->
+        <span class="kicker">
+            <a href="/categories#apache-pinot">APACHE PINOT</a>
+        </span>
+    
+
+    <!-- Post Title -->
+    <h1 class="posttitle">Running Apache Pinot Locally</h1>
+
+    <!-- Author and Date -->
+    
+    
+        <div class="d-flex align-items-center mt-4" style="font-size: 100%">
+            <div>
+                
+                <img class="author-thumb" src="https://www.gravatar.com/avatar/6fc127cda8cd99830932538a58dc6173?s=250&d=mm&r=x" alt="Senthil Nayagan">
+                
+            </div>            
+            <div>
+                
+                    <!-- <a target="_blank" href="https://www.linkedin.com/in/senthilnayagan" style="color: black; border-bottom: 1px solid blue;"><b>Senthil Nayagan</b></a> -->
+                    <span class="author-name">
+                        <a target="_blank" href="https://www.linkedin.com/in/senthilnayagan">Senthil Nayagan</a>
+                    </span>
+                
+                
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <span class="social-connect-icon">
+                        <a target="_blank" href="https://senthilnayagan.com/">
+                            <i class="fa-solid fa-window-maximize"></i>
+                        </a>
+                    </span> 
+                                     
+                
+                    &nbsp;
+                    <span class="social-connect-icon">
+                        <a target="_blank" href="https://fosstodon.org/@towardsdata">
+                            <i class="fa-brands fa-mastodon"></i>
+                        </a>                         
+                    </span>
+                                
+                
+                    &nbsp;
+                    <span class="social-connect-icon">
+                        <a target="_blank" href="https://twitter.com/SenthilNayagan">
+                            <i class="fa-brands fa-x-twitter"></i>
+                        </a>                         
+                    </span>                    
+                
+                
+                    &nbsp;
+                    <span class="social-connect-icon">
+                        <a target="_blank" href="https://www.instagram.com/senthilnayagan">
+                            <i class="fa-brands fa-square-instagram"></i>
+                        </a>                         
+                    </span>                    
+                                                   
+                <br/> 
+                <span class="post-date-and-mins-read">           
+                    
+                        <i class="fa-regular fa-calendar-days"></i>&nbsp;<time datetime="2022-12-07T00:00:00+05:30">Dec 7, 2022</time>
+                    
+                    
+                    -&nbsp;<i class="fa-solid fa-clock"></i>&nbsp;8 Mins Read
+                </span>
+            </div>            
+        </div>
+    
+</div>
+
+<!-- Adsense under title if enabled from _config.yml (change your pub id and slot) -->
+<!---->
+
+<!-- Tags -->
+<div class="article-post">
+    <ul class="tags">
+        
+        
+        <li>
+            <a class="smoothscroll" href="/tags#apache-pinot">apache-pinot</a>
+        </li>
+        
+        <li>
+            <a class="smoothscroll" href="/tags#olap">olap</a>
+        </li>
+        
+        <li>
+            <a class="smoothscroll" href="/tags#olap-datastore">olap-datastore</a>
+        </li>
+        
+        <li>
+            <a class="smoothscroll" href="/tags#pinot">pinot</a>
+        </li>
+        
+    </ul>
+</div>
+
+<!-- Summary -->
+<div class="summary">
+    
+    <hr class="grey_line"></hr>
+</div>
+
+<!-- Draft - Shows writing in progress -->
+<div class="draft">
+    
+</div>
+
+<!-- Featured Image -->
+
+
+<!-- Content -->
+<!-- Post, Page Content
+================================================== -->
+<div class="article-post">
+    <!-- Toc if any -->
+    
+    <!---->
+    <div class="toc mt-4 mb-4 lead" style="font-size: 85%">
+        <h5 class="font-weight-bold">Table of contents</h5>
+        <ul>
+  <li><a href="#download-apache-pinot">Download Apache Pinot</a></li>
+  <li><a href="#launching-apache-pinot">Launching Apache Pinot</a>
+    <ul>
+      <li><a href="#launching-apache-pinot-using-quick-start">Launching Apache Pinot using Quick Start</a></li>
+      <li><a href="#launching-all-the-components-individually">Launching all the components individually</a>
+        <ul>
+          <li><a href="#prerequisites">Prerequisites</a></li>
+          <li><a href="#starting-zookeeper">Starting ZooKeeper</a></li>
+          <li><a href="#starting-pinot-controller">Starting Pinot Controller</a>
+            <ul>
+              <li><a href="#controller-1-on-port-9001">Controller 1 on port 9001</a></li>
+              <li><a href="#controller-2-on-port-9002">Controller 2 on port 9002</a></li>
+            </ul>
+          </li>
+          <li><a href="#starting-pinot-broker">Starting Pinot Broker</a></li>
+          <li><a href="#starting-pinot-servers">Starting Pinot Servers</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+    </div>
+    
+    <!-- End Toc -->
+    <p>Apache Pinot can be run in any of the following environments:</p>
+
+<ul>
+  <li><strong>locally</strong> on our own computer</li>
+  <li>in <strong>Docker</strong></li>
+  <li>in <strong>Kubernetes</strong></li>
+</ul>
+
+<p>Here, we’ll discuss about how to deploy and run Apache Pinot <em>locally</em> on our computer.</p>
+
+<h1 id="download-apache-pinot">Download Apache Pinot</h1>
+
+<p>Let’s start by getting the Apache Pinot distribution. We can either download a packaged release or build a distribution from the source code.</p>
+
+<blockquote>
+  <p><strong>Prerequisites:</strong><br />Install JDK11 or higher (JDK16 is not yet supported).<br />
+For JDK 8 support use Pinot 0.7.1 or compile from the source code.</p>
+</blockquote>
+
+<p>Here, we’ll download a packaged release.</p>
+
+<p>Download the latest binary release from <a href="https://pinot.apache.org/download/" target="_blank">Apache Pinot</a>, or use the following command. At the time this blog was written, 0.11.0 was the most recent version of Pinot.</p>
+
+<pre><code class="language-shell">PINOT_VERSION=0.11.0 #set to the Pinot version you want to use
+
+wget https://downloads.apache.org/pinot/apache-pinot-$PINOT_VERSION/apache-pinot-$PINOT_VERSION-bin.tar.gz
+</code></pre>
+
+<p>Once we have the tar file downloaded, untar it as shown below:</p>
+
+<pre><code class="language-bash"># untar it
+tar -zxvf apache-pinot-$PINOT_VERSION-bin.tar.gz
+
+# navigate to directory containing Pinot binaries and launch scripts
+cd apache-pinot-$PINOT_VERSION-bin
+</code></pre>
+
+<h1 id="launching-apache-pinot">Launching Apache Pinot</h1>
+
+<p>We can launch Apache Pinot either by using <strong>Quick Start</strong> or by launching all of its components <strong>individually</strong>, one at a time.</p>
+
+<blockquote>
+  <p><strong>Pinot launch script:</strong> The <code>pinot-admin.sh</code> launch script can be found in the bin directory of Pinot. It can be used to start different Pinot components. If we run it without any arguments, it will show us all the commands we can use.</p>
+</blockquote>
+
+<h2 id="launching-apache-pinot-using-quick-start">Launching Apache Pinot using Quick Start</h2>
+
+<p>Pinot comes with <code>QuickStart</code> commands that let us run all of its components in a <em>single process</em> and import pre-built data sets. If you are new to Pinot, these QuickStarts are a good place to start.</p>
+
+<p>The following quick-start launches Apache Pinot with a set of sample data, schemas, and table configurations already loaded into it. </p>
+
+<pre><code class="language-bash">./bin/pinot-admin.sh QuickStart
+</code></pre>
+
+<p>The above quick-start command does the following:</p>
+
+<ul>
+  <li>Starts Apache ZooKeeper</li>
+  <li>Starts Pinot Controller</li>
+  <li>Starts Pinot Broker</li>
+  <li>Starts Pinot Server</li>
+  <li>Creates the <code>baseballStats</code> table (comes with pre-loaded dataset)</li>
+  <li>Launches a standalone data ingestion (batch processing) job that builds one segment for a given CSV data file for the <code>baseballStats</code> table and pushes the segment to the Pinot Controller</li>
+  <li>Issues sample queries to Pinot</li>
+</ul>
+
+<blockquote>
+  <p><strong>macOS Users:</strong> AirPlay receiver allows nearby Apple devices to send video and audio content to our Mac with AirPlay. By default, the Airplay receiver server runs on <em>port 7000</em>, which is also the port used by the Pinot server in the Quick Start. So we may get an address-bind exception when running quick-start commands. If we turn off the AirPlay receiver server and try again, this error message should go away.</p>
+</blockquote>
+
+<p>Here, we will focus more on launching all the required components individually, one at a time. To know more about Quick Start commands, refer <a href="https://docs.pinot.apache.org/basics/getting-started/quick-start" target="_blank">here</a>.</p>
+
+<h2 id="launching-all-the-components-individually">Launching all the components individually</h2>
+
+<p>If we want to deal with bigger sets of data (more than a few MB), we can start each component separately.</p>
+
+<h3 id="prerequisites">Prerequisites</h3>
+
+<p>Before we start, make sure we’ve done everything on the following list:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Step</th>
+      <th>Link</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>Download <strong>sample data</strong> and configs</td>
+      <td><a href="https://github.com/npawar/pinot-tutorial">https://github.com/npawar/pinot-tutorial</a></td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Download latest <strong>Apache Pinot</strong> release binary</td>
+      <td><a href="https://pinot.apache.org">https://pinot.apache.org</a></td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Install <strong>Java 9</strong> or higher</td>
+      <td><a href="https://openjdk.java.net">https://openjdk.java.net</a></td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Install <strong>Apache Maven</strong><sup>*</sup> 3.5.0 or higher</td>
+      <td><a href="https://maven.apache.org">https://maven.apache.org</a></td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>Download <strong>ZooInspector</strong></td>
+      <td><a href="https://github.com/zzhang5/zooinspector">https://github.com/zzhang5/zooinspector</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><sup>*</sup><small> Apache Maven is required to build and package ZooInspector tool.</small></p>
+
+<blockquote>
+  <p><strong>ZooInspector</strong><br />ZooInspector is a UI we can use for inspecting our <em>znode</em> structure. Every node in a ZooKeeper tree is refered to as a <strong>znode</strong>. Each time a znode’s data changes, the version number increases. Znodes are the main enitity that a programmer access. Make sure to click the refresh button on the ZooInspector tool to see any changes.<br /><br />Build and run ZooInspector:<br /><code>git clone https://github.com/zzhang5/zooinspector.git</code><br /><code>cd zooinspector/</code><br /><code>mvn clean package</code><br /><br /><code>chmod +x target/zooinspector-pkg/bin/zooinspector.sh</code><br /><code>target/zooinspector-pkg/bin/zooinspector.sh</code></p>
+</blockquote>
+
+<p>We’ll put together a Pinot cluster with the following components:</p>
+
+<ul>
+  <li>1 ZooKeeper</li>
+  <li>2 Pinot Controllers</li>
+  <li>2 Pinot Brokers</li>
+  <li>2 Pinot Servers</li>
+</ul>
+
+<p>We will do the following activities in the order they appear:</p>
+
+<ol>
+  <li>Starting ZooKeeper</li>
+  <li>Starting Pinot Controller</li>
+  <li>Starting Pinot Broker</li>
+  <li>Starting Pinot Server</li>
+</ol>
+
+<h3 id="starting-zookeeper">Starting ZooKeeper</h3>
+
+<p>We will start the ZooKeeper using the pinot-admin script (<code>pinot-admin.sh</code>), which can be found in the Apache Pinot installed directory. We uses the default ZooKeeper port, <code>2181</code>.</p>
+
+<pre><code class="language-bash">./bin/pinot-admin.sh StartZookeeper -zkPort 2181
+</code></pre>
+
+<p>We can use ZooInspector tool to browse the ZooKeeper instance.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"><img src="/assets/images/posts/zooinspector-zookeeper-instance.png" alt="ZooInspector Tool: Shows ZooKeeper instance" /></th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><sup><em>Figure 1: ZooInspector Tool: Shows ZooKeeper instance.</em></sup></td>
+      <td><br /><br /></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="starting-pinot-controller">Starting Pinot Controller</h3>
+
+<p>Pinot Controller hosts <strong>Apache Helix</strong>, and together they are responsible for managing all the other components of the cluster. Controller’s default port is <code>9000</code>.</p>
+
+<h4 id="controller-1-on-port-9001">Controller 1 on port 9001</h4>
+
+<pre><code class="language-bash">./bin/pinot-admin.sh StartController \
+    -zkAddress localhost:2181 \
+    -clusterName PinotCluster \
+    -controllerPort 9001
+</code></pre>
+
+<h4 id="controller-2-on-port-9002">Controller 2 on port 9002</h4>
+
+<pre><code class="language-bash">./bin/pinot-admin.sh StartController \
+    -zkAddress localhost:2181 \
+    -clusterName PinotCluster \
+    -controllerPort 9002
+</code></pre>
+
+<p>In the above commands, two Pinot controllers are started on ports <code>9001</code> and <code>9002</code>. We can give any name to a cluster using the <code>-clusterName</code> option. The controller will communicate to ZooKeeper when it starts up to register itself. Also, it will open port 9001 so that we can use its user interface (<code>localhost:9001</code>).</p>
+
+<p>Let’s look at the <strong>ZooInspector</strong> tool to see what changes show up after starting the Pinot controller. We have a new cluster called <em>PinotCluster</em> which has cluster-level config properties.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"><img src="/assets/images/posts/zooinspector-controller.png" alt="ZooInspector Tool: New Cluster, PinotCluster is showing up" /></th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><sup><em>Figure 2: ZooInspector Tool: New Cluster, PinotCluster is showing up.</em></sup></td>
+      <td><br /><br /></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>We have a participants directory that lists all of the cluster participants. So far, we only have the controllers (two controllers) that we just started.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"><img src="/assets/images/posts/zooinspector-2-controllers.png" alt="ZooInspector Tool: Shows two controllers under participant directory" /></th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><sup><em>Figure 3: ZooInspector Tool: Shows two controllers under participant directory.</em></sup></td>
+      <td><br /><br /></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>In the controller directory, we can see a <strong>leader</strong> node, which tells us which of the two controllers is the lead controller. The lead controller has additional responsibilities, such as running some periodic maintenance and cleanup tasks in the background.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"><img src="/assets/images/posts/zooinspector-2nd-controller.png" alt="ZooInspector Tool: Shows two controllers with a leader controller node" /></th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><sup><em>Figure 4: ZooInspector Tool: Shows two controllers with a leader controller node.</em></sup></td>
+      <td><br /><br /></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Let’s see what else our controller can do. Type <code>localhost:9001</code> into the web browser’s address bar. This opens the dashboard for the Pinot cluster, which is shown below:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"><img src="/assets/images/posts/apache-pinot-cluster-dashboard.png" alt="Apache Pinot - Cluster Dashboard" /></th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><sup><em>Figure 5: Apache Pinot - Cluster Dashboard.</em></sup></td>
+      <td><br /><br /></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>This dashboard has the following options:</p>
+
+<ul>
+  <li><strong>Cluster Manager</strong></li>
+  <li><strong>Query Console</strong> - lets us run queries on the tables in our cluster.</li>
+  <li><strong>ZooKeeper Browser</strong></li>
+  <li><strong>Swagger REST API</strong> - has admin endpoints to operate and manage the cluster. Here we can perform read/write/delete operations on other entities of a cluster.</li>
+</ul>
+
+<p>Below is the Swagger REST API page:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"><img src="/assets/images/posts/swagger-rest-api-screen.png" alt="Swagger REST API Page" /></th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><sup><em>Figure 6: Swagger REST API Page.</em></sup></td>
+      <td><br /><br /></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="starting-pinot-broker">Starting Pinot Broker</h3>
+
+<p>Brokers handle Pinot queries. They accept queries from clients and forward them to the right servers (data servers). They gather results from the servers and combine them into a single response to send back to the client.</p>
+
+<p>Use the following command to start a Broker:</p>
+
+<pre><code class="language-bash">./bin/pinot-admin.sh StartBroker \
+    -zkAddress localhost:2181 \
+    -clusterName PinotCluster \
+    -brokerPort 7001
+</code></pre>
+
+<p>Let’s also start another Broker using a different port, <code>7002</code>:</p>
+
+<pre><code class="language-bash">./bin/pinot-admin.sh StartBroker \
+    -zkAddress localhost:2181 \
+    -clusterName PinotCluster \
+    -brokerPort 7002
+</code></pre>
+
+<p>Let’s look at the ZooInspector tool again. Now, it shows two instances of the broker:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"><img src="/assets/images/posts/zooinspector-brokers.png" alt="ZooInspector with Brokers" /></th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><sup><em>Figure 7: ZooInspector with Brokers.</em></sup></td>
+      <td><br /><br /></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="starting-pinot-servers">Starting Pinot Servers</h3>
+
+<p>Use the following commands to start two Pinot servers:</p>
+
+<pre><code class="language-bash">./bin/pinot-admin.sh StartServer \
+    -zkAddress localhost:2181 \
+    -clusterName PinotCluster \
+    -serverPort 8001 -serverAdminPort 8011
+</code></pre>
+
+<pre><code class="language-bash">./bin/pinot-admin.sh StartServer \
+    -zkAddress localhost:2181 \
+    -clusterName PinotCluster \
+    -serverPort 8002 -serverAdminPort 8012
+</code></pre>
+
+<p>ZooInspector shows all services now:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"><img src="/assets/images/posts/zooinspector-all-services.png" alt="ZooInspector with all services" /></th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><sup><em>Figure 8: ZooInspector with all services.</em></sup></td>
+      <td><br /><br /></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Kudos! The cluster has been set up now. Use Zooinspector to explore the cluster. Explore the Admin endpoints using Rest API on the controller <a href="http://localhost:9001" target="_blank">http://localhost:9001</a>.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"><img src="/assets/images/posts/pinot-dashboard-with-all-services.png" alt="Pinot Dashboard with all services" /></th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><sup><em>Figure 9: Pinot Dashboard with all services.</em></sup></td>
+      <td><br /><br /></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>From the dashboard, we can see that there are two controllers, two brokers, two servers, and one tenant. The Pinot cluster is now up and running.</p>
+
+<blockquote>
+  <p><strong>Tenant</strong> is a logical grouping of nodes (servers and brokers) with the same Helix tag. In our cluster, we have a default tenant called “default tenant.” When nodes are created in the cluster, they automatically get added to the default tenant.</p>
+</blockquote>
+
+</div>
+
+<!-- Rating -->
+
+
+<!-- Author Box if enabled from _config.yml -->
+<!-- Author Box -->
+
+
+
+
+<!-- Comments if not disabled with comments: false -->
+<!-- Comments
+================================================== -->
+ 
+<div class="comments mt-5">
+    <button class="btn btn-outline-dark py-3 px-5 d-block w-100 show-comments"><i class="fa fa-comments text-muted"></i> &nbsp; Show comments</button>         
+    <div id="comments">  
+        <h4 class="mb-4">Comments</h4>                 
+            <section class="disqus">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rustinaction'; 
+        var disqus_developer = 0;
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = window.location.protocol + '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</section>
+     
+    <div class="clearfix"></div>              
+    </div>    
+</div>       
+
+
+<!-- Share -->
+<div class="share">
+    <!-- <ul>
+        <li class="ml-1 mr-1">
+            <a href="/" ><i class="fas fa-home"></i></a>
+        </li>
+    </ul>
+    <hr> -->
+    <!---->
+    <span>Share</span>
+    <ul>
+        <li class="ml-1 mr-1">
+            <a target="_blank" href="https://twitter.com/intent/tweet?text=Running Apache Pinot Locally&url=http://localhost:4000/apache-pinot/2022/running-apache-pinot-locally" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                <i class="fa-brands fa-x-twitter"></i>
+            </a>
+        </li>
+        <li class="ml-1 mr-1">
+            <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url=http://localhost:4000/apache-pinot/2022/running-apache-pinot-locally" onclick="window.open(this.href, 'width=550,height=435');return false;">
+                <i class="fab fa-linkedin-in"></i>
+            </a>
+        </li>
+        <!--<li class="ml-1 mr-1">
+            <a target="_blank" href="http://news.ycombinator.com/submitlink?u=http://localhost:4000/apache-pinot/2022/running-apache-pinot-locally" onclick="window.open(this.href, 'width=550,height=435');return false;">
+                <i class="fab fa-y-combinator"></i>
+            </a>
+        </li>
+        <li class="ml-1 mr-1">
+            <a target="_blank" href="http://www.reddit.com/submit?url=http://localhost:4000/apache-pinot/2022/running-apache-pinot-locally&title=Running Apache Pinot Locally" onclick="window.open(this.href, 'width=550,height=435');return false;">
+                <i class="fab fa-reddit"></i>
+            </a>
+        </li>-->                 
+        <li class="ml-1 mr-1">
+            <a target="_blank" href="https://api.whatsapp.com/send?text=Running Apache Pinot Locally%20http://localhost:4000/apache-pinot/2022/running-apache-pinot-locally" onclick="window.open(this.href, 'width=550,height=435');return false;">
+                <i class="fab fa-whatsapp"></i>
+            </a>
+        </li>
+        <li class="ml-1 mr-1">
+            <a href="#" onclick="copyToClipboard()">
+                <i class="fas fa-link"></i>
+            </a>
+            <script>
+                function copyToClipboard() { 
+                   window.navigator.clipboard.writeText(`http://localhost:4000/apache-pinot/2022/running-apache-pinot-locally`);
+                }
+            </script>
+        </li>         
+        <!--
+        
+            <ul>
+                <li>
+                <a class="small" href="#disqus_thread"></a>
+                </li>
+            </ul>
+           
+        -->
+    </ul>
+    <!---->
+</div>
+
+
+<!-- Related Post -->
+<!-- Related Posts
+================================================== -->
+<div class=" related-posts ">  
+
+    
+    <h2 class="text-center mb-4">Explore more like this</h2>
+    
+    
+    <div class="d-flex justify-content-center align-items-center">
+    
+    <!-- Categories -->
+    <!--
+    
+    
+    <a class="smoothscroll badge badge-primary text-capitalize" href="/categories#apache-pinot">apache-pinot</a>                
+    
+    -->
+
+    <!-- Tags -->  
+    
+                    
+    <a class="smoothscroll badge badge-primary text-lowercase" href="/tags#apache-pinot">apache-pinot</a>               
+                    
+    <a class="smoothscroll badge badge-primary text-lowercase" href="/tags#olap">olap</a>               
+                    
+    <a class="smoothscroll badge badge-primary text-lowercase" href="/tags#olap-datastore">olap-datastore</a>               
+                    
+    <a class="smoothscroll badge badge-primary text-lowercase" href="/tags#pinot">pinot</a>               
+    
+
+    </div>
+
+    
+    
+    
+    <div class="blog-grid-container">
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+                <!-- begin post -->
+
+
+<div class="blog-grid-item">
+    <div class="card h-100">
+        <div class="maxthumb">
+            <a href="/apache-pinot/2024/introduction-to-apache-pinot">
+                
+                    
+                        <img class="img-thumb" src="/assets/images/posts-cover-images/presto-pinot-kafka.png" alt="Apache Pinot joins hands with Kafka and Presto to provide low-latency, high-throughput user-facing analytics"> 
+                    
+                
+            </a>
+        </div>
+        <div class="card-body">
+            <h2 class="card-title">
+                <a class="text-dark" href="/apache-pinot/2024/introduction-to-apache-pinot">Apache Pinot joins hands with Kafka and Presto to provide low-latency, high-throughput user-facing analytics</a>
+                
+            </h2>
+            <span class="card-text">Apache Pinot is a real-time, distributed OLAP datastore that was built for low-latency, high-throughput analytics, making it perfect for user-facing analytical workloads. Pinot joins hands with Kafka and Presto to provide user-facing analytics.</span>
+        </div>
+        <!-- 
+            <div class="card-footer d-flex align-items-center mt-0" style="font-size: 85%">
+                <div>
+                    <img class="author-thumb" src="https://www.gravatar.com/avatar/6fc127cda8cd99830932538a58dc6173?s=250&d=mm&r=x" alt="Senthil Nayagan">
+                </div>
+                <div class="post-name">
+                    <span class="author-name">
+                        <b>Senthil Nayagan</b>
+                    </span>
+                    <br/>
+                    <span style="color: rgba(23, 24, 30, .5);"><i class="fa-regular fa-calendar-days"></i>&nbsp;Jan 16, 2024 - <i class="fa-solid fa-clock"></i><span class="reading-time">
+  
+  
+    17 Mins Read
+  
+</span></span>
+                </div>
+            </div>
+         -->
+        <div class="clearfix"></div>
+
+        <!-- Tags -->
+        <div class="card-footer">
+            <ul class="tags">
+                
+                
+                <li>
+                    <a class="smoothscroll" href="/tags#apache-pinot">apache-pinot</a>
+                </li>
+                
+                <li>
+                    <a class="smoothscroll" href="/tags#olap">olap</a>
+                </li>
+                
+                <li>
+                    <a class="smoothscroll" href="/tags#olap-datastore">olap-datastore</a>
+                </li>
+                
+                <li>
+                    <a class="smoothscroll" href="/tags#pinot">pinot</a>
+                </li>
+                
+            </ul>                    
+        </div>        
+    </div>
+</div>
+<!-- end post -->
+                
+                
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+        </div>        
+</div>
+
+<!-- Review with LD-JSON, adapt it for your needs if you like, but make sure you test the generated HTML source code first: 
+https://search.google.com/structured-data/testing-tool/u/0/
+================================================== -->
+
+        </div>
+
+        
+        <!-- Newsletter -->
+        <div class="newsletter text-center">
+            <span class="h4"><!--<img src="/assets/images/logo/logo_transparent.png" class="newsletter-logo" alt="thoughtful works"> &nbsp;-->If you like our posts and don't want to miss any of them, sign up for our newsletter.</span>
+            <form action="https://gmail.us17.list-manage.com/subscribe?u=155954fdd35cc37fcbfab134a&id=acc42a78d4" method="post" name="mc-embedded-subscribe-form" class="wj-contact-form validate" target="_blank" novalidate>
+                <div class="mc-field-group d-inline-flex">
+                <input type="email" placeholder="Your e-mail" name="EMAIL" class="required email" id="mce-EMAIL" autocomplete="on" required>
+                <input type="submit" value="Subscribe" name="subscribe" class="heart">
+                </div>
+            </form>
+        </div>
+        
+        
+    </div>
+
+    <!-- Begin Footer -->
+    <!-- <script>
+        const repoOwner = 'rust-lang';
+        const repoName = 'rust';
+
+        const apiUrlRelease = `https://api.github.com/repos/${repoOwner}/${repoName}/releases/latest`;
+      
+        fetch(apiUrlRelease)
+            .then(response => response.json())
+            .then(data => {
+            document.getElementById('current-release').innerText = `${data.tag_name}`;
+            document.getElementById('release-url').innerHTML = `<a href="${data.html_url}" target="_blank">${data.tag_name}</a>`;
+            })
+            .catch(error => console.error('Error fetching GitHub release information:', error));
+    </script>  -->
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-sm-12 text-center text-lg-left">
+                    Copyright © 2024 <b>thoughtful works</b> | <a href="/privacy-policy.html" target="_blank">Privacy Policy</a> | Made with <b>Jekyll</b> and hosted on <b>GitHub Pages</b> | This website DOES NOT use cookies.
+                </div>
+                <div class="col-md-6 col-sm-12 text-center text-lg-right">    
+                    <!-- <i class="fa-brands fa-rust"></i> <a href=`<span id="release-url"></span>`><span id="current-release"></span></a>&nbsp;<i class="fa-solid fa-tag"></i>&nbsp;(latest) -->
+                    <!-- - <i class="fa-solid fa-star"></i> <span id="repo-stars"></span> -->
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- End Footer -->
+
+    </div> <!-- /.site-content -->
+
+    <!-- Scripts (if you need bootstrap.js, please add it yourself. I didn't use it for performance reasons, it was not needed in this theme) -->
+
+    <script src="/assets/js/prism.js"></script>
+
+    <script src="/assets/js/theme.js"></script>
+
+    
+
+    
+    <script id="dsq-count-scr" src="//rustinaction.disqus.com/count.js"></script>
+    
+</body>
+</html>

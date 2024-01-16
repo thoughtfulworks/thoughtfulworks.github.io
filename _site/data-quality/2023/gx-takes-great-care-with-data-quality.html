@@ -1,0 +1,1687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<link rel="icon" href="/assets/images/logo/logo_square.png">
+
+<title>Great Expectations takes great care of your data quality | thoughtful works</title>
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Great Expectations takes great care of your data quality | thoughtful works</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Great Expectations takes great care of your data quality" />
+<meta name="author" content="senthil" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Data quality" />
+<meta property="og:description" content="Data quality" />
+<link rel="canonical" href="http://localhost:4000/data-quality/2023/gx-takes-great-care-with-data-quality" />
+<meta property="og:url" content="http://localhost:4000/data-quality/2023/gx-takes-great-care-with-data-quality" />
+<meta property="og:site_name" content="thoughtful works" />
+<meta property="og:image" content="http://localhost:4000/assets/images/posts-cover-images/data-quality-oss-tools.jpg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-04-01T00:00:00+05:30" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="http://localhost:4000/assets/images/posts-cover-images/data-quality-oss-tools.jpg" />
+<meta property="twitter:title" content="Great Expectations takes great care of your data quality" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"senthil"},"dateModified":"2023-04-01T00:00:00+05:30","datePublished":"2023-04-01T00:00:00+05:30","description":"Data quality","headline":"Great Expectations takes great care of your data quality","image":"http://localhost:4000/assets/images/posts-cover-images/data-quality-oss-tools.jpg","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/data-quality/2023/gx-takes-great-care-with-data-quality"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/images/logo/logo_transparent.png"},"name":"senthil"},"url":"http://localhost:4000/data-quality/2023/gx-takes-great-care-with-data-quality"}</script>
+<!-- End Jekyll SEO tag -->
+
+    
+<link href="/assets/css/prism.css" rel="stylesheet">
+
+<link href="/assets/css/theme.css" rel="stylesheet">
+
+<script src="/assets/js/jquery.min.js"></script>
+
+<script src="https://kit.fontawesome.com/a04651ccb8.js" crossorigin="anonymous"></script>
+
+</head>
+
+
+
+
+<body class="line-numbers">
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="outer site-nav-main">
+                <div class="inner">
+                    <nav class="site-nav">
+                        <div class="site-nav-left-wrapper">
+                            <div class="site-nav-left">
+                                <!-- Site Logo/Name -->
+                                <a class="navbar-brand" href="/">
+                                    <img src="/assets/images/logo/logo_transparent.png" alt="thoughtful works">
+                                </a>
+                                &nbsp;&nbsp;
+                                <a href="https://twitter.com/thoughtfulwx" target="_blank" style="text-decoration: none;">
+                                    <span style="color:#000000; font-size: 25px;">
+                                        <i class="fa-brands fa-x-twitter"></i>
+                                    </span>
+                                </a>
+                                <a href="https://www.instagram.com/thoughtful.works/" target="_blank" style="text-decoration: none;">
+                                    <span style="color:#000000; font-size: 25px;">
+                                        <i class="fa-brands fa-square-instagram"></i>
+                                    </span>
+                                </a> 
+                                <a href="https://github.com/thoughtfulworks?tab=repositories" target="_blank" style="text-decoration: none;">
+                                    <span style="color:#000000; font-size: 25px;">
+                                        <i class="fa-brands fa-github"></i>
+                                    </span>
+                                </a>
+                                <span style="color: grey; font-size: 25px;"><i class="fa-solid fa-ellipsis-vertical"></i></span>
+                                <script src="/assets/js/lunr.js"></script>
+
+<style>
+    
+</style>
+
+<div class="wrap-search">
+    <div class="d-flex align-items-center ml-auto">
+        <i class="fas fa-search show-search"></i>
+        <form class="bd-search ml-3" onSubmit="return lunr_search(document.getElementById('lunrsearch').value);">
+            <input type="text" class="form-control bigradius text-small launch-modal-search" id="lunrsearch" name="q" maxlength="255" value="" placeholder="Type and enter..."/>
+        </form>
+    </div>
+</div>
+
+<div id="lunrsearchresults">
+    <ul></ul>
+</div>
+
+<script src="/assets/js/lunrsearchengine.js"></script>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </header>
+    </div>
+
+	<!-- Defer loading of font and font awesome -->
+	<noscript id="deferred-styles">
+		<link href="https://fonts.googleapis.com/css?family=Sen:400,700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+	</noscript>
+
+    <!-- Back to top icon/button -->
+    <script src="https://unpkg.com/vanilla-back-to-top@7.2.1/dist/vanilla-back-to-top.min.js"></script>
+    <!-- <script>addBackToTop()</script>     -->
+    <script>addBackToTop({
+        diameter: 50,
+        backgroundColor: 'rgba(22, 22, 23, .8)',
+        textColor: '#fff'
+        })
+    </script>
+
+    <!-- Begin Sidebar Navigation -->
+    <div class="sidebar">    
+    </div>   
+    <div class="nav-icon">
+        <div class="hamburger-bar"></div>
+    </div>
+    <div id="blackover-nav" class="blackover"></div>
+    <nav id="menu">
+        <ul>
+            <h4>Navigation</h4>
+            <li><a href="/tags">Tags</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/authors">Contributors</a></li>
+            <li><a href="/contact">Contact us</a></li>       
+        </ul>   
+    </nav>
+
+    <!-- <script src="/assets/js/lunr.js"></script>
+
+<style>
+    
+</style>
+
+<div class="wrap-search">
+    <div class="d-flex align-items-center ml-auto">
+        <i class="fas fa-search show-search"></i>
+        <form class="bd-search ml-3" onSubmit="return lunr_search(document.getElementById('lunrsearch').value);">
+            <input type="text" class="form-control bigradius text-small launch-modal-search" id="lunrsearch" name="q" maxlength="255" value="" placeholder="Type and enter..."/>
+        </form>
+    </div>
+</div>
+
+<div id="lunrsearchresults">
+    <ul></ul>
+</div>
+
+<script src="/assets/js/lunrsearchengine.js"></script> -->
+    <!-- End Sidebar Navigation -->
+
+    <div class="site-content ">
+
+    <div class="container">
+        <!-- Content -->
+        <div class="main-content">
+            <div class="entry-header">
+    <!-- Kicker -->
+    
+        <!--<h6 class="kicker">Data Quality</h6>-->
+        <span class="kicker">
+            <a href="/categories#data-quality">Data Quality</a>
+        </span>
+    
+
+    <!-- Post Title -->
+    <h1 class="posttitle">Great Expectations takes great care of your data quality</h1>
+
+    <!-- Author and Date -->
+    
+    
+        <div class="d-flex align-items-center mt-4" style="font-size: 100%">
+            <div>
+                
+                <img class="author-thumb" src="https://www.gravatar.com/avatar/6fc127cda8cd99830932538a58dc6173?s=250&d=mm&r=x" alt="Senthil Nayagan">
+                
+            </div>            
+            <div>
+                
+                    <!-- <a target="_blank" href="https://www.linkedin.com/in/senthilnayagan" style="color: black; border-bottom: 1px solid blue;"><b>Senthil Nayagan</b></a> -->
+                    <span class="author-name">
+                        <a target="_blank" href="https://www.linkedin.com/in/senthilnayagan">Senthil Nayagan</a>
+                    </span>
+                
+                
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <span class="social-connect-icon">
+                        <a target="_blank" href="https://senthilnayagan.com/">
+                            <i class="fa-solid fa-window-maximize"></i>
+                        </a>
+                    </span> 
+                                     
+                
+                    &nbsp;
+                    <span class="social-connect-icon">
+                        <a target="_blank" href="https://fosstodon.org/@towardsdata">
+                            <i class="fa-brands fa-mastodon"></i>
+                        </a>                         
+                    </span>
+                                
+                
+                    &nbsp;
+                    <span class="social-connect-icon">
+                        <a target="_blank" href="https://twitter.com/SenthilNayagan">
+                            <i class="fa-brands fa-x-twitter"></i>
+                        </a>                         
+                    </span>                    
+                
+                
+                    &nbsp;
+                    <span class="social-connect-icon">
+                        <a target="_blank" href="https://www.instagram.com/senthilnayagan">
+                            <i class="fa-brands fa-square-instagram"></i>
+                        </a>                         
+                    </span>                    
+                                                   
+                <br/> 
+                <span class="post-date-and-mins-read">           
+                    
+                        <i class="fa-regular fa-calendar-days"></i>&nbsp;<time datetime="2023-04-01T00:00:00+05:30">Apr 1, 2023</time>
+                    
+                    
+                    -&nbsp;<i class="fa-solid fa-clock"></i>&nbsp;28 Mins Read
+                </span>
+            </div>            
+        </div>
+    
+</div>
+
+<!-- Adsense under title if enabled from _config.yml (change your pub id and slot) -->
+<!---->
+
+<!-- Tags -->
+<div class="article-post">
+    <ul class="tags">
+        
+        
+        <li>
+            <a class="smoothscroll" href="/tags#data">data</a>
+        </li>
+        
+        <li>
+            <a class="smoothscroll" href="/tags#data-observability">data-observability</a>
+        </li>
+        
+        <li>
+            <a class="smoothscroll" href="/tags#data-quality">data-quality</a>
+        </li>
+        
+        <li>
+            <a class="smoothscroll" href="/tags#great-expectations">great-expectations</a>
+        </li>
+        
+        <li>
+            <a class="smoothscroll" href="/tags#gx">gx</a>
+        </li>
+        
+    </ul>
+</div>
+
+<!-- Summary -->
+<div class="summary">
+    
+    <hr class="grey_line"></hr>
+</div>
+
+<!-- Draft - Shows writing in progress -->
+<div class="draft">
+    
+</div>
+
+<!-- Featured Image -->
+
+<div class="entry-featured-image">
+    
+        <img class="featured-image  image-shadow " src="/assets/images/posts-cover-images/data-quality-oss-tools.jpg" alt="Great Expectations takes great care of your data quality">
+    
+    
+ </div>
+
+
+<!-- Content -->
+<!-- Post, Page Content
+================================================== -->
+<div class="article-post">
+    <!-- Toc if any -->
+    
+    <!---->
+    <div class="toc mt-4 mb-4 lead" style="font-size: 85%">
+        <h5 class="font-weight-bold">Table of contents</h5>
+        <ul>
+  <li><a href="#data-quality">Data quality</a>
+    <ul>
+      <li><a href="#data-quality-dimensions">Data quality dimensions</a></li>
+      <li><a href="#testing-data">Testing data</a>
+        <ul>
+          <li><a href="#data-quality-testing-stages">Data quality testing stages</a></li>
+          <li><a href="#data-quality-tools">Data quality tools</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#introduction-to-great-expectations-gx">Introduction to Great Expectations (GX)</a>
+    <ul>
+      <li><a href="#data-context">Data Context</a>
+        <ul>
+          <li><a href="#initialize-our-data-context-with-the-cli">Initialize our Data Context with the CLI</a></li>
+          <li><a href="#create-our-data-context">Create our Data Context</a></li>
+          <li><a href="#load-the-existing-data-context">Load the existing Data Context</a></li>
+          <li><a href="#save-the-data-context-for-future-use">Save the Data Context for future use</a></li>
+        </ul>
+      </li>
+      <li><a href="#datasource">Datasource</a>
+        <ul>
+          <li><a href="#data-connector">Data Connector</a>
+            <ul>
+              <li><a href="#inferredassetdataconnectors">InferredAssetDataConnectors</a></li>
+              <li><a href="#configuredassetdataconnector">ConfiguredAssetDataConnector</a></li>
+              <li><a href="#runtimedataconnector">RuntimeDataConnector</a></li>
+            </ul>
+          </li>
+          <li><a href="#execution-engine">Execution Engine</a></li>
+          <li><a href="#create-a-new-datasource-through-the-cli">Create a new Datasource through the CLI</a>
+            <ul>
+              <li><a href="#file-based-datasource">File-based Datasource</a></li>
+            </ul>
+          </li>
+          <li><a href="#create-a-filesystem-datasource-python">Create a Filesystem Datasource (Python)</a></li>
+          <li><a href="#test-our-datasource-configuration">Test our Datasource configuration</a></li>
+          <li><a href="#save-our-datasource-configuration">Save our Datasource configuration</a></li>
+        </ul>
+      </li>
+      <li><a href="#data-asset">Data Asset</a></li>
+      <li><a href="#batch">Batch</a></li>
+      <li><a href="#batch-request">Batch Request</a>
+        <ul>
+          <li><a href="#how-to-create-a-batch-request">How to create a Batch Request</a></li>
+        </ul>
+      </li>
+      <li><a href="#expectation">Expectation</a>
+        <ul>
+          <li><a href="#various-ways-of-creating-expectations">Various ways of creating Expectations</a>
+            <ul>
+              <li><a href="#interactive-workflow">Interactive workflow</a></li>
+              <li><a href="#data-assistant-workflow">Data Assistant workflow</a>
+                <ul>
+                  <li><a href="#create-a-batch-request">Create a Batch Request</a></li>
+                  <li><a href="#prepare-a-new-expectation-suite">Prepare a new Expectation Suite</a></li>
+                  <li><a href="#run-the-onboarding-data-assistant">Run the Onboarding Data Assistant</a></li>
+                  <li><a href="#save-our-expectation-suite">Save our Expectation Suite</a></li>
+                  <li><a href="#test-our-expectation-suite-with-a-simplecheckpoint">Test our Expectation Suite with a SimpleCheckpoint</a></li>
+                  <li><a href="#plot-and-inspect-the-data-assistants-calculated-metrics-and-produced-expectations">Plot and inspect the Data Assistant’s calculated Metrics and produced Expectations</a></li>
+                </ul>
+              </li>
+              <li><a href="#manually-define-our-expectations">Manually define our Expectations</a></li>
+              <li><a href="#custom-scripts">Custom scripts</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li><a href="#expectation-suite">Expectation Suite</a>
+        <ul>
+          <li><a href="#create-a-new-expectations-suite">Create a new Expectations Suite</a></li>
+        </ul>
+      </li>
+      <li><a href="#store">Store</a>
+        <ul>
+          <li><a href="#expectation-store">Expectation Store</a></li>
+        </ul>
+      </li>
+      <li><a href="#validator">Validator</a>
+        <ul>
+          <li><a href="#instantiate-our-validator">Instantiate our Validator</a></li>
+        </ul>
+      </li>
+      <li><a href="#checkpoint">Checkpoint</a>
+        <ul>
+          <li><a href="#create-a-checkpoint">Create a Checkpoint</a>
+            <ul>
+              <li><a href="#using-cli-to-open-a-jupyter-notebook-for-creating-a-new-checkpoint">Using CLI to open a Jupyter Notebook for creating a new Checkpoint</a></li>
+            </ul>
+          </li>
+          <li><a href="#edit-the-existing-checkpoint-configuration">Edit the existing Checkpoint configuration</a></li>
+          <li><a href="#validate-and-test-our-checkpoint-configuration">Validate and test our Checkpoint configuration</a></li>
+          <li><a href="#store-our-checkpoint-configuration">Store our Checkpoint configuration</a></li>
+          <li><a href="#run-our-checkpoint-and-open-the-data-docs">Run our Checkpoint and open the Data Docs</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#great-expectations-in-detail">Great Expectations in detail</a>
+    <ul>
+      <li><a href="#installing-gx-oss">Installing GX OSS</a>
+        <ul>
+          <li><a href="#prerequisites">Prerequisites</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#frequently-asked-questions-faqs">Frequently asked questions (FAQs)</a>
+    <ul>
+      <li><a href="#how-gxget_context-works">How <code>gx.get_context()</code> works?</a></li>
+    </ul>
+  </li>
+</ul>
+    </div>
+    
+    <!-- End Toc -->
+    <h1 id="data-quality">Data quality</h1>
+
+<p>Information is only valuable if it is of high quality. How can we get data of such high quality, then?  The answer is simple: testing the data quality is what assures high quality. We know the “what” part of it gets us quality, but the “how” part is much more crucial in producing high-quality data.</p>
+
+<h2 id="data-quality-dimensions">Data quality dimensions</h2>
+
+<p>Data quality focuses on ensuring that the data conforms to the <strong>six data quality dimensions</strong> listed below. These data quality dimensions are useful guidelines for enhancing the quality of data assets.</p>
+
+<ul>
+  <li><strong>Accuracy</strong> - What degree of fact does a piece of information have?</li>
+  <li><strong>Completeness</strong> - The state of being complete and entire.</li>
+  <li><strong>Consistency</strong> - Does information stored in one place match relevant data stored elsewhere?</li>
+  <li><strong>Timeliness</strong> - Is our information available when it’s needed?</li>
+  <li><strong>Validity</strong> - Invalid data affects the accuracy: Is information is a certain format, do business standards or rules apply to the information, or is it in an unusable format?</li>
+  <li><strong>Uniqueness</strong> - Ensures duplicate or overlapping data is identified and removed.</li>
+</ul>
+
+<h2 id="testing-data">Testing data</h2>
+
+<p>Similar to unit testing in software engineering, data testing has to become a regular practice in data engineering. A data acceptance procedure may be established by the organization, according to which data cannot be utilized unless its owners provide evidence that it satisfies the organization’s quality standards.</p>
+
+<h3 id="data-quality-testing-stages">Data quality testing stages</h3>
+
+<ol>
+  <li><strong>First stage:</strong> The first place that we need to test data is <strong>at the point of ingestion</strong>. When ingesting data, we want to be sure that all of the data has successfully moved from its source to the target destination.</li>
+  <li><strong>Second stage:</strong> The second place that we need to test data is <strong>at the point of transformation</strong>. With transformation testing, we will typically check pre- and post-conditions, such as:
+    <ul>
+      <li>Null checks</li>
+      <li>Valid value checks</li>
+      <li>Schema checks</li>
+      <li>Referential integrity checks, and so on.</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="data-quality-tools">Data quality tools</h3>
+
+<p>There are various data quality tools—both commercial and open source—that are currently on the market. This blog focuses on one of the hand-picked open source data quality tools called <strong>Great Expectations</strong>, among other open source tools.</p>
+
+<p>We’ve taken into account the following factors while evaluating the open source data quality tools:</p>
+
+<ul>
+  <li>Is the tool <strong>able to deal with all six data quality dimensions</strong>?</li>
+  <li><strong>How easy is it for both data engineers and data analysts</strong> to learn how to write data quality checks or tests and get good at them quickly?</li>
+  <li><strong>How well the documentation and API guides</strong> are supported?</li>
+  <li><strong>How flexible and extensible</strong> the tool is</li>
+  <li><strong>How active and responsive is the respective community in Slack</strong>? In general, Slack is considered to be far more helpful than submitting our questions elsewhere. We could ask questions and receive straight answers from committers, which is one of the best things about Slack.</li>
+  <li>The <strong>rate at which the tool is evolving and gaining new capabilities</strong>.</li>
+  <li>Last but not least, which one of them is <strong>more widely used across enterprises</strong>?</li>
+</ul>
+
+<p>Let’s take a closer look at <strong>Great Expectations</strong> to see how it might assist us in obtaining reliable data.</p>
+
+<h1 id="introduction-to-great-expectations-gx">Introduction to Great Expectations (GX)</h1>
+
+<p>Great Expectations, shortly referred to as <strong>GX</strong>, is a <strong>powerful</strong> and <strong>flexible</strong> open-source data quality solution on the market today. We’ll take a close look at it with examples to demonstrate how powerful and flexible GX tool is.</p>
+
+<p>Unlike traditional unit tests, GX applies tests to data instead of code. To put it simply, <strong>in GX, testing is performed on data rather than code</strong>. It’s a Python library that enables us to verify that our data is accurate by <strong>validating</strong>, <strong>documenting</strong>, and <strong>profiling</strong> it.</p>
+
+<blockquote>
+  <p><strong>Profiling</strong>, or <strong>data profiling</strong>, is the process of examining, analyzing, and creating useful summaries of data that aid in the discovery of data quality issues.</p>
+</blockquote>
+
+<p>The best part about Great Expectations is that, unlike other data quality tools, <strong>we do not need to write the configuration</strong>. Instead, Great Expectations comes with the Jupyter Notebook, which will help us generate various configurations for us.</p>
+
+<p>At a high level, there are four stages in Great Expectations:</p>
+
+<ol>
+  <li><strong>Setup</strong></li>
+  <li><strong>Connect to Data</strong></li>
+  <li><strong>Create Expectations</strong></li>
+  <li><strong>Validate Data</strong></li>
+</ol>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"><img src="/assets/images/posts/gx-four-stages.png" alt="Figure 1: Four stages of Great Expectations" title="Created by Author" width="90%" /></th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><sup><em>Figure 1: Four stages of Great Expectations.</em></sup></td>
+      <td><br /><br /></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Various activities go into each stage as shown below. We will go into great detail on each of these activities later on. For now, it’s crucial to understand the various concepts and terms used in Great Expectations.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"><img src="/assets/images/posts/gx-stages-and-activities.png" alt="Figure 2: Various activities go into each stage" title="Created by Author" /></th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><sup><em>Figure 2: Various activities go into each stage.</em></sup></td>
+      <td><br /><br /></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="data-context">Data Context</h2>
+
+<p>A Data Context is the <strong>primary entry point for a Great Expectations</strong>. Our Data Context provides us with methods to configure our Stores, plugins, and Data Docs. It also provides the methods needed to create, configure, and access our Datasources, Expectations, Profilers, and Checkpoints. In addition to all of that, it internally manages our Metrics, Validation Results, and the contents of your Data Docs for us. Expectations, Profilers, Checkpoints, Metrics, and Validation Results will all be covered in greater depth later on.</p>
+
+<p>Data Context can be initialized using the CLI, created, loaded, and saved for future use.</p>
+
+<h3 id="initialize-our-data-context-with-the-cli">Initialize our Data Context with the CLI</h3>
+
+<p>The simplest way to create a new Data Context is by using Great Expectations’ CLI. Run the following command from the directory where we wish to initialize Great Expectations:</p>
+
+<pre><code class="language-bash">great_expectations init
+</code></pre>
+
+<p>The above command causes Great Expectations to create the directory structure and configuration files required for us to go on. Great Expectations will create a new directory with the following structure:</p>
+
+<pre><code class="language-text">great_expectations
+    |-- great_expectations.yml
+    |-- expectations
+    |-- checkpoints
+    |-- plugins
+    |-- .gitignore
+    |-- uncommitted
+        |-- config_variables.yml
+        |-- data_docs
+        |-- validations
+</code></pre>
+
+<h3 id="create-our-data-context">Create our Data Context</h3>
+
+<p>Use the following Python statements to create a new Data Context:</p>
+
+<pre><code class="language-python">import great_expectations as gx
+
+context = gx.get_context()  # Creating a DataContext object
+
+# The below statement is the same as above with a variable-type annotation. 
+# It's a more clean way of coding.
+# context: gx.DataContext = gx.get_context()
+</code></pre>
+
+<h3 id="load-the-existing-data-context">Load the existing Data Context</h3>
+
+<p>Load an on-disk Data Context via:</p>
+
+<pre><code class="language-python">import great_expectations as gx
+
+context = gx.get_context(
+    context_root_dir='path/to/my/context/root/directory/great_expectations'
+)
+</code></pre>
+
+<h3 id="save-the-data-context-for-future-use">Save the Data Context for future use</h3>
+
+<p>We obtained a temporary, in-memory <strong>Ephemeral Data Context</strong> from <code>gx.get context()</code> since we had not previously initialized a Filesystem Data Context (using <code>great_expectations init</code>) or specified a path at which to create one (via <code>gx.get_context(context_root_dir='path/great_expectations')</code>).</p>
+
+<p>To save this Data Context for future use, we will convert it to a Filesystem Data Context:</p>
+
+<pre><code class="language-python">context = context.convert_to_file_context()
+</code></pre>
+
+<p>We can also provide the path to a specific folder where we want the Filesystem Data Context to be initialized.</p>
+
+<h2 id="datasource">Datasource</h2>
+
+<p>GX provides better connectivity with a wide variety of data sources and data manipulation frameworks like Apache Spark and Pandas. It provides a <strong>unified Datasource API</strong> that <em>connects</em> and <em>interacts</em> across multiple data sources. The term “unified” denotes that the Datasource API remains the same across all data sources, such as PostgreSQL, CSV filesystems, and others. This unified Datasource API makes working with all data sources very convenient. Having said that, our primary tool for connecting to data is the Datasource.</p>
+
+<p>Under the hood, Datasources uses a <strong>Data Connector</strong> and an <strong>Execution Engine</strong> to connect to a wide variety of external data sources and perform computation, respectively. The Datasource provides an interface for a Data connector and an Execution Engine to work together. Each Datasource must have an Execution Engine and one or more Data Connectors configured.</p>
+
+<p>Thanks to the unified Datasource API, once a Datasource is configured, we will be able to operate with the Datasource’s API rather than needing a different API for each data source we may be working with.</p>
+
+<h3 id="data-connector">Data Connector</h3>
+
+<p>Datasource leverages the Data Connector, which facilitates access to external data sources such as databases, filesystems, and cloud storage. A Data Connector is an integral element of a Datasource.</p>
+
+<p>Great Expectations provides <strong>three</strong> types of DataConnector classes:</p>
+
+<ul>
+  <li><strong>InferredAssetDataConnectors</strong></li>
+  <li><strong>ConfiguredAssetDataConnectors</strong></li>
+  <li><strong>RuntimeDataConnector</strong></li>
+</ul>
+
+<h4 id="inferredassetdataconnectors">InferredAssetDataConnectors</h4>
+
+<ul>
+  <li>Infers <code>data_asset_name</code> by using a regex that takes advantage of patterns that exist in the filename or folder structure.</li>
+</ul>
+
+<h4 id="configuredassetdataconnector">ConfiguredAssetDataConnector</h4>
+
+<ul>
+  <li>It allows us to specify that we have multiple <strong>Data Assets</strong> in a Datasource, but also requires an explicit listing of each Data Asset we want to connect to.</li>
+  <li>Allows users to have the most fine-tuning, and requires an explicit listing of each Data Asset we want to connect to.</li>
+</ul>
+
+<p>There are different Data Connector classes that exist both for <code>InferredAssetDataConnectors</code> and <code>ConfiguredAssetDataConnector</code>:</p>
+
+<ul>
+  <li><code>InferredAssetFilesystemDataConnector</code> and <code>ConfiguredAssetFilesystemDataConnector</code></li>
+  <li><code>InferredAssetFilePathDataConnector</code> and <code>ConfiguredAssetFilePathDataConnector</code></li>
+  <li><code>InferredAssetAzureDataConnector</code> and <code>ConfiguredAssetAzureDataConnector</code></li>
+  <li><code>InferredAssetGCSDataConnector</code> and <code>ConfiguredAssetGCSDataConnector</code></li>
+  <li><code>InferredAssetS3DataConnector</code> and <code>ConfiguredAssetS3DataConnector</code></li>
+  <li><code>InferredAssetSqlDataConnector</code> and <code>ConfiguredAssetSqlDataConnector</code></li>
+  <li><code>InferredAssetDBFSDataConnector</code> and <code>ConfiguredAssetDBFSDataConnector</code></li>
+</ul>
+
+<p>InferredAssetDataConnectors and ConfiguredAssetDataConnectors are used to define Data Assets and their associated <strong>data_references</strong>. A Data Asset is an abstraction that can consist of one or more data_references. For instance, we might have a <code>yellow_tripdata</code> Data Asset containing information about taxi rides, which consists of twelve data_references.</p>
+
+<h4 id="runtimedataconnector">RuntimeDataConnector</h4>
+
+<ul>
+  <li>A <code>RuntimeDataConnector</code> is a special kind of Data Connector that enables us to use a <code>RuntimeBatchRequest</code> to provide a Batch’s data directly at runtime.</li>
+  <li>The <code>RuntimeBatchRequest</code> can wrap either an in-memory dataframe, filepath, or SQL query, and must include batch identifiers that uniquely identify the data. For example, a <code>run_id</code> from an AirFlow DAG run.</li>
+  <li>The batch identifiers that must be passed in at runtime are specified in the RuntimeDataConnector’s configuration.</li>
+</ul>
+
+<h3 id="execution-engine">Execution Engine</h3>
+
+<p>Execution Engine provides computing resources that will be used to perform Validation. Great Expectations can take advantage of different Execution Engines, such as <strong>Pandas</strong>, <strong>Spark</strong>, or <strong>SqlAlchemy</strong>.</p>
+
+<p>Various Execution Engine’s class names are listed below. We will discuss in the later section where we will use these Execution Engine classes.</p>
+
+<ul>
+  <li><strong>Pandas</strong> - <code>PandasExecutionEngine</code></li>
+  <li><strong>Spark</strong> - <code>SparkDFExecutionEngine</code></li>
+  <li><strong>SqlAlchemy</strong> - <code>SqlAlchemyExecutionEngine</code></li>
+</ul>
+
+<p>The following shows the high-level workflow:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"><img src="/assets/images/posts/gx-datasource-how-it-works.png" alt="Figure 3: Datasource - How it works?" title="Created by Author" width="80%" /></th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><sup><em>Figure 3: Datasource - How it works?</em></sup></td>
+      <td><br /><br /></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="create-a-new-datasource-through-the-cli">Create a new Datasource through the CLI</h3>
+
+<p>Run the below command to create a new Datasource:</p>
+
+<pre><code class="language-bash">great_expectations datasource new
+</code></pre>
+
+<p>The above command will bring up the following prompt:</p>
+
+<pre><code class="language-text">What data would you like Great Expectations to connect to?
+    1. Files on a filesystem (for processing with Pandas or Spark)
+    2. Relational database (SQL)
+: 1
+</code></pre>
+
+<p>We can get data either way:</p>
+
+<ul>
+  <li>From the filesystem (a file-based Datasource) using Pandas or Spark</li>
+  <li>From a relational database</li>
+</ul>
+
+<h4 id="file-based-datasource">File-based Datasource</h4>
+
+<p>For file-based Datasource, the configuration contains an <code>InferredAssetFilesystemDataConnector</code>, which will add a <strong>Data Asset</strong> for each file in the base directory we provided. It also contains a <code>RuntimeDataConnector</code>, which can accept file paths. Note that we can customize it as we wish.</p>
+
+<p>In the case of Spark as the processing engine, the following is the Datasource configuration (as a Python string):</p>
+
+<pre><code class="language-python">datasource_yaml = f"""
+name: {"my_datasource"}
+class_name: Datasource
+execution_engine:
+  class_name: SparkDFExecutionEngine
+data_connectors:
+  default_inferred_data_connector_name:
+    class_name: InferredAssetFilesystemDataConnector
+    base_directory: ../data
+    default_regex:
+      group_names:
+        - data_asset_name
+      pattern: (.*)
+  default_runtime_data_connector_name:
+    class_name: RuntimeDataConnector
+    assets:
+      my_runtime_asset_name:
+        batch_identifiers:
+          - runtime_batch_identifier_name
+"""
+</code></pre>
+
+<h3 id="create-a-filesystem-datasource-python">Create a Filesystem Datasource (Python)</h3>
+
+<p>A Filesystem Datasource can be created with two pieces of information:</p>
+
+<ul>
+  <li><code>name</code>: The name by which the Datasource will be referenced in the future</li>
+  <li><code>base_directory</code>: The path to the folder containing the files the Datasource will be used to connect to</li>
+</ul>
+
+<pre><code class="language-python">datasource_name = "my_spark_datasource"
+raw_data_files = "./data"
+</code></pre>
+
+<p>Next, pass both data source name and data directory path as parameters when we create our Datasource:</p>
+
+<pre><code class="language-python">datasource = context.sources.add_spark_filesystem(
+    name = datasource_name, 
+    base_directory = raw_data_files
+  )
+</code></pre>
+
+<p>This creates a <code>SparkFilesystemDatasource</code> object shown below:</p>
+
+<pre><code class="language-python">SparkFilesystemDatasource(
+	type='spark_filesystem', 
+	name='my_spark_datasource', 
+	id=None, 
+	assets={}, 
+	base_directory=PosixPath('data'), 
+	data_context_root_directory=None
+)
+</code></pre>
+
+<h3 id="test-our-datasource-configuration">Test our Datasource configuration</h3>
+
+<p>Use <code>context.test_yaml_config(...)</code> to test our Datasource configuration as shown below:</p>
+
+<pre><code class="language-python">context.test_yaml_config(yaml_config = datasource_yaml)
+</code></pre>
+
+<p>In the above Python statement, <code>context</code> is the Data Context object, which can be created as follows:</p>
+
+<pre><code class="language-python">import great_expectations as gx
+
+context = gx.get_context()
+
+# The below statement is the same as above with a variable-type annotation. 
+# It's a more clean way of coding.
+# context: gx.DataContext = gx.get_context()
+</code></pre>
+
+<h3 id="save-our-datasource-configuration">Save our Datasource configuration</h3>
+
+<p>Here we save our Datasource in our Data Context once we are satisfied with the configuration using the following Python statement:</p>
+
+<pre><code class="language-python">from great_expectations.cli.datasource import sanitize_yaml_and_save_datasource
+
+sanitize_yaml_and_save_datasource(context, datasource_yaml, overwrite_existing=False)
+</code></pre>
+<p>Note that <code>overwrite_existing</code> defaults to False, but we can change it to True if we wish to overwrite the configuration. Please note that if we wish to include comments we must add them directly to our <code>great_expectations.yml</code>.</p>
+
+<h2 id="data-asset">Data Asset</h2>
+
+<p>A Data Asset is a <em>logical</em> collection of records within a Datasource. Often, Data Assets are tied to already-existing data that has a name (e.g., “the UserEvents table”). <strong>Also, Data Assets can slice the data one step further</strong> (subsets) (e.g., “new records for month within the UserEvents table.”). Great Expectations protects the quality of Data Assets.</p>
+
+<p>More Data Asset examples are:</p>
+
+<ul>
+  <li>In a SQL database, a Data Asset may be the rows from a table grouped by the week.</li>
+  <li>In an S3 bucket or filesystem, a Data Asset may be the files matching a particular regex pattern.</li>
+</ul>
+
+<p>We can define multiple Data Assets built from the same underlying data source to support different workflows or use cases. To put it simply, the same data can be in multiple Data Assets. For instance, we may have different <strong>Expectations</strong> of the same raw data for different purposes.</p>
+
+<p>Not all records in a Data Asset need to be available at the same time or same place. A Data Asset could be built from:</p>
+
+<ul>
+  <li>Streaming data that is never stored</li>
+  <li>Incremental deliveries</li>
+  <li>Incremental updates</li>
+  <li>Analytic queries</li>
+  <li>Replacement deliveries or from a one-time snapshot</li>
+</ul>
+
+<p>That implies that a Data Asset is a logical concept. So no matter where the data comes from originally, Great Expectations validates <strong>batches</strong> of data.</p>
+
+<h2 id="batch">Batch</h2>
+
+<p>A Batch is a discrete selection or subset of records from a Data Asset. Providing a <strong>Batch Request</strong> to a Datasource results in the creation of a Batch. <strong>A Batch adds metadata to precisely identify the specific data included in the Batch</strong>. With the help of these metadata, a Batch can be identified by a collection of parameters, such as <em>the date of delivery</em>, <em>the value of a field</em>, <em>the time of validation</em>, or <em>access control permissions</em>.</p>
+
+<h2 id="batch-request">Batch Request</h2>
+
+<p>A Batch Request is sent to a <strong>Datasource</strong> in order to create a <strong>Batch</strong>. A Batch Request contains all the necessary details to query the underlying data. A Batch Request will return all matching Batches if it finds more than one that satisfy the requirements of the user-provided <code>batch identifiers</code>. A Batch Request is always used when Great Expectations builds a Batch.</p>
+
+<p>When a Batch Request is passed to a Datasource, the Datasource will use its Data Connector to build a <strong>Batch Spec</strong>, which is an Execution Engine-specific description of the Batch. Datasource’s Execution Engine will use this Batch Spec to return a Batch of data.</p>
+
+<p>We will rarely need to access an existing Batch Request. Instead, we often find ourself defining a Batch Request in a configuration file, or passing in parameters to create a Batch Request which we will then pass to a Datasource. Once we receive a Batch back, it is unlikely we will ever need to reference to the Batch Request that generated it. In fact, if the Batch Request was part of a configuration, Great Expectations will simply initialize a new copy rather than load an existing one when the Batch Request is needed.</p>
+
+<h3 id="how-to-create-a-batch-request">How to create a Batch Request</h3>
+
+<p>Batch Requests are instances of either a <code>RuntimeBatchRequest</code> or a <code>BatchRequest</code>. A BatchRequest can be defined by passing a dictionary with the necessary parameters when a BatchRequest is initialized.</p>
+
+<pre><code class="language-python">from great_expectations.core.batch import BatchRequest
+
+batch_request_parameters = {
+  'datasource_name': 'my_datasource',
+  'data_connector_name': 'default_inferred_data_connector_name',
+  'data_asset_name': 'my-data-under-test.csv',
+  'limit': 1000  # Optional
+}
+
+batch_request = BatchRequest(**batch_request_parameters)
+</code></pre>
+
+<h2 id="expectation">Expectation</h2>
+
+<p>An Expectation is a <strong>test assertion that we can run against our data under test</strong>. Like unit test assertions in most of the programming languages, Expectations provide a flexible, <em>declarative language</em> for describing expected behavior. Unlike traditional unit tests, <strong>Great Expectations applies Expectations to data instead of code</strong>.</p>
+
+<p>Each Expectation is a declarative test assertion about the expected format, content, or behavior of our data under test. The <strong>test assertions are both human-readable and machine-verifiable assertions</strong>.</p>
+
+<blockquote>
+  <p><strong>Expectation Gallery:</strong> Great Expectations comes with many <a href="https://greatexpectations.io/expectations/" target="_blank">built-in</a> Expectations, and we can also develop our own custom Expectations.</p>
+</blockquote>
+
+<p>As an example, we could define an Expectation that states that a column has no null values. Great Expectations would then compare our data to that Expectation and report if a null value was found.</p>
+
+<h3 id="various-ways-of-creating-expectations">Various ways of creating Expectations</h3>
+
+<p>There are a few workflows we can follow when creating Expectations. These workflows represent various ways of creating Expectations.</p>
+
+<p>There are <strong>four</strong> potential ways to create Expectations as shown below:</p>
+
+<ol>
+  <li><strong>Interactive workflow</strong> (with inspecting data) (Recommended)</li>
+  <li><strong>Data Assistant workflow</strong> (with inspecting data) (Recommended)</li>
+  <li><strong>Manually define our Expectations</strong> (without inspecting data) (Default)</li>
+  <li><strong>Custom scripts</strong></li>
+</ol>
+
+<h4 id="interactive-workflow">Interactive workflow</h4>
+
+<p>In this workflow, we will be working in a Python interpreter or Jupyter Notebook. In this case, we will navigate to our Data Context’s root directory in our terminal, where we will use the CLI to launch a Jupyter Notebook, which will assist us in the process. We will use a Validator and call expectations methods on it to define Expectations in an Expectation Suite. When we have finished, we will save that Expectation Suite in our Expectation Store.</p>
+
+<p>Use the CLI to begin the interactive process of creating Expectations. From the root folder of our Data Context, enter the following command:</p>
+
+<pre><code class="language-bash">great_expectations suite new
+</code></pre>
+
+<p>This will bring up the following prompt:</p>
+
+<pre><code class="language-text">How would you like to create your Expectation Suite?
+    1. Manually, without interacting with a sample Batch of data (default)
+    2. Interactively, with a sample Batch of data
+    3. Automatically, using a Data Assistant
+:
+</code></pre>
+
+<p>To start the Interactive Mode workflow, enter 2. Note that we can skip the above prompt by including the flag <code>--interactive</code> in our command-line input:</p>
+
+<pre><code class="language-bash">great_expectations suite new --interactive
+</code></pre>
+
+<h4 id="data-assistant-workflow">Data Assistant workflow</h4>
+
+<p>In this workflow, we will use a Data Assistant to generate Expectations based on some input data. In this case, we will be working in a Python environment, so we will need to load or create our Data Context as an instantiated object. Next, we will create a Batch Request to specify the data we would like to Profile with our Data Assistant.</p>
+
+<h5 id="create-a-batch-request">Create a Batch Request</h5>
+<p>This is how we create a <code>BatchRequest</code>:</p>
+
+<pre><code class="language-python">from great_expectations.core.batch import BatchRequest
+
+batch_request_parameters = {
+  'datasource_name': 'my_datasource',
+  'data_connector_name': 'default_inferred_data_connector_name',
+  'data_asset_name': 'my-data-under-test.csv',
+  'limit': 1000  # Optional
+}
+
+batch_request = BatchRequest(**batch_request_parameters)
+</code></pre>
+
+<blockquote>
+  <p><strong>Caution:</strong> The Onboarding Data Assistant will run a high volume of queries against our Datasource. Data Assistant performance can vary significantly depending on the number of Batches, count of records per Batch, and network latency. It is recommended that we start with a smaller BatchRequest if we find that Data Assistant runtimes are too long.</p>
+</blockquote>
+
+<h5 id="prepare-a-new-expectation-suite">Prepare a new Expectation Suite</h5>
+
+<p>Preparing a new Expectation Suite is done with the Data Context’s <code>add_or_update_expectation_suite(...)</code> method as shown below:</p>
+
+<pre><code class="language-python">expectation_suite_name = "my_onboarding_assistant_suite"
+
+expectation_suite = context.add_or_update_expectation_suite(
+    expectation_suite_name = expectation_suite_name
+)
+</code></pre>
+
+<h5 id="run-the-onboarding-data-assistant">Run the Onboarding Data Assistant</h5>
+
+<p>Next, run the Onboarding Data Assistant. Running a Data Assistant is as simple as calling the <code>run(...)</code> method for the appropriate assistant. There are numerous parameters available for the <code>run(...)</code> method of the Onboarding Data Assistant. For instance, the <code>exclude_column_names</code> parameter allows us to provide a list columns that should not be Profiled. In addition, we can also use other parameters, such as <code>include_column_names</code>, <code>include_column_name_suffixes</code>, and <code>cardinality_limit_mode</code>.</p>
+
+<p>The following code shows how to run the Onboarding Assistant.</p>
+
+<pre><code class="language-python">data_assistant_result = context.assistants.onboarding.run(
+    batch_request = batch_request,
+    exclude_column_names = [col3, col6, col9],
+    include_column_names = [col1, col2, col4, col5, col7, col8, col10]
+)
+</code></pre>
+
+<h5 id="save-our-expectation-suite">Save our Expectation Suite</h5>
+
+<p>Once we have executed the Onboarding Data Assistant’s <code>run(...)</code> method and generated Expectations for our data, we need to load them into our Expectation Suite and save them. We will do this by using the Data Assistant result:</p>
+
+<pre><code class="language-python">expectation_suite = data_assistant_result.get_expectation_suite(
+    expectation_suite_name = expectation_suite_name
+)
+</code></pre>
+
+<p>Once the Expectation Suite has been retrieved from the Data Assistant result, we can save it as shown below:</p>
+
+<pre><code class="language-python">context.add_or_update_expectation_suite(expectation_suite = expectation_suite)
+</code></pre>
+
+<h5 id="test-our-expectation-suite-with-a-simplecheckpoint">Test our Expectation Suite with a SimpleCheckpoint</h5>
+
+<p>To verify that our Expectation Suite is working, we can use a <code>SimpleCheckpoint</code> with the Expectation Suite and Batch Request that we have already defined:</p>
+
+<pre><code class="language-python">checkpoint_config = {
+    "class_name": "SimpleCheckpoint",
+    "validations": [
+        {
+            "batch_request": batch_request,
+            "expectation_suite_name": expectation_suite_name,
+        }
+    ],
+}
+</code></pre>
+
+<p>Once we have our <code>SimpleCheckpoint</code>’s configuration defined, we can instantiate a SimpleCheckpoint and run it. We can check the <code>"success"</code> key of the <code>SimpleCheckpoint</code>’s results to verify that our Expectation Suite worked.</p>
+
+<pre><code class="language-python">checkpoint = SimpleCheckpoint(
+    f"my_{expectation_suite_name}",
+    context,
+    **checkpoint_config,
+)
+
+checkpoint_result = checkpoint.run()
+
+assert checkpoint_result["success"] is True
+</code></pre>
+
+<h5 id="plot-and-inspect-the-data-assistants-calculated-metrics-and-produced-expectations">Plot and inspect the Data Assistant’s calculated Metrics and produced Expectations</h5>
+
+<p>To see Batch-level visualizations of Metrics computed by the Onboarding Data Assistant run:</p>
+
+<pre><code class="language-python">data_assistant_result.plot_metrics()
+</code></pre>
+
+<p>To see all Metrics computed by the Onboarding Data Assistant run:</p>
+
+<pre><code class="language-python">data_assistant_result.metrics_by_domain
+</code></pre>
+
+<p>To plot the Expectations produced, and the associated Metrics calculated by the Onboarding Data Assistant run:</p>
+
+<pre><code class="language-python">data_assistant_result.plot_expectations_and_metrics()
+</code></pre>
+
+<blockquote>
+  <p><strong>Note:</strong> If no Expectation was produced by the Data Assistant for a given Metric, neither the Expectation nor the Metric will be visualized by the <code>plot_expectations_and_metrics()</code> method.</p>
+</blockquote>
+
+<p>To see the Expectations produced and grouped by Domain run:</p>
+
+<pre><code class="language-python">data_assistant_result.show_expectations_by_domain_type(
+    expectation_suite_name = expectation_suite_name
+)
+</code></pre>
+
+<p>To see the Expectations produced and grouped by Expectation type run:</p>
+
+<pre><code class="language-python">data_assistant_result.show_expectations_by_expectation_type(
+    expectation_suite_name = expectation_suite_name
+)
+</code></pre>
+
+<h4 id="manually-define-our-expectations">Manually define our Expectations</h4>
+
+<p>This workflow is for advanced users who want to manually (<strong>without inspecting data</strong>) define the Expectations by writing the configurations. While source data is not necessary for this approach, a thorough understanding of the Expectations configurations is necessary.</p>
+
+<p>Create Expectation Configurations as shown below:</p>
+
+<pre><code class="language-python">expectation_configuration = ExpectationConfiguration(
+   expectation_type = "expect_column_values_to_be_in_set",
+   kwargs = {
+      "column": "transaction_type",
+      "value_set": ["purchase", "refund", "upgrade"]
+   },
+)
+</code></pre>
+
+<p>Then, add the Expectation to the suite as shown below:</p>
+
+<pre><code class="language-python">suite.add_expectation(expectation_configuration = expectation_configuration)
+</code></pre>
+
+<h4 id="custom-scripts">Custom scripts</h4>
+
+<p>Some advanced users have also taken advantage of this workflow, and have written custom methods that allow them to generate Expectations based on the metadata associated with their source data systems.</p>
+
+<h2 id="expectation-suite">Expectation Suite</h2>
+
+<p><strong>Expectations are grouped into Expectation Suites</strong>, which can be stored and retrieved using an <strong>Expectation Store</strong>. The most critical aspect of Great Expectation is creating Expectation, or Expectation Suites. Note that a local configuration for an Expectation Store will be added automatically to <code>great_expectations.yml</code> when we initialize our Data Context for the first time. We can change this configuration to work with different <strong>Stores</strong>.</p>
+
+<p>Generally, we will not need to interact with an Expectation Store directly. Instead, our Data Context will use an Expectation Store to store and retrieve Expectation Suites behind the scenes. This means, we most likely use convenience methods in our Data Context to retrieve Expectation Suites.</p>
+
+<h3 id="create-a-new-expectations-suite">Create a new Expectations Suite</h3>
+
+<p>The below shows how to create an Expectations Suite using the CLI. Run the below command from Data Context:</p>
+
+<pre><code class="language-bash">great_expectations suite new
+</code></pre>
+
+<p>The above command will bring up the following prompt:</p>
+
+<pre><code class="language-text">How would you like to create your Expectation Suite?
+    1. Manually, without interacting with a sample Batch of data (default)
+    2. Interactively, with a sample Batch of data
+    3. Automatically, using a Data Assistant
+</code></pre>
+
+<h2 id="store">Store</h2>
+
+<p>A Store is a <strong>location to store and retrieve information about metadata</strong> in Great Expectations. Great Expectations supports a variety of Stores for different purposes, but the most common Stores are:</p>
+
+<ul>
+  <li><strong>Expectation Stores</strong> - Used to store and retrieve information about collections of test assertions about data.</li>
+  <li><strong>Validations Stores</strong> - Used to store and retrieve information about objects generated when data is Validated against an Expectation Suite.</li>
+  <li><strong>Checkpoint Stores</strong> -</li>
+  <li><strong>Metric Stores</strong></li>
+  <li><strong>Evaluation Parameter Stores</strong></li>
+  <li><strong>Data Docs Stores</strong></li>
+</ul>
+
+<h3 id="expectation-store">Expectation Store</h3>
+
+<p>Expectation Stores allow us <strong>to store and retrieve Expectation Suites</strong>. These Stores can be accessed and configured through the Data Context, but entries are added to them when we save an Expectation Suite.</p>
+
+<h2 id="validator">Validator</h2>
+
+<p>A Validator is the object responsible <strong>for running an Expectation Suite against data</strong>. In other words, we use a Validator to access and interact with our data. Checkpoints, in particular, use Validators when running an Expectation Suite against a Batch Request. However, we can also use our Data Context to get a Validator to use outside a Checkpoint - for instance, to create Expectations interactively in a Jupyter Notebook.</p>
+
+<p>Also, we can use the Validator to verify our Datasource. To verify a new Datasource, we can load data from it into a Validator using a Batch Request.</p>
+
+<p>Note that <strong>Validators don’t require additional configuration</strong>. Provide one with an Expectation Suite and a Batch Request, and it will work out of the box!</p>
+
+<h3 id="instantiate-our-validator">Instantiate our Validator</h3>
+
+<p>The code shows how to instantiate a Validator:</p>
+
+<pre><code class="language-python">from great_expectations.core.batch import BatchRequest
+
+expectation_suite_name = "insert_the_name_of_your_suite_here"
+
+# Setting Batch Request configuration
+batch_request_parameters = {
+  'datasource_name': 'my_datasource',
+  'data_connector_name': 'default_inferred_data_connector_name',
+  'data_asset_name': 'my-data-under-test.csv',
+  'limit': 1000  # Optional
+}
+
+validator = context.get_validator(
+    batch_request = BatchRequest(**batch_request_parameters),
+    expectation_suite_name = expectation_suite_name
+)
+</code></pre>
+
+<p>After we get our Validator instantiated, we can call <code>validator.head()</code> to confirm that it contains the data that we expect.</p>
+
+<h2 id="checkpoint">Checkpoint</h2>
+
+<p>In a production deployment of Great Expectations, a Checkpoint serves as the primary means for validating data. Checkpoints provide a convenient abstraction for bundling the Validation of a Batch (or Batches) of data against an Expectation Suite (or several), as well as the Actions (optional) that should be taken after the validation.</p>
+
+<p>Checkpoints have their own Store which is used to persist their configurations to YAML files. These configurations can be committed to version control.</p>
+
+<p>A Checkpoint uses a <strong>Validator</strong> to run one or more Expectation Suites against one or more Batches provided by one or more Batch Requests. Running a Checkpoint produces Validation Results and will result in optional Actions being performed if they are configured to do so.</p>
+
+<h3 id="create-a-checkpoint">Create a Checkpoint</h3>
+
+<h4 id="using-cli-to-open-a-jupyter-notebook-for-creating-a-new-checkpoint">Using CLI to open a Jupyter Notebook for creating a new Checkpoint</h4>
+
+<p>The Great Expectations CLI has a convenience method that will open a Jupyter Notebook to easily configure and save our Checkpoint. Run the following CLI command from our Data Context:</p>
+
+<pre><code class="language-bash">great_expectations checkpoint new my_checkpoint
+</code></pre>
+<p>We can replace <code>my_checkpoint</code> in the above command with whatever name we would like to associate with the Checkpoint we will be creating. After running this command, a Jupyter Notebook will open, which will guide us through the procedure for creating a Checkpoint. We can modify the default setup of this Jupyter Notebook to fit our use case.</p>
+
+<h3 id="edit-the-existing-checkpoint-configuration">Edit the existing Checkpoint configuration</h3>
+<p>The following shows the minimum required Checkpoint configuration generated by Jupyter Notebook, which uses the <code>SimpleCheckpoint class</code> that takes care of some defaults. The following example shows the YAML configuration as a Python string.</p>
+
+<pre><code class="language-python">config = """
+name: my_checkpoint  # This is populated by the CLI.
+config_version: 1
+class_name: SimpleCheckpoint
+validations:
+  - batch_request:
+      datasource_name: my_datasource  # Update this value.
+      data_connector_name: my_data_connector  # Update this value.
+      data_asset_name: MyDataAsset  # Update this value.
+      data_connector_query:
+        index: -1
+    expectation_suite_name: my_suite  # Update this value.
+"""
+</code></pre>
+
+<p>We need to replace the names <code>my_datasource</code>, <code>my_data_connector</code>, <code>MyDataAsset</code> and <code>my_suite</code> with the respective <strong>Datasource</strong>, <strong>Data Connector</strong>, <strong>Data Asset</strong>, and <strong>Expectation Suite</strong> names we have configured in our <code>great_expectations.yml</code>.</p>
+
+<h3 id="validate-and-test-our-checkpoint-configuration">Validate and test our Checkpoint configuration</h3>
+
+<p>We can use the following Python statement to validate the contents of our <code>config</code> yaml string mentioned above:</p>
+
+<pre><code class="language-python">context.test_yaml_config(yaml_config=config)
+</code></pre>
+
+<p>Here, <code>context</code> represents Data Context object. When executed, <code>test_yaml_config(...)</code> will instantiate the passing component and run through a self-check procedure to verify that the component works as expected.</p>
+
+<p>In the case of a Checkpoint, this means:</p>
+
+<ul>
+  <li>Verifying that the Checkpoint class with the given configuration, if valid, can be instantiated.</li>
+  <li>Printing warnings in case the configuration is invalid or incomplete.</li>
+  <li>Raise error if our configuration was not set up correctly.</li>
+</ul>
+
+<h3 id="store-our-checkpoint-configuration">Store our Checkpoint configuration</h3>
+
+<p>After we are satisfied with our Checkpoint configuration, we can store it in our Checkpoint Store.</p>
+
+<h3 id="run-our-checkpoint-and-open-the-data-docs">Run our Checkpoint and open the Data Docs</h3>
+
+<p>Before running a Checkpoint, make sure that all classes and Expectation Suites referred to in the configuration exist. We can use the below Python statement to run our Checkpoint.</p>
+
+<pre><code class="language-python">context.run_checkpoint(...)
+</code></pre>
+
+<h1 id="great-expectations-in-detail">Great Expectations in detail</h1>
+
+<h2 id="installing-gx-oss">Installing GX OSS</h2>
+
+<p>The following steps show how to install GX OSS (open source software) locally on our desktop.</p>
+
+<h3 id="prerequisites">Prerequisites</h3>
+
+<ul>
+  <li>A supported version of <strong>Python</strong> (versions 3.7 to 3.10)</li>
+  <li>The ability to install Python packages with <strong>pip</strong></li>
+</ul>
+
+<p>Install GX using pip as shown below:</p>
+
+<pre><code class="language-bash">python -m pip install great_expectations
+</code></pre>
+
+<p>GX and its associated dependencies will be installed by <code>pip</code> when we run the above command from the terminal. This may take a moment to complete. For best practices, set up a virtual workspace for our project.</p>
+
+<p>Let’s get into the fundamentals of writing test cases, validating them against the data, and generating test reports.</p>
+
+<p>The following shows various steps in the order they are given. Each step consists of a series of required and optional actions.</p>
+
+<pre><code class="language-text">Data Context
+  |-- Initialize a Data Context with the CLI
+  |-- Create a DataContext object
+  |-- Load the existing Data Context
+  |-- Save the Data Context for future use
+
+Datasource
+  |-- Create a new Datasource through the CLI
+        |-- Filesystem datasource via Pandas or Spark
+        |-- Relational database
+  |-- Test our Datasource configuration (Optional)
+  |-- Save our Datasource configuration (Stored in great_expectations.yml)
+
+Data Asset (Subset of Datasource) (Optional)
+  |-- Add a Data Asset to the Datasource
+
+Batch Request
+  |-- Create a Batch Request (Has Datasource details)
+  |-- Create a Batch Request from Data Asset (In case of Data Asset)
+
+Expectation and Expectation Suite
+  |-- Create via interactive workflow (With inspecting data) (Recommended)
+  |-- Create via Data Assistant workflow (With inspecting data) (Recommended)
+  	    |-- Create a Batch Request (Has Datasource details)
+  	    |-- Prepare a new Expectation Suite
+  	    |-- Run the Onboarding Data Assistant (Uses Batch Request)
+  	    |-- Save our Expectation Suite
+  	    |-- Test our Expectation Suite with a SimpleCheckpoint
+  	    |-- Plot and inspect the Data Assistant's calculated Metrics and produced Expectations
+  |-- Manually define our Expectations (Without inspecting data) (Default)
+  |-- Custom scripts
+
+Validator
+  |-- Instantiate our Validator (Passing Batch Request and Expection Suite)
+
+Checkpoint
+  |-- Create a new Checkpoint using CLI to open a Jupyter Notebook
+  |-- Edit the existing Checkpoint configuration
+  |-- Validate and test our Checkpoint configuration
+  |-- Store our Checkpoint configuration
+  |-- Run our Checkpoint and open the Data Docs
+</code></pre>
+
+<h1 id="frequently-asked-questions-faqs">Frequently asked questions (FAQs)</h1>
+
+<h2 id="how-gxget_context-works">How <code>gx.get_context()</code> works?</h2>
+
+<p>Load an on-disk Data Context from a <code>great_expectations.yml</code> configuration via the <code>get_context()</code> command.</p>
+
+</div>
+
+<!-- Rating -->
+
+
+<!-- Author Box if enabled from _config.yml -->
+<!-- Author Box -->
+
+
+
+
+<!-- Comments if not disabled with comments: false -->
+<!-- Comments
+================================================== -->
+ 
+<div class="comments mt-5">
+    <button class="btn btn-outline-dark py-3 px-5 d-block w-100 show-comments"><i class="fa fa-comments text-muted"></i> &nbsp; Show comments</button>         
+    <div id="comments">  
+        <h4 class="mb-4">Comments</h4>                 
+            <section class="disqus">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rustinaction'; 
+        var disqus_developer = 0;
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = window.location.protocol + '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</section>
+     
+    <div class="clearfix"></div>              
+    </div>    
+</div>       
+
+
+<!-- Share -->
+<div class="share">
+    <!-- <ul>
+        <li class="ml-1 mr-1">
+            <a href="/" ><i class="fas fa-home"></i></a>
+        </li>
+    </ul>
+    <hr> -->
+    <!---->
+    <span>Share</span>
+    <ul>
+        <li class="ml-1 mr-1">
+            <a target="_blank" href="https://twitter.com/intent/tweet?text=Great Expectations takes great care of your data quality&url=http://localhost:4000/data-quality/2023/gx-takes-great-care-with-data-quality" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                <i class="fa-brands fa-x-twitter"></i>
+            </a>
+        </li>
+        <li class="ml-1 mr-1">
+            <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url=http://localhost:4000/data-quality/2023/gx-takes-great-care-with-data-quality" onclick="window.open(this.href, 'width=550,height=435');return false;">
+                <i class="fab fa-linkedin-in"></i>
+            </a>
+        </li>
+        <!--<li class="ml-1 mr-1">
+            <a target="_blank" href="http://news.ycombinator.com/submitlink?u=http://localhost:4000/data-quality/2023/gx-takes-great-care-with-data-quality" onclick="window.open(this.href, 'width=550,height=435');return false;">
+                <i class="fab fa-y-combinator"></i>
+            </a>
+        </li>
+        <li class="ml-1 mr-1">
+            <a target="_blank" href="http://www.reddit.com/submit?url=http://localhost:4000/data-quality/2023/gx-takes-great-care-with-data-quality&title=Great Expectations takes great care of your data quality" onclick="window.open(this.href, 'width=550,height=435');return false;">
+                <i class="fab fa-reddit"></i>
+            </a>
+        </li>-->                 
+        <li class="ml-1 mr-1">
+            <a target="_blank" href="https://api.whatsapp.com/send?text=Great Expectations takes great care of your data quality%20http://localhost:4000/data-quality/2023/gx-takes-great-care-with-data-quality" onclick="window.open(this.href, 'width=550,height=435');return false;">
+                <i class="fab fa-whatsapp"></i>
+            </a>
+        </li>
+        <li class="ml-1 mr-1">
+            <a href="#" onclick="copyToClipboard()">
+                <i class="fas fa-link"></i>
+            </a>
+            <script>
+                function copyToClipboard() { 
+                   window.navigator.clipboard.writeText(`http://localhost:4000/data-quality/2023/gx-takes-great-care-with-data-quality`);
+                }
+            </script>
+        </li>         
+        <!--
+        
+            <ul>
+                <li>
+                <a class="small" href="#disqus_thread"></a>
+                </li>
+            </ul>
+           
+        -->
+    </ul>
+    <!---->
+</div>
+
+
+<!-- Related Post -->
+<!-- Related Posts
+================================================== -->
+<div class=" related-posts ">  
+
+    
+    <h2 class="text-center mb-4">Explore more like this</h2>
+    
+    
+    <div class="d-flex justify-content-center align-items-center">
+    
+    <!-- Categories -->
+    <!--
+    
+    
+    <a class="smoothscroll badge badge-primary text-capitalize" href="/categories#data-quality">data-quality</a>                
+    
+    -->
+
+    <!-- Tags -->  
+    
+                    
+    <a class="smoothscroll badge badge-primary text-lowercase" href="/tags#data">data</a>               
+                    
+    <a class="smoothscroll badge badge-primary text-lowercase" href="/tags#data-observability">data-observability</a>               
+                    
+    <a class="smoothscroll badge badge-primary text-lowercase" href="/tags#data-quality">data-quality</a>               
+                    
+    <a class="smoothscroll badge badge-primary text-lowercase" href="/tags#great-expectations">great-expectations</a>               
+                    
+    <a class="smoothscroll badge badge-primary text-lowercase" href="/tags#gx">gx</a>               
+    
+
+    </div>
+
+    
+    
+    
+    <div class="blog-grid-container">
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+               
+        
+            
+                
+                
+            
+                
+            
+                
+               
+        
+        </div>        
+</div>
+
+<!-- Review with LD-JSON, adapt it for your needs if you like, but make sure you test the generated HTML source code first: 
+https://search.google.com/structured-data/testing-tool/u/0/
+================================================== -->
+
+        </div>
+
+        
+        <!-- Newsletter -->
+        <div class="newsletter text-center">
+            <span class="h4"><!--<img src="/assets/images/logo/logo_transparent.png" class="newsletter-logo" alt="thoughtful works"> &nbsp;-->If you like our posts and don't want to miss any of them, sign up for our newsletter.</span>
+            <form action="https://gmail.us17.list-manage.com/subscribe?u=155954fdd35cc37fcbfab134a&id=acc42a78d4" method="post" name="mc-embedded-subscribe-form" class="wj-contact-form validate" target="_blank" novalidate>
+                <div class="mc-field-group d-inline-flex">
+                <input type="email" placeholder="Your e-mail" name="EMAIL" class="required email" id="mce-EMAIL" autocomplete="on" required>
+                <input type="submit" value="Subscribe" name="subscribe" class="heart">
+                </div>
+            </form>
+        </div>
+        
+        
+    </div>
+
+    <!-- Begin Footer -->
+    <!-- <script>
+        const repoOwner = 'rust-lang';
+        const repoName = 'rust';
+
+        const apiUrlRelease = `https://api.github.com/repos/${repoOwner}/${repoName}/releases/latest`;
+      
+        fetch(apiUrlRelease)
+            .then(response => response.json())
+            .then(data => {
+            document.getElementById('current-release').innerText = `${data.tag_name}`;
+            document.getElementById('release-url').innerHTML = `<a href="${data.html_url}" target="_blank">${data.tag_name}</a>`;
+            })
+            .catch(error => console.error('Error fetching GitHub release information:', error));
+    </script>  -->
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-sm-12 text-center text-lg-left">
+                    Copyright © 2024 <b>thoughtful works</b> | <a href="/privacy-policy.html" target="_blank">Privacy Policy</a> | Made with <b>Jekyll</b> and hosted on <b>GitHub Pages</b> | This website DOES NOT use cookies.
+                </div>
+                <div class="col-md-6 col-sm-12 text-center text-lg-right">    
+                    <!-- <i class="fa-brands fa-rust"></i> <a href=`<span id="release-url"></span>`><span id="current-release"></span></a>&nbsp;<i class="fa-solid fa-tag"></i>&nbsp;(latest) -->
+                    <!-- - <i class="fa-solid fa-star"></i> <span id="repo-stars"></span> -->
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- End Footer -->
+
+    </div> <!-- /.site-content -->
+
+    <!-- Scripts (if you need bootstrap.js, please add it yourself. I didn't use it for performance reasons, it was not needed in this theme) -->
+
+    <script src="/assets/js/prism.js"></script>
+
+    <script src="/assets/js/theme.js"></script>
+
+    
+
+    
+    <script id="dsq-count-scr" src="//rustinaction.disqus.com/count.js"></script>
+    
+</body>
+</html>
