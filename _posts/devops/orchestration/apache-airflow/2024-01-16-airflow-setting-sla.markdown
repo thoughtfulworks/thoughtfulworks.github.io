@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "How To Set SLA in Apache Airflow"
+title:  "How to set SLA in Apache Airflow"
 kicker: "DevOps"
 summary: "Apache Airflow enables us to schedule tasks as code. In Airflow, a SLA determines the maximum completion time for a task or DAG. Note that SLAs are established based on the DAG execution date, not the task start time."
 image: assets/images/posts-cover-images/airflow-setting-sla.webp
