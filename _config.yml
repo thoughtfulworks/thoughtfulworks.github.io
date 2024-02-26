@@ -1,15 +1,15 @@
 # Site
 name: "thoughtful works"
 title: "thoughtful works"
-description: "In rust in action, we delve into a broad variety of concepts, such as how to productively produce, manage, and democratize data. In all of our posts, we strive to provide you with sufficient information to grasp the concepts while also making them as simple to read as possible."
+description: "The primary objective of '<b>{{ site.name }}</b>' is to bring together a vibrant community of full-stack developers who possess a wide range of skills and expertise and to facilitate the free exchange of ideas and knowledge through virtual collaboration."
 logo: "assets/images/logo/logo_transparent.png"
 favicon: "assets/images/logo/logo_square.png"
 baseurl: ""
-disqus: 'rustinaction'
-mailchimp-list: 'https://gmail.us17.list-manage.com/subscribe?u=155954fdd35cc37fcbfab134a&id=acc42a78d4'
+disqus: 'thoughtfulworks'
+mailchimp-list: ''
 include: ["_pages"]
 permalink: /:categories/:year/:title
-email: hello@rustinaction.dev
+email: hello@thoughtfulworks.dev
 contact-us: https://formspree.io/f/mdoqkzjn
 author: https://www.gravatar.com/avatar/6fc127cda8cd99830932538a58dc6173?s=250&d=mm&r=x
 
