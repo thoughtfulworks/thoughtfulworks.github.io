@@ -130,8 +130,6 @@ $enable-rounded: false;
 // general
 body, input, button, select, optgroup, textarea {
     font-family: "Fira Sans", Sans-fallback;
-    // font-family: "Roboto";
-    // font-family: Opensans;
     color: $text-color;
     color-scheme: light;
 }
@@ -419,7 +417,6 @@ img, img:hover {
         }
     }
     .card-text {
-        font-family: Agrandir;
         font-weight: 400;
         font-size: 16px;
         //line-height: 1.2;
@@ -450,7 +447,6 @@ img, img:hover {
     }
 }
 .post-date-and-mins-read {
-    font-family: Agrandir;
     font-size: 15px;
     color: #909090;
     // text-transform: uppercase;
@@ -617,7 +613,6 @@ img, img:hover {
     border-radius: 10px;
     .author-description {
         font-size: 16px;
-        font-family: Agrandir;
     }
     .author-thumb {
         width: 120px;
@@ -755,7 +750,6 @@ img, img:hover {
 
 // Share
 .share { 
-    font-family: BalooDa2;
     position: fixed; left: 15px; bottom: 40%; z-index: 1026;
     text-align: center;    
     ul {
@@ -1153,8 +1147,6 @@ sharing {
 }
 
 .author-name {
-    font-family: Agrandir;
-    // font-family: Roboto;
     // text-transform: uppercase;
     font-size: 15px;
     // font-weight: bold;
@@ -1210,7 +1202,6 @@ sharing {
 
 // Kicker aka catagoery
 .kicker {
-    // font-family: Agrandir;
     font-size: 15px;
     text-transform: uppercase;
     a {
@@ -1224,7 +1215,6 @@ sharing {
 }
 
 .summary {
-    font-family: Agrandir;
     font-size: 16px;
     color: #909090;
     max-width: 800px;
@@ -1264,7 +1254,6 @@ sharing {
 } 
 
 .draft {
-    font-family: Agrandir;
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
@@ -1299,7 +1288,6 @@ mark {
 
 .featured-image-credits {
     text-align: center;
-    font-family: BalooDa2;
     color: #909090;
     font-size: 80%;
     line-height: 3em;
