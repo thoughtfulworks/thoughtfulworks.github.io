@@ -7,26 +7,20 @@ comments: false
 --imageshadow: false
 ---
 
-The primary objective of <b>{{ site.name }}</b> is to encourage the exchange of ideas among Rust developers, who each possess a unique set of skills and expertise, through virtual collaboration. We explore an extensive range of concepts here. We strive to present information in the _clearest and most straightforward manner possible_, covering all the grounds needed to grasp it completely. 
+The primary objective of <b>{{ site.name }}</b> is to bring together a vibrant community of full-stack developers who possess a wide range of skills and expertise and to facilitate the free exchange of ideas and knowledge through virtual collaboration. We explore an extensive range of concepts here. We strive to present information in the _clearest and most straightforward manner possible_, covering all the grounds needed to grasp it completely. 
 
 Our commitment is to **provide a clutter-free experience**, free of advertisements on the blogs, and without requiring a subscription—**any information that is beneficial must be invariably democratized for all**, thereby enabling readers to fully understand the subject matter at hand without having to rely on additional sources for further clarification.
 
-### Why Scala?
+Join us at <b>{{ site.name }}</b> as we embark on this journey of learning, sharing, and growing together. Let's build a community that thrives on collaboration, where every member feels empowered to contribute their knowledge and gain from the collective wisdom of like-minded individuals. 
 
-Scala is a powerful and versatile programming language that combines object-oriented and functional programming paradigms. Here are the strengths of Scala:
-
-- **Expressiveness**: Scala's syntax is more expressive than Java's, enabling us to write the same functionality in a clear, concise, and understandable manner. Expressiveness in a programming language refers to its ability to facilitate the expression of the programmer's intent with the least amount of verbosity possible.
-- **Functional Programming**: Adopting functional programming can bring about improved code quality, maintainability, and scalability.
-
-Scala's combination of features makes it well-suited for a wide range of applications, from small scripts to large-scale, particularly distributed systems.
-
+<b>Every idea matters, and every voice adds value to the discussion in every way!</b>
 
 Feel free to get in [touch]({{ site.baseurl }}/contact) with us if you like reading our posts, have feedback for us, or would like to contribute.
  
 Happy learning!
 
 **Senthil Nayagan**<br/>
-<sup>Founder and content creator, [**towardsdata.dev**](https://towardsdata.dev/){:target="_blank"} and **rustinaction.dev**.</sup>
+<sup>Founder and content creator, [**towardsdata.dev**](https://towardsdata.dev/){:target="_blank"} and [**rustinaction.dev**](https://rustinaction.dev/){:target="_blank"}.</sup>
 
 **Email:** [hello@thoughtfulworks.dev](mailto:hello@thoughtfulworks.dev)<br/>
 **Twitter:** [thoughtfulwx](https://twitter.com/thoughtfulwx){:target="_blank"}<br/>
