@@ -33,35 +33,8 @@ Kafka Streams supports various types of windowing operations to group events by 
 
 Before we go further into explaining all these types of windows, let's understand some of the core concepts:
 
-## Window size 
-
-The duration of each window. All events within this period are aggregated together.
-
-## Advance interval (Hop size) 
-
-The amount by which each window advances. If the advance interval is less than the window size, the windows will overlap.
-
-## Grace period
-
-The "grace period" refers to a configurable time window that allows for late-arriving records to be included in windowed aggregations. In other words, the grace period specifies how much time after a window has technically expired (based on its defined duration) the system will continue to accept records for that window. This feature is particularly useful for dealing with out-of-order data, which is common in distributed systems due to network delays or other factors. By setting a grace period, you can accommodate these late-arriving records to ensure they are processed and included in the correct aggregation window, rather than being discarded or processed as part of a later window.
-
-For example, if we have a 1-minute tumbling window with a grace period of 30 seconds, records that arrive up to 30 seconds after the end of each 1-minute window can still be included in the corresponding windowed computation. After the grace period has elapsed, the window is closed, and no further records for that window are processed.
-
-The grace period is set via the `Materialized` or Windows configuration when defining windowed operations in Kafka Streams. It's a crucial setting for ensuring data completeness and accuracy in real-time streaming applications, especially when handling data that may not arrive in perfect chronological order.
-
-```java
-// Tumbling window
-countStream.groupByKey()
-	.windowedBy(TimeWindows.ofSizeAndGrace(Duration.ofMinutes(1)
-		,Duration.ofSeconds(30)))  // Using 30 seconds for the grace period
-	.count(Materialized.as("Tumbling-window-counting-store"))
-
-// Session window
-countStream.groupByKey()
-	.windowedBy(SessionWindows.ofInactivityGapAndGrace(Duration.ofMinutes(1),
-		Duration.ofSeconds(30)))  // Using 30 seconds for the grace period
-	.count(Materialized.as("Session-window-counting-store"))
-```
+- **Window size**: The duration of each window. All events within this period are aggregated together.
+- **Advance interval (Hop size)**: The amount by which each window advances. If the advance interval is less than the window size, the windows will overlap.
 
 ---
 
@@ -301,6 +274,32 @@ public class SlidingWindowExample {
 - The **`aggregate`** method computes the sum of temperatures in each window, and then we calculate the average by dividing by the count of readings (simplified here for demonstration; in practice, we'd dynamically count readings within each window).
 
 Sliding windows are ideal for continuous calculations that need to be updated with each new event, providing a more granular and immediate view of data trends over time.
+
+---
+
+# Frequently asked questions (FAQs)
+
+## What is the grace period in Kafka Streams?
+
+The "grace period" refers to a configurable time window that allows for late-arriving records to be included in windowed aggregations. In other words, the grace period specifies how much time after a window has technically expired (based on its defined duration) the system will continue to accept records for that window. This feature is particularly useful for dealing with out-of-order data, which is common in distributed systems due to network delays or other factors. By setting a grace period, you can accommodate these late-arriving records to ensure they are processed and included in the correct aggregation window, rather than being discarded or processed as part of a later window.
+
+For example, if we have a 1-minute tumbling window with a grace period of 30 seconds, records that arrive up to 30 seconds after the end of each 1-minute window can still be included in the corresponding windowed computation. After the grace period has elapsed, the window is closed, and no further records for that window are processed.
+
+The grace period is set via the `Materialized` or Windows configuration when defining windowed operations in Kafka Streams. It's a crucial setting for ensuring data completeness and accuracy in real-time streaming applications, especially when handling data that may not arrive in perfect chronological order.
+
+```java
+// Tumbling window
+countStream.groupByKey()
+	.windowedBy(TimeWindows.ofSizeAndGrace(Duration.ofMinutes(1)
+		,Duration.ofSeconds(30)))  // Using 30 seconds for the grace period
+	.count(Materialized.as("Tumbling-window-counting-store"))
+
+// Session window
+countStream.groupByKey()
+	.windowedBy(SessionWindows.ofInactivityGapAndGrace(Duration.ofMinutes(1),
+		Duration.ofSeconds(30)))  // Using 30 seconds for the grace period
+	.count(Materialized.as("Session-window-counting-store"))
+```
 
 ---
 
