@@ -54,6 +54,10 @@ Let's say the sensor sends readings at minutes: **`1, 3, 7, 11, 15, 18, 22, 25`*
 - **Window 2** (10-20 minutes): Includes readings at minutes **`11, 15, 18`**. The average of these readings is calculated.
 - **Window 3** (20-30 minutes): Includes readings at minutes **`22, 25`**. The average of these readings is calculated.
 
+|![Tumbling windows](/assets/images/posts/tumbling-windows.png)|
+|:-:|
+|<sup>*Figure 1: Tumbling windows.*</sup>|<br/><br/>
+
 Each reading is accounted for in exactly one window, with no overlap between windows.
 
 ## Code example
@@ -106,6 +110,10 @@ Let's say our events are timestamped as follows (in minutes): **`1, 2, 3, 4, 5, 
 - **Window 2** (starting at minute 2) covers **`2-6`** and sees events at **`2, 3, 4, 5, 6`**.
 - ...
 - **Window 6** (starting at minute 6) covers **`6-10`** and sees events at **`6, 7, 8, 9, 10`**.
+
+|![Hopping windows](/assets/images/posts/hopping-windows.png){: width="70%" }|
+|:-:|
+|<sup>*Figure 2: Hopping windows.*</sup>|<br/><br/>
 
 Notice how each window overlaps with the next, sharing four minutes of data with it.
 
@@ -178,7 +186,7 @@ Let's say we have the following events (login actions) for two players over time
 - **Player A**: Events at **`10:00`**, **`10:05`**, and **`10:20`**.
 - **Player B**: Events at **`10:30`** and **`11:15`**.
 
-Assuming an inactivity gap of 10 minutes:
+Assuming an **inactivity gap of 10 minutes**:
 
 - **Player A** would have a single session window from **`10:00`** to **`10:20`** because the events are within 10 minutes of each other.
 - **Player B** would have two separate session windows (**`10:30`** to **`10:30`** and **`11:15`** to **`11:15`**) because the gap between events exceeds the 10-minute inactivity gap.
