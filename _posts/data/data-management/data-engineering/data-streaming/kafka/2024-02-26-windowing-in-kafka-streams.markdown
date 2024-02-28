@@ -26,10 +26,10 @@ By segmenting the data temporally, windowing allows for more granular and time-s
 
 Kafka Streams supports various types of windowing operations to group events by time boundaries, allowing for time-sensitive processing of streaming data:
 
-- **Tumbling windows**
-- **Hopping windows**
-- **Session windows**
-- **Sliding windows**
+- [Tumbling windows](/kafka-streams/2024/windowing-in-kafka-streams#tumbling-windows)
+- [Hopping windows](/kafka-streams/2024/windowing-in-kafka-streams#hopping-windows)
+- [Session windows](/kafka-streams/2024/windowing-in-kafka-streams#session-windows)
+- [Sliding windows](/kafka-streams/2024/windowing-in-kafka-streams#sliding-windows)
 
 Before we go further into explaining all these types of windows, let's understand some of the core concepts:
 
@@ -347,7 +347,7 @@ Sliding windows are ideal for continuous calculations that need to be updated wi
 
 # Summary
 
-Below is a tabular comparison:
+Hopefully, this clarifies the concepts of windowing in Kafka Streams. A quick comparison between each type of window is given below:
 
 |![Windows' comparison](/assets/images/posts/kafka-stream-windows.png "Created by Author"){: width="100%" }|
 |:-:|
@@ -357,7 +357,7 @@ Below is a tabular comparison:
 
 # Frequently asked questions (FAQs)
 
-## What is the grace period in Kafka Streams?
+## What does the "grace period" refer to in Kafka Streams?
 
 The "grace period" refers to a configurable time window that allows for late-arriving records to be included in windowed aggregations. In other words, the grace period specifies how much time after a window has technically expired (based on its defined duration) the system will continue to accept records for that window. This feature is particularly useful for dealing with out-of-order data, which is common in distributed systems due to network delays or other factors. By setting a grace period, you can accommodate these late-arriving records to ensure they are processed and included in the correct aggregation window, rather than being discarded or processed as part of a later window.
 
