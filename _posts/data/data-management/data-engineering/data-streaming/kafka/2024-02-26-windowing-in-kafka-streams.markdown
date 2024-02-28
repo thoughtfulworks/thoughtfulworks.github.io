@@ -347,11 +347,13 @@ Sliding windows are ideal for continuous calculations that need to be updated wi
 
 # Summary
 
-Hopefully, this clarifies the concepts of windowing in Kafka Streams. A quick comparison between each type of window is given below:
+Hopefully, this clarifies the concepts of windowing in Kafka Streams. Below is a quick comparison of all the window types that we have learned about:
 
 |![Windows' comparison](/assets/images/posts/kafka-stream-windows.png "Created by Author"){: width="100%" }|
 |:-:|
 |<sup>*Figure 5: Windows' comparison. [Original image](/assets/images/posts/kafka-stream-windows.png){:target="_blank"} (1092 × 365 pixels).*</sup>|<br/><br/>
+
+Happy learning!
 
 ---
 
