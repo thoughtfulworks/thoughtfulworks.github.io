@@ -10,9 +10,10 @@ tags: ["data-engineering", "data-science"]
 categories: data-management
 featured: true
 hidden: true
+draft: true
 ---
 
-> **Writing in progress:** If you have any suggestions for improving the content or notice any inaccuracies, please email me at [hello@senthilnayagan.com](mailto:hello@senthilnayagan.com). Thanks!
+# Overview
 
 Data engineering and data science are not sub-disciplines of each other. They complement one another but do not rely on each other. Data engineering is the step before data science. They give data scientists the data they need to turn it into something useful.
 

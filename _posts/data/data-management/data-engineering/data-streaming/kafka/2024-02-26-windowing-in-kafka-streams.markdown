@@ -46,7 +46,7 @@ Fixed-size, non-overlapping intervals of time. They are useful for cases where w
 
 ## Example
 
-Let's say we want to determine the average temperature every *ten minutes* from a stream of temperature signals from a sensor. To guarantee that every temperature reading is contained in *a single 10-minute window*, tumbling windows are used in this situation. Averages are then computed for these non-overlapping periods.
+Let's say we want to determine the average temperature every **ten minutes** from a stream of temperature signals from a sensor. To guarantee that every temperature reading is contained in **a single 10-minute window**, tumbling windows are used in this situation. Averages are then computed for these non-overlapping periods.
 
 Let's say the sensor sends readings at minutes: **`1, 3, 7, 11, 15, 18, 22, 25`**. Using 10-minute tumbling windows, the readings would be grouped and averaged as follows:
 
@@ -54,9 +54,9 @@ Let's say the sensor sends readings at minutes: **`1, 3, 7, 11, 15, 18, 22, 25`*
 - **Window 2** (10-20 minutes): Includes readings at minutes **`11, 15, 18`**. The average of these readings is calculated.
 - **Window 3** (20-30 minutes): Includes readings at minutes **`22, 25`**. The average of these readings is calculated.
 
-|![Tumbling windows](/assets/images/posts/tumbling-windows.png)|
+|![Tumbling windows](/assets/images/posts/tumbling-windows.png "Created by Author")|
 |:-:|
-|<sup>*Figure 1: Tumbling windows.*</sup>|<br/><br/>
+|<sup>*Figure 1: Tumbling windows. [Original image](/assets/images/posts/tumbling-windows.png){:target="_blank"} (1331 × 389 pixels).*</sup>|<br/><br/>
 
 Each reading is accounted for in exactly one window, with no overlap between windows.
 
@@ -93,7 +93,9 @@ public class TumblingWindowExample {
 
 # Hopping windows
 
-Fixed-size, overlapping intervals of time. They allow for operations over windows that move forward by a smaller step than the window size, providing overlapping data aggregates. Literally, "hop" means "lightly jump." This particular window is called hopping because each window moves forward by a fixed period, which is less than or equal to the size of the window itself. A hopping window is defined by a window size and the size of the time block at which it advances. This results in windows that overlap with each other, providing a way to analyze data points that are close in time across multiple windows. 
+Fixed-size, overlapping intervals of time. They allow for operations over windows that move forward by a smaller step than the window size, providing overlapping data aggregates. This particular window is called hopping because each window moves forward by a fixed period, which is less than or equal to the size of the window itself. A hopping window is defined by a window size and the size of the time block at which it advances. This results in windows that overlap with each other, providing a way to analyze data points that are close in time across multiple windows.
+
+> **Hop**: Literally, "hop" means "lightly jump." In our context, "advance by." If the hop size is equal to the window size, then there's no overlap, and the windows are referred to as tumbling windows.
 
 ## Example
 
@@ -111,9 +113,9 @@ Let's say our events are timestamped as follows (in minutes): **`1, 2, 3, 4, 5, 
 - ...
 - **Window 6** (starting at minute 6) covers **`6-10`** and sees events at **`6, 7, 8, 9, 10`**.
 
-|![Hopping windows](/assets/images/posts/hopping-windows.png){: width="70%" }|
+|![Hopping windows](/assets/images/posts/hopping-windows.png "Created by Author"){: width="70%" }|
 |:-:|
-|<sup>*Figure 2: Hopping windows.*</sup>|<br/><br/>
+|<sup>*Figure 2: Hopping windows. [Original image](/assets/images/posts/hopping-windows.png){:target="_blank"} (804 × 758 pixels).*</sup>|<br/><br/>
 
 Notice how each window overlaps with the next, sharing four minutes of data with it.
 
@@ -151,7 +153,7 @@ Hopping windows are particularly useful for analyses where we want more frequent
 
 # Session windows
 
-Dynamically sized windows based on periods of activity. Session windows do not overlap. In other words, its size is *not based on time but on behavior instead*. It capture periods of activity separated by gaps of inactivity, making them particularly suited for scenarios where activity occurs in bursts.
+Dynamically sized windows based on periods of activity. **Session windows do not overlap**. Its size is *not based on time but on behavior instead*. It capture periods of activity **separated by gaps of inactivity**, making them particularly suited for scenarios where activity occurs in bursts. In other words, session windows are designed to group together events that are closely related in time, while allowing for gaps of inactivity.
 
 Session windows define a period of inactivity, and they expand in size as new events occur within that period. Unlike tumbling or hopping windows, which are based on fixed time intervals, session windows dynamically adjust their size based on the presence or absence of events. This capability allows for more flexible and meaningful aggregation of events that naturally occur in sessions or bursts[^1].
 
@@ -165,7 +167,7 @@ Once a new event comes in after that break, it starts a new session window. This
 
 This is a configurable duration that defines how much time must pass without any events before a new session window is started, i.e., before new messages start arraying. If a subsequent event arrives within the inactivity gap, it is included in the current session window, potentially extending its duration.
 
-## No overlap for a given key
+## Key and no overlap for a given key
 
 The key is a crucial concept in session windows. It's what Kafka Streams uses to group events into sessions. Each event in a Kafka stream has a key-value pair, and the key is used to identify which events are related. When processing streams, Kafka Streams uses these keys to organize data into windows.
 
@@ -183,13 +185,36 @@ Consider an online gaming platform where players log in, perform various activit
 
 Let's say we have the following events (login actions) for two players over time:
 
-- **Player A**: Events at **`10:00`**, **`10:05`**, and **`10:20`**.
-- **Player B**: Events at **`10:30`** and **`11:15`**.
+- **Player A's events**: **`10:00`**, **`10:05`**, and **`10:20`**.
+- **Player B's events**: **`10:30`** and **`11:15`**.
+- **Inactivity gap**: **`10`** minutes.
 
-Assuming an **inactivity gap of 10 minutes**:
+### Session window analysis
 
-- **Player A** would have a single session window from **`10:00`** to **`10:20`** because the events are within 10 minutes of each other.
-- **Player B** would have two separate session windows (**`10:30`** to **`10:30`** and **`11:15`** to **`11:15`**) because the gap between events exceeds the 10-minute inactivity gap.
+#### Player A
+
+- **10:00 and 10:05**: These two events are 5 minutes apart, which is less than the 10-minute inactivity gap. Therefore, they belong to the same session window.
+- **10:05 and 10:20**: The gap between these two events is 15 minutes, which is more than the 10-minute inactivity threshold. Therefore, the event at 10:20 starts a new session window.
+
+As a result, **Player A** has two session windows:
+
+- One from `10:00` to `10:05`
+- Another starting at `10:20` and ending at the last event time (assuming no more events occur, this window ends at `10:20` itself).
+
+#### Player B
+
+- **10:30 and 11:15**: These two events are 45 minutes apart, which is significantly more than the 10-minute inactivity gap. Each event here would constitute its own session window because the gap between any two events is larger than the defined threshold.
+
+As a result, Player B has two separate session windows:
+
+- One starting at `10:30` and ending at `10:30` (assuming no more events occur close to this time).
+- Another starting at `11:15` and ending at `11:15` (assuming no more events occur close to this time).
+
+|![Session windows](/assets/images/posts/session-windows.png "Created by Author"){: width="100%" }|
+|:-:|
+|<sup>*Figure 3: Session windows. [Original image](/assets/images/posts/session-windows.png){:target="_blank"} (3182 × 486 pixels).*</sup>|<br/><br/>
+
+Each session window starts with the first event and ends with the last event in that session, considering the inactivity gap.
 
 ## Code example
 
@@ -218,70 +243,115 @@ public class SessionWindowExample {
 
 - **`playerActions`** is a **`KStream`** representing player actions, keyed by player ID.
 - **`groupByKey`** groups the actions by player ID, preparing them for windowed aggregation.
-- **`windowedBy(SessionWindows.with(inactivityGap))`** applies session windowing based on the specified inactivity gap.
+- **`windowedBy(SessionWindows.with(inactivityGap))`** applies session windowing based on the specified inactivity gap. In our case, we set the inactivity gap to 10 minutes.
 - The **`count`** method aggregates the number of actions within each session window for each player.
 
 Session windows are particularly useful for analyzing user behavior, session-based analytics, and any scenario where activity patterns are bursty or discontinuous. By dynamically adjusting window sizes based on actual activity, session windows offer a detailed view of event patterns compared to fixed-size windows.
 
 # Sliding windows
 
-Sliding windows are defined by a fixed duration and a sliding interval. Like the session window, they can continue to grow in size because they are based on behavior. In other words, they allow for the aggregation of events within a specific time frame that "slides" over the data stream as time progresses. 
+Sliding windows are defined by a **fixed duration** and they are designed to allow **overlapping windows** that slide over the data stream for continuous updates. Like the session window, they can continue to grow in size because they are based on behavior. In other words, they allow for the aggregation of events within a specific time frame that "slides" over the data stream as time progresses. 
 
-Imagine a river is flowing by us, and we want to examine the water quality, but instead of checking the entire river at once, we decide to look at just a portion of the water that flows by us within a specific time frame. Let's say we choose to examine the water every 5 minutes, but instead of starting a new check every 5 minutes on the dot, we start a new check every minute, each time including the water from the last 5 minutes.
+Having said that, they are defined by two parameters:
+
+- **Window's length**: The duration of the window for which the data is aggregated.
+- **Slide interval** or **Advance Interval** or **Slide**: How often a new window starts.
+
+To better understand, imagine a river flowing by us, and we want to examine the water quality, but instead of checking the entire river at once, we decide to look at just a portion of the water that flows by us within a specific time frame. Let's say we choose to examine the water every 5 minutes, but instead of starting a new check every 5 minutes on the dot, we start a new check every minute, each time including the water from the last 5 minutes.
 
 In the context of Kafka Streams and sliding windows, the "river" is our stream of data (events), and the "water quality check" is the aggregation or analysis we want to perform on that data. A sliding window is like the moving 5-minute period we use to check the water quality. As time moves forward, this 5-minute window "slides" along with the flow of the river (or the flow of our data). This means we're constantly updating our analysis or aggregation based on the most recent 5 minutes of data, starting a new analysis every minute (or whatever our chosen interval is).
 
-Put simply, we're continuously summarizing or analyzing the most recent chunk of data, and this chunk moves forward over time, constantly capturing a fresh set of data based on the window's duration and the sliding interval we've defined. This approach allows us to get a continuous, up-to-date view of what's happening in our data stream, making it very useful for real-time monitoring and analysis.
+In other words, we're continuously summarizing or analyzing the most recent chunk of data, and this chunk moves forward over time, constantly capturing a fresh set of data based on the window's duration and the sliding interval we've defined. This approach allows us to get a continuous, up-to-date view of what's happening in our data stream, making it very useful for real-time monitoring and analysis.
 
 ## Example
 
-Consider a scenario where we're analyzing temperature readings from a sensor, and we want to calculate the average temperature over the last 5 minutes for every reading. This means for each temperature reading, we look back 5 minutes from its timestamp and include all readings in that interval for our calculation.
+Let's take the following case:
 
-Let's say we have temperature readings timestamped as follows (in minutes): **`1, 2, 3, 4, 5, 6, 7, 8, 9, 10`**.
+- **Window size**: **`30`** minutes
+- **Slide interval**: **`10`** minutes
 
-Using a 5-minute sliding window, for the reading at minute **`6`**, we would include readings from minutes **`2, 3, 4, 5, 6`** in the average calculation. For the reading at minute **`7`**, the window slides to include readings from **`3, 4, 5, 6, 7`**, and so on.
+This means every *10 minutes*, a new window starts but each window covers data from the *past 30 minutes*. Therefore, windows will overlap each other.
+
+Imagine our click data stream over a timeline:
+
+|![Sliding windows](/assets/images/posts/sliding-windows.png "Created by Author"){: width="100%" }|
+|:-:|
+|<sup>*Figure 4: Sliding windows. [Original image](/assets/images/posts/sliding-windows.png){:target="_blank"} (1961 × 436 pixels).*</sup>|<br/><br/>
+
+Clicks occur at minutes 5, 15, 25, 35, 45, 55, 65, 75, 85.
+
+- **Window 1 (0-30)**: Captures clicks at 5, 15, 25.
+- **Window 2 (10-40) - Slides 10 minutes from Window 1**: Captures clicks at 15, 25, 35.
+- **Window 2 (20-50) - Slides 10 minutes from Window 2**: Captures clicks at 25, 35, 45.
+
+And so on.
+
+To visualize this:
+
+```scss
+Initial State (First Window)
+[5, 15, 25]              <- Window 1 (0-30)
+      [15, 25, 35]       <- Window 2 (10-40) (Starts after 10 minutes)
+            [25, 35, 45] <- Window 3 (20-50) (Starts after another 10 minutes)
+```
+
+Each bracket [...] represents a window capturing clicks within that 30-minute period, sliding every 10 minutes, showing the overlap where consecutive windows include some of the same data points (clicks).
 
 ## Code example
 
 Here's how we might set up a sliding window in Kafka Streams for calculating average temperatures:
 
 ```java
+import org.apache.kafka.common.serialization.Serdes;
+import org.apache.kafka.streams.KafkaStreams;
+import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
+import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.kstream.*;
-
 import java.time.Duration;
+import java.util.Properties;
 
-public class SlidingWindowExample {
+public class ClickCountSlidingWindow {
+
     public static void main(String[] args) {
+        Properties props = new Properties();
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "click-count-application");
+        props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
+        props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
+
         StreamsBuilder builder = new StreamsBuilder();
-        KStream<String, Double> temperatureReadings = builder.stream("temperature-sensor");
 
-        // Define a sliding window of 5 minutes
-        SlidingWindows slidingWindows = SlidingWindows.ofTimeDifferenceWithNoGrace(Duration.ofMinutes(5));
+        KStream<String, String> clicks = builder.stream("clicks-topic");
 
-        KTable<Windowed<String>, Double> averageTemperatures = temperatureReadings
-            .groupByKey() // Assuming the key is the sensor ID
-            .windowedBy(slidingWindows)
-            .aggregate(
-                () -> 0.0, // Initializer for the aggregation
-                (key, newValue, aggValue) -> aggValue + newValue, // Adder
-                (key, leftValue, rightValue) -> leftValue + rightValue, // Subtracter for out-of-window values, if needed
-                Materialized.<String, Double, WindowStore<Bytes, byte[]>>as("average-temperature-store")
-                    .withValueSerde(Serdes.Double()) // Specify the SerDe explicitly for the aggregated value
-            )
-            .mapValues(total -> total / 5); // Calculate the average
+        // Define the sliding window
+        TimeWindows slidingWindow = TimeWindows.of(Duration.ofMinutes(30)).advanceBy(Duration.ofMinutes(10));
 
+        // Count clicks in the sliding window
+        KTable<Windowed<String>, Long> clickCounts = clicks
+                .groupByKey()
+                .windowedBy(slidingWindow)
+                .count(Materialized.as("clicks-count-store"));
+        
         // Further processing or output the results to a topic
     }
 }
 ```
 
-- **`temperatureReadings`** is a **`KStream`** representing the stream of temperature readings, with each reading possibly keyed by the sensor ID.
-- The **`groupByKey`** method groups the readings by sensor ID, preparing them for aggregation.
-- **`windowedBy(slidingWindows)`** applies the sliding window definition to the grouped stream.
-- The **`aggregate`** method computes the sum of temperatures in each window, and then we calculate the average by dividing by the count of readings (simplified here for demonstration; in practice, we'd dynamically count readings within each window).
+- `TimeWindows`: Defines the sliding window with a size of 30 minutes and an advance interval of 10 minutes.
+- `groupByKey()`: Groups the click events by their key. In this case, the specific key doesn't matter since we're counting all clicks, but it's necessary for windowed aggregation.
+- `windowedBy()`: Applies the sliding window definition to the grouped stream.
+- `count()`: Counts the number of events (clicks) within each window.
 
 Sliding windows are ideal for continuous calculations that need to be updated with each new event, providing a more granular and immediate view of data trends over time.
+
+# Summary
+
+Below is a tabular comparison:
+
+|![Windows' comparison](/assets/images/posts/kafka-stream-windows.png "Created by Author"){: width="100%" }|
+|:-:|
+|<sup>*Figure 5: Windows' comparison. [Original image](/assets/images/posts/kafka-stream-windows.png){:target="_blank"} (1092 × 365 pixels).*</sup>|<br/><br/>
 
 ---
 
