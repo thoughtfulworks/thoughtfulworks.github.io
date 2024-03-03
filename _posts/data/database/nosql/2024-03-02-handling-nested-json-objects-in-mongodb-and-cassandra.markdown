@@ -45,6 +45,11 @@ The aforementioned qualities make NoSQL databases a strong option in situations 
 
 # Handling nested JSON objects
 
+
+**TL;DR**: Handling nested JSON objects in Cassandra presents challenges due to the lack of support for JOIN operations, requiring a different approach for efficient data read/write operations. The recommended strategy involves flattening the nested data structure, utilizing Cassandra's collection types (lists, sets, and maps) or User-Defined Types (UDTs) to model the data. This approach allows us to store complex, nested information in a single table, reducing the need for joins.
+
+Let's dive deep into this in detail.
+
 In the ever-evolving world of NoSQL databases, the choice between **MongoDB** and **Cassandra** becomes crucial when dealing with nested or complex JSON objects. MongoDB and Cassandra offer different approaches due to their underlying data models and architectures. The efficiency of read and write operations in these databases is significantly influenced by how they handle such data structures. Whether we're building a real-time analytics engine, or any application requiring efficient storage and retrieval of complex JSON data, understanding the strengths and limitations of each database system will empower us to make an informed decision.
 
 ## How does MongoDB handle nested JSON?
@@ -81,11 +86,25 @@ On the other hand, Cassandra, a wide-column store, excels in handling vast amoun
 
 # Recommended approach for nested JSON data in Cassandra
 
+Cassandra, being a column-family database, does not directly support nested structures in the same way as MongoDB does. However, there are different approaches that can be used to model nested data.
+
+## Denormalization over normalization
+
+In Cassandra, denormalization is preferred over normalization because normalization is generally not a viable option due to the following reasons:
+
+- **No Joins**: Cassandra does not support joins. Normalizing data into multiple tables would necessitate joins to reassemble the data for queries, which Cassandra cannot do. Normalizing data into multiple tables would necessitate joins to reassemble the data for queries, which Cassandra cannot do.
+- **Data Modeling**: Cassandra's data modeling is based on query patterns rather than data relationships. The recommended approach is to model our tables based on the queries you intend to run. This often means creating multiple, *purpose-built tables that might duplicate data*[^3].
+- **Performance**: Cassandra is optimized for high write and read throughput across distributed systems. Normalization would require multiple read operations from different tables to reconstruct a single object, which would be slower and more complex to handle at scale.
+- **Partitioning and clustering**: Cassandra's architecture relies heavily on partitioning data across nodes. Normalized data would be more difficult to partition effectively and could lead to "hotspots" - where one partition has a significantly higher load than others.
+
+## Recommended approaches
+
 When dealing with nested JSON data in Cassandra, the recommended approach typically involves:
 
 - **Flattening Data**: Flatten the JSON structure as much as possible to fit Cassandra's table structure, using columns for each field or using collection types (lists, sets, maps) where appropriate for minor nested data.
 - **Using User-Defined Types (UDTs)**: For semi-structured nested data that fits naturally into a hierarchical model, Cassandra's UDTs can be used. UDTs allow for the definition of custom types composed of multiple fields, offering a way to handle more complex data structures within the constraints of Cassandra's data model.
-- **Denormalization and Duplication**: Create multiple tables, each designed to serve specific query patterns, potentially duplicating data across these tables to ensure queries are efficient.
+- **Using Cassandra's collection types**: TODO
+- **Denormalization and Duplication**: Create multiple purpose-built tables, each designed to serve specific query patterns, potentially duplicating data across these tables to ensure queries are efficient.
 
 In summary, normalization is not a recommended approach for working with nested JSON data in Cassandra. Instead, leveraging Cassandra's strengths involves denormalizing data, thoughtfully designing tables around our application's query patterns, and using Cassandra's data types effectively to manage complex data structures within the wide-column store model.
 
@@ -141,8 +160,18 @@ No, MongoDB is not a wide column store like Cassandra. MongoDB is categorized as
 
 In summary, MongoDB and Cassandra serve different purposes and excel in different scenarios due to their distinct data models and architecture. MongoDB is a document database that is best for use cases requiring complex data structures and schema flexibility, while Cassandra is a wide column store optimized for scalability and performance across large, distributed datasets.
 
+## What does it mean to have purpose-built tables with possible duplicate data in Cassandra?
+
+When it comes to Cassandra, tables are frequently constructed with the queries that the application will execute in mind, as opposed to minimizing data redundancy. Each table is typically optimized to serve a specific type of query with all the necessary data included within the same partition. With that said, Cassandra may involve creating multiple, purpose-built tables that duplicate data in order to optimize data retrieval operations. This is fundamentally different from the relational database practice of normalization, which seeks to minimize redundancy and maintain data integrity by splitting data into multiple related tables that are then recombined using joins.
+
+- **Duplication for performance**: To ensure that each query can be satisfied by reading from a single table, without the need for joins or multiple reads from different tables, data is duplicated across these purpose-built tables. This means that the same piece of data might exist in several tables, each structured to answer a different query.
+- **Write amplification**: This approach leads to write amplification, where a single logical update may result in updates across multiple tables. While this increases write complexity, it benefits read performance because each query can be satisfied by a direct and efficient table scan.
+- **Denormalization by design**: Unlike normalization, which aims to reduce data redundancy and maintain data integrity, the duplication in Cassandra is intentional and does not aim to conform to the RDBMS normalization forms. Denormalization in Cassandra is a design choice to leverage the database's distributed nature and ensure linear scalability.
+
 ---
 
 [^1]: **Wide-column store databases**: Wide-column store databases are a type of NoSQL database that organizes data into tables, rows, and "dynamic" columns. Dynamic columns enable each row can have a different set of columns. Unlike traditional relational databases that structure data into fixed columns and rows, wide-column stores allow each row to have a unique or different set of columns. **Use Cases**: Ideal for handling large datasets with variable schema across many rows, such as time-series data, or for applications requiring high performance and scalability, like web analytics and real-time sensor data analysis.
 
 [^2]: **Dynamic schema**: The dynamic schema (or dynamic column) feature of MongoDB refers to its ability to allow the structure of documents (akin to rows in relational databases) to vary from one to another within the same collection. This means that documents in a single collection do not need to have the same set of fields or structure, allowing for the storage of data in a more flexible way compared to traditional relational databases that require the schema of a table to be defined and fixed before data can be inserted. This flexibility enables developers to evolve their data model without having to perform schema migrations or alter table structures as their applications develop and change. It's particularly useful for dealing with *heterogeneous data*, accommodating changes in data models, and rapidly developing applications where the data structure can evolve over time.
+
+[^3]: **Purpose-built tables with duplicate data for queries**: When we say Cassandra may involve creating multiple, purpose-built tables that duplicate data, we're describing a deliberate design strategy aimed at maximizing the efficiency of data retrieval operations. This is fundamentally different from the relational database practice of normalization, which seeks to minimize redundancy and maintain data integrity by splitting data into multiple related tables that are then recombined using joins.
