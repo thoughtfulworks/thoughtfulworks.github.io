@@ -20,7 +20,7 @@ toc: true
 
 In the world of NoSQL databases, MongoDB and Cassandra stand out for their robustness, scalability, and flexibility, making them prime choices for managing the data demands of modern applications. When it comes to managing complex, nested JSON data structures, the choice between MongoDB and Cassandra becomes crucial, as each offers unique capabilities and advantages tailored to specific requirements. 
 
-This post aims to provide a comprehensive overview of how MongoDB and Cassandra handle nested or complex JSON data, comparing their data modeling capabilities, query flexibility, performance implications, and scalability to help you decide which NoSQL database best suits our specific use case. Understanding the strengths and limitations of each database in handling complex JSON data is key to making an informed decision.
+This post aims to provide a comprehensive overview of how MongoDB and Cassandra handle nested or complex JSON data, comparing their data modeling capabilities, query flexibility, performance implications, and scalability to help us decide which NoSQL database best suits our specific use case. Understanding the strengths and limitations of each database in handling complex JSON data is key to making an informed decision.
 
 ---
 
@@ -78,7 +78,7 @@ On the other hand, Cassandra, a wide-column store, excels at handling vast amoun
 |---------|---------|-----------|
 | **Native support for JSON** (Including nested, complex JSON objects) | MongoDB is designed as a document-oriented database, making it **inherently well-suited for storing, reading, and writing nested JSON objects, including nested complex JSON objects**. | Cassandra is a wide-column store, which **doesn't natively support nested JSON structures** in the same way document-oriented databases like MongoDB do.<br><br>Instead, complex data structures must be mapped to Cassandra’s table structure, often involving **denormalization**, or we would typically need to **flatten** the data through the use of user-defined types (UDTs) or Cassandra's data types like map, list, and set to model data with some level of nesting, but these are not equivalent to fully nested JSON objects. This requires careful data modeling to ensure efficiency. The flattening method simplifies queries but can lead to data redundancy and larger storage requirements. |
 | **Normalization** | MongoDB **does not require us to normalize data into separate tables**. Instead, we can store nested data directly within a single document in a collection, which can simplify data retrieval and reduce the need for join operations. | Cassandra's architecture and data modeling practices are fundamentally **designed around denormalization, not normalization**.<br><br>**Lack of Joins**: Cassandra does not support joins. Attempting to normalize data in Cassandra would lead to inefficient querying patterns, requiring application-level joins that are costly in terms of performance and complexity. |
-| **Querying** | MongoDB **provides a rich set of query operators** to navigate and query nested objects and arrays. You can query based on nested field values, array elements, and even use projection operators to return specific parts of a document. | Cassandra **does not offer native support for querying inside nested JSON structures** stored as text. For structured querying of nested data, we would typically use User-Defined Types (UDTs) to model part of the nested structure, or store serialized JSON in a text column and handle the deserialization in our application. |
+| **Querying** | MongoDB **provides a rich set of query operators** to navigate and query nested objects and arrays. We can query based on nested field values, array elements, and even use projection operators to return specific parts of a document. | Cassandra **does not offer native support for querying inside nested JSON structures** stored as text. For structured querying of nested data, we would typically use User-Defined Types (UDTs) to model part of the nested structure, or store serialized JSON in a text column and handle the deserialization in our application. |
 | **Indexing** | MongoDB **allows us to create indexes on fields that are deeply nested within a JSON document**, improving the performance of queries that access these fields.<br><br>**Multikey indexes for arrays**: When a field contains an array, MongoDB automatically uses a multikey index to index each element of the array. This is particularly useful for nested arrays within JSON documents, enabling efficient queries on array elements.<br><br>**Compound indexes**: MongoDB supports compound indexes that can include nested fields. This feature is useful for optimizing queries that filter or sort on multiple fields, including those within nested structures.<br><br>**Partial indexes**: Partial indexes allow indexing only a subset of a collection based on a specified filter expression. This can include conditions on nested fields, making the indexes more efficient by only including relevant documents. | Cassandra's **support for indexing nested JSON fields is more limited**. While Cassandra can store JSON data, it does so by mapping JSON fields to columns. Indexing is performed on these columns, not directly within nested JSON structures. Cassandra supports User-Defined Types (UDTs), which can be used to model nested data structures to some extent. We can create indexes on UDT fields, but this requires modeling our data in a way that aligns with Cassandra's columnar structure, rather than working directly with arbitrary nested JSON. |
 | **Joins** | Since MongoDB allows nested JSON documents to be stored and queried within single documents, it **reduces the need for joins**, but MongoDB also provides mechanisms to perform operations similar to SQL joins through its aggregation framework. MongoDB supports a form of joining documents from different collections primarily through the `$lookup` operator in its aggregation framework. | Cassandra **does not support joins** in the way relational databases do. This limitation is by design, stemming from Cassandra's focus on scalability, distributed architecture, and performance. In distributed databases like Cassandra, the overhead and complexity of performing joins across potentially large datasets spread over many nodes can significantly impact performance and scalability. |
 
@@ -96,7 +96,7 @@ Cassandra, being a column-family database, does not directly support nested stru
 In Cassandra, denormalization is preferred over normalization because **normalization is generally not a viable option** due to the following reasons:
 
 - **No Joins**: Cassandra does not support joins. Normalizing data into multiple tables would necessitate joins to reassemble the data for queries, which Cassandra cannot do. Normalizing data into multiple tables would necessitate joins to reassemble the data for queries, which Cassandra cannot do.
-- **Data Modeling**: Cassandra's data modeling is based on query patterns rather than data relationships. The recommended approach is to model our tables based on the queries you intend to run. This often means creating multiple, *purpose-built tables that might duplicate data*[^3].
+- **Data Modeling**: Cassandra's data modeling is based on query patterns rather than data relationships. The recommended approach is to model our tables based on the queries we intend to run. This often means creating multiple, *purpose-built tables that might duplicate data*[^3].
 - **Performance**: Cassandra is optimized for high write and read throughput across distributed systems. Normalization would require multiple read operations from different tables to reconstruct a single object, which would be slower and more complex to handle at scale.
 - **Partitioning and clustering**: Cassandra's architecture relies heavily on partitioning data across nodes. Normalized data would be more difficult to partition effectively and could lead to "hotspots," where one partition has a significantly higher load than others.
 
@@ -112,11 +112,46 @@ The below nested array JSON will serve as a basis for these explanations:
 
 ```json
 {
-  "user_id": "123",
-  "name": "John Doe",
-  "addresses": [
-    {"street": "123 Main St", "city": "Anytown"},
-    {"street": "456 Elm St", "city": "Villageton"}
+  "account_id": "123456789",
+  "account_holder_name": "John Doe",
+  "balance": 9500.00,
+  "account_type": "Checking",
+  "transactions": [
+    {
+      "transaction_id": "T1001",
+      "transaction_type": "debit",
+      "amount": 500.00,
+      "date": "2024-02-25",
+      "description": "Grocery Shopping at SuperMart",
+    },
+    {
+      "transaction_id": "T1002",
+      "transaction_type": "credit",
+      "amount": 1500.00,
+      "date": "2024-02-20",
+      "description": "Monthly Salary",
+    },
+    {
+      "transaction_id": "T1003",
+      "transaction_type": "debit",
+      "amount": 200.00,
+      "date": "2024-02-18",
+      "description": "Electricity Bill Payment",
+    },
+    {
+      "transaction_id": "T1004",
+      "transaction_type": "debit",
+      "amount": 300.00,
+      "date": "2024-02-15",
+      "description": "Online Subscription Service",
+    },
+    {
+      "transaction_id": "T1005",
+      "transaction_type": "credit",
+      "amount": 2000.00,
+      "date": "2024-02-10",
+      "description": "Freelance Payment Received",
+    }
   ]
 }
 ```
@@ -125,79 +160,152 @@ The below nested array JSON will serve as a basis for these explanations:
 
 Cassandra's UDTs allow us to define a custom data type that represents the structure of nested JSON data. This is useful for encapsulating the attributes of a complex entity.
 
-First, define a UDT using the `type` keyword for the address structure:
+First, define a UDT using the `type` keyword for the **transaction** structure:
 
 ```sql
-CREATE TYPE address (
-  street text,
-  city text
+CREATE TYPE IF NOT EXISTS transaction_udt (
+    transaction_id text,
+    transaction_type text,
+    amount decimal,
+    date text,
+    description text
 );
 ```
 
 Next, use this UDT in a table definition:
 
 ```sql
-CREATE TABLE users (
-  user_id text PRIMARY KEY,
-  name text,
-  addresses list<frozen<address>>  -- Using the address UDT in a list
+CREATE TABLE IF NOT EXISTS bank_accounts (
+    account_id text PRIMARY KEY,
+    account_holder_name text,
+    balance decimal,
+    account_type text,
+    transactions list<frozen<transaction_udt>>
 );
 ```
 
-To insert the example data:
+To insert the sample data:
 
 ```sql
-INSERT INTO users (user_id, name, addresses) VALUES (
-  '123',
-  'John Doe',
-  [{street: '123 Main St', city: 'Anytown'}, {street: '456 Elm St', city: 'Villageton'}]
-);
+INSERT INTO bank_accounts (account_id, account_holder_name, balance, account_type, transactions)
+VALUES ('123456789', 'John Doe', 9500.00, 'Checking', [
+    {transaction_id: 'T1001', transaction_type: 'debit', amount: 500.00, date: '2024-02-25', description: 'Grocery Shopping at SuperMart'},
+    ...
+]);
 ```
 
-This approach maintains the nested structure within a single table, allowing for efficient queries related to the user and their addresses. UDTs can be used in combination with collections for more complex structures. In our case, we used the `list` collection type to define a list of addresses, where address is an UDT.
+This approach maintains the nested structure within a single table, allowing for efficient queries related to the bank account and their transactions. UDTs can be used in combination with collections for more complex structures. In our case, we used the `list` collection type to define a list of addresses, where address is an UDT.
 
 ### Using Cassandra's collection types
 
-We can also model nested structures using Cassandra's built-in collection types, such as `list`s, `set`s, and `map`s. For the given JSON, a `list` or `set` could be used to store addresses if the addresses can be simplified into a `string` or `map` format. However, since we're dealing with more complex address information, UDTs (as shown above) are more appropriate. This example focuses on how UDTs are essentially utilized in combination with collection types for nested data, as directly using collection types for complex nested data without UDTs can be limiting and less structured.
+We can also model nested structures using Cassandra's built-in collection types, such as `list`s, `set`s, and `map`s. To model the same use case without using UDTs but instead utilizing Cassandra's collection types directly in the table, we can adjust the approach to store transactions as a collection. 
 
-Use a `list` or `set` for addresses:
+However, since Cassandra collections (lists, sets, maps) do not support nesting complex structures like transactions directly, we have to simplify the data model. A common approach is to use a `map` for each transaction attribute, with the transaction ID as the key for each `map`. This approach does not directly nest the transaction details as a single entity but keeps them related by their transaction ID keys.
+
+We'll create a table that uses maps to store transaction attributes. Each transaction attribute (`type`, `amount`, `date`, `description`) will be stored in its own map, keyed by the transaction ID:
 
 ```sql
-CREATE TABLE users (
-  user_id text PRIMARY KEY,
-  name text,
-  addresses list<text>
+CREATE TABLE IF NOT EXISTS bank_accounts_collections (
+    account_id text PRIMARY KEY,
+    account_holder_name text,
+    balance decimal,
+    account_type text,
+    transaction_ids set<text>,
+    transaction_types map<text, text>,
+    transaction_amounts map<text, decimal>,
+    transaction_dates map<text, text>,
+    transaction_descriptions map<text, text>
 );
 ```
+
+In this model:
+
+- **transaction_ids** is a set of all transaction IDs associated with the account. This helps to maintain a list of all transactions without duplicating detailed information.
+- **transaction_types**, **transaction_amounts**, **transaction_dates**, and **transaction_descriptions** are maps where the key is the transaction ID, and the value is the respective attribute of the transaction.
+
+To insert data into this table, we would first generate unique transaction IDs and then use them to insert the transaction details into the respective maps. Here's how we might insert an example account with transactions:
+
+```sql
+INSERT INTO bank_accounts_collections (account_id, account_holder_name, balance, account_type, transaction_ids, transaction_types, transaction_amounts, transaction_dates, transaction_descriptions) VALUES (
+    '123456789',
+    'John Doe',
+    9500.00,
+    'Checking',
+    {'T1001', 'T1002', 'T1003'},
+    {'T1001': 'debit', 'T1002': 'credit', 'T1003': 'debit'},
+    {'T1001': 500.00, 'T1002': 1500.00, 'T1003': 200.00},
+    {'T1001': '2024-02-25', 'T1002': '2024-02-20', 'T1003': '2024-02-18'},
+    {'T1001': 'Grocery Shopping at SuperMart', 'T1002': 'Monthly Salary', 'T1003': 'Electricity Bill Payment'}
+);
+```
+
+#### Considerations
+- **Query Limitations**: This design requires more effort to query specific transaction details as we need to fetch the entire map and then filter for the keys (transaction IDs) we're interested in. It's less convenient than having a UDT where transaction details are encapsulated as a single entity.
+- **Update Complexity**: Updating or deleting individual transactions can become more complex, as we must ensure consistency across all maps for the transaction IDs.
+- **Performance**: While this approach avoids using UDTs, it may not necessarily offer better performance. The use of multiple maps and a set increases the complexity of updates and queries.
 
 ### Creating purpose-built tables with data duplication
 
 For certain query patterns, we might create separate tables that duplicate some of the data to optimize read performance. Here’s how we could model the users and their addresses in separate tables:
 
-Users Table:
+#### Purpose-built table for transactions by type
+
+This table is optimized for querying transactions based on their type (credit or debit):
 
 ```sql
-CREATE TABLE users (
-  user_id text PRIMARY KEY,
-  name text
-);
+CREATE TABLE IF NOT EXISTS transactions_by_type (
+    account_id text,
+    transaction_type text,
+    transaction_id text,
+    amount decimal,
+    date text,
+    description text,
+    PRIMARY KEY ((account_id, transaction_type), date, transaction_id)
+) WITH CLUSTERING ORDER BY (date DESC, transaction_id ASC);
 ```
 
-User addresses table:
+**Primary Key**: The combination of `account_id` and `transaction_type` as the partition key allows for efficient querying of transactions by account and type. The `transaction_id` is used as a clustering column to ensure uniqueness and allow ordering within the partition.
+
+#### Purpose-built table for transactions by date
+
+This table facilitates querying transactions for an account by date:
 
 ```sql
-CREATE TABLE user_addresses (
-  user_id text,
-  address_id uuid,
-  street text,
-  city text,
-  PRIMARY KEY (user_id, address_id)
-);
+CREATE TABLE IF NOT EXISTS transactions_by_date (
+    account_id text,
+    date text,
+    transaction_id text,
+    transaction_type text,
+    amount decimal,
+    description text,
+    PRIMARY KEY ((account_id), date, transaction_id)
+) WITH CLUSTERING ORDER BY (date DESC, transaction_id ASC);
 ```
 
-To insert the data, we would first insert the user information into the `users` table and then insert each address into the `user_addresses` table, possibly generating a unique `address_id` for each address. This approach allows for flexible queries and can be optimized for different access patterns, such as retrieving all addresses for a given user. However, it requires managing data duplication and consistency across tables.
+**Primary Key**: Here, `account_id` is the partition key, and `date` is a clustering column, which allows for transactions to be ordered chronologically within each account. The `transaction_id` ensures uniqueness of transactions within each day.
 
-**Conclusion**: Each of these options has its own trade-offs in terms of complexity, flexibility, and performance. The choice depends on our specific application's query patterns and performance requirements. Using UDTs keeps the structure close to the original JSON and is more straightforward for simple nested objects. Collection types offer flexibility for simpler nested data. However, collections are limited in size (2 billion elements) and are not ideal for very large datasets. Purpose-built tables can provide the highest query performance at the cost of data duplication and increased complexity in data management.
+#### Data duplication strategy
+
+When using purpose-built tables, we'll need to insert the **same transaction data into multiple tables**, each optimized for a specific query pattern. Here's an example of how to insert data into both the *transactions_by_type* and *transactions_by_date* tables:
+
+```sql
+BEGIN BATCH
+    INSERT INTO transactions_by_type (account_id, transaction_type, transaction_id, amount, date, description)
+    VALUES ('123456789', 'debit', 'T1001', 500.00, '2024-02-25', 'Grocery Shopping at SuperMart');
+    
+    INSERT INTO transactions_by_date (account_id, date, transaction_id, transaction_type, amount, description)
+    VALUES ('123456789', '2024-02-25', 'T1001', 'debit', 500.00, 'Grocery Shopping at SuperMart');
+    
+    // Repeat for other transactions...
+APPLY BATCH;
+```
+
+This approach ensures that data is consistently replicated across tables designed for specific access patterns, facilitating fast and efficient queries. However, it also means we need to manage data consistency across multiple tables, especially in write-heavy applications. When updating or deleting transactions, ensure these operations are applied across all relevant tables to maintain data integrity.
+
+**Conclusion of the three Cassandra approaches to managing nested JSON**: Each of these options has its own trade-offs in terms of complexity, flexibility, and performance. The choice depends on our specific application's query patterns and performance requirements. 
+- **UDTs** (Recommended): Using **UDTs keeps the structure close to the original JSON** and is more straightforward for simple nested objects. 
+- **Collection types** offer flexibility for simpler nested data. However, **collections are limited in size** (2 billion elements) and are **not ideal for very large datasets**. 
+- **Purpose-built tables** can provide the highest query performance at the cost of data duplication and increased complexity in data management.
 
 ---
 
