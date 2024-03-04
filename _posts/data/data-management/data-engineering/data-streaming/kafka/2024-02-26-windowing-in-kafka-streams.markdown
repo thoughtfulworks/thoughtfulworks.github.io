@@ -54,9 +54,12 @@ Let's say the sensor sends readings every minute: **`1, 3, 7, 11, 15, 18, 22, 25
 - **Window 2** (10-20 minutes): Includes readings at minutes **`11, 15, 18`**. The average of these readings is calculated.
 - **Window 3** (20-30 minutes): Includes readings at minutes **`22, 25`**. The average of these readings is calculated.
 
-|![Tumbling windows](/assets/images/posts/tumbling-windows.png "Created by Author")|
-|:-:|
-|<sup>*Figure 1: Tumbling windows. [Original image](/assets/images/posts/tumbling-windows.png){:target="_blank"} (1331 × 389 pixels).*</sup>|<br/><br/>
+<p align="center">
+  <img src="/assets/images/posts/tumbling-windows.png" alt="Tumbling windows" title="Created by Author" style="width:100%;"/>
+  <br>
+  <br>
+  <sup><b>Figure 1: </b>Tumbling windows.<a href="/assets/images/posts/tumbling-windows.png" target="_blank"> Original image</a> (1331 × 389 pixels).</sup>
+</p>
 
 Each reading is accounted for in exactly one window, with no overlap between windows.
 
@@ -115,9 +118,12 @@ Let's say our events are timestamped as follows (in minutes): **`1, 2, 3, 4, 5, 
 - ...
 - **Window 6** (starting at minute 6) covers **`6-10`** and sees events at **`6, 7, 8, 9, 10`**.
 
-|![Hopping windows](/assets/images/posts/hopping-windows.png "Created by Author"){: width="70%" }|
-|:-:|
-|<sup>*Figure 2: Hopping windows. [Original image](/assets/images/posts/hopping-windows.png){:target="_blank"} (804 × 758 pixels).*</sup>|<br/><br/>
+<p align="center">
+  <img src="/assets/images/posts/hopping-windows.png" alt="Hopping windows" title="Created by Author" style="width:70%;"/>
+  <br>
+  <br>
+  <sup><b>Figure 2: </b>Hopping windows.<a href="/assets/images/posts/hopping-windows.png" target="_blank"> Original image</a> (804 × 758 pixels).</sup>
+</p>
 
 Notice how each window overlaps with the next, sharing four minutes of data with it.
 
@@ -214,9 +220,12 @@ As a result, Player B has two separate session windows:
 - One starting at `10:30` and ending at `10:30` (assuming no more events occur close to this time).
 - Another starting at `11:15` and ending at `11:15` (assuming no more events occur close to this time).
 
-|![Session windows](/assets/images/posts/session-windows.png "Created by Author"){: width="100%" }|
-|:-:|
-|<sup>*Figure 3: Session windows. [Original image](/assets/images/posts/session-windows.png){:target="_blank"} (3182 × 486 pixels).*</sup>|<br/><br/>
+<p align="center">
+  <img src="/assets/images/posts/session-windows.png" alt="Session windows" title="Created by Author" style="width:100%;"/>
+  <br>
+  <br>
+  <sup><b>Figure 3: </b>Session windows.<a href="/assets/images/posts/session-windows.png" target="_blank"> Original image</a> (3182 × 486 pixels).</sup>
+</p>
 
 Each session window starts with the first event and ends with the last event in that session, considering the inactivity gap.
 
@@ -280,9 +289,12 @@ This means every *10 minutes*, a new window starts, but each window covers data 
 
 Imagine our click data stream over a timeline:
 
-|![Sliding windows](/assets/images/posts/sliding-windows.png "Created by Author"){: width="100%" }|
-|:-:|
-|<sup>*Figure 4: Sliding windows. [Original image](/assets/images/posts/sliding-windows.png){:target="_blank"} (1961 × 436 pixels).*</sup>|<br/><br/>
+<p align="center">
+  <img src="/assets/images/posts/sliding-windows.png" alt="Sliding windows" title="Created by Author" style="width:100%;"/>
+  <br>
+  <br>
+  <sup><b>Figure 4: </b>Sliding windows.<a href="/assets/images/posts/sliding-windows.png" target="_blank"> Original image</a> (1961 × 436 pixels).</sup>
+</p>
 
 Clicks occur at minutes 5, 15, 25, 35, 45, 55, 65, 75, 85.
 
@@ -357,11 +369,14 @@ Sliding windows are ideal for continuous calculations that need to be updated wi
 
 Hopefully, this clarifies the concepts of windowing in Kafka Streams. Below is a quick comparison of all the window types that we have learned about:
 
-|![Windows' comparison](/assets/images/posts/kafka-stream-windows.png "Created by Author"){: width="100%" }|
-|:-:|
-|<sup>*Figure 5: Windows' comparison. [Original image](/assets/images/posts/kafka-stream-windows.png){:target="_blank"} (1092 × 365 pixels).*</sup>|<br/><br/>
+<p align="center">
+  <img src="/assets/images/posts/kafka-stream-windows.png" alt="Windows' comparison" title="Created by Author" style="width:100%;"/>
+  <br>
+  <br>
+  <sup><b>Figure 5: </b>Windows' comparison.<a href="/assets/images/posts/kafka-stream-windows.png" target="_blank"> Original image</a> (1092 × 365 pixels).</sup>
+</p>
 
-Happy learning!
+**Happy learning!**
 
 ---
 
