@@ -311,9 +311,11 @@ This approach ensures that data is consistently replicated across tables designe
 
 # Conclusion
 
-In summary, MongoDB provides a more flexible query model with support for join-like operations through its aggregation framework, which can be useful for applications that require complex data retrieval. Cassandra, on the other hand, focuses on scalability and performance, avoiding joins in favor of denormalization and careful data modeling. Normalization is not a possible approach for working with nested JSON data in Cassandra. Instead, leveraging Cassandra's strengths involves denormalizing data, thoughtfully designing tables around our application's query patterns, and using Cassandra's data types effectively to manage complex data structures within the wide-column store model.
+To put it simply, **MongoDB** offers a flexible way to query data, including operations similar to joins, which is great for complex data retrieval tasks. It allows for an *natural handling of nested JSON data*, making it a good choice if we're looking for ease of use and flexible data structures. On the other hand, **Cassandra** shines in scalability and performance, designed to handle massive data *without using joins*. It relies on denormalization and careful planning of data models instead of normalization, *making it less straightforward for managing nested JSON data*.
 
-When choosing between them, consider our application's specific requirements, including the complexity of data relationships, scalability needs, and the importance of query performance.
+Choosing **Cassandra** means we'll likely use User-Defined Types (UDTs) to deal with nested data. While UDTs help structure relational data in Cassandra, *they're not as flexible or easy to use as MongoDB's approach to JSON documents*.
+
+If our main priority is straightforward management of nested JSON data and a flexible schema, **MongoDB** is likely our best bet. However, for applications that demand high scalability and distributed data management, and where we're okay with a more structured method of dealing with nested data, **Cassandra**, with its UDTs, could be a better fit. This is particularly true for applications that are write-heavy or need specific adjustments for consistency and availability.
 
 ---
 
