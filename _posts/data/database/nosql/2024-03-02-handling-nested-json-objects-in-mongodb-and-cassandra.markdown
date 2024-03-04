@@ -22,9 +22,11 @@ In the world of NoSQL databases, MongoDB and Cassandra stand out for their robus
 
 This post aims to provide a comprehensive overview of how MongoDB and Cassandra handle nested or complex JSON data, comparing their data modeling capabilities, query flexibility, performance implications, and scalability to help you decide which NoSQL database best suits our specific use case. Understanding the strengths and limitations of each database in handling complex JSON data is key to making an informed decision.
 
+---
+
 # A brief introduction to NoSQL database
 
-The term "NoSQL" originally meant "non-SQL" but has evolved to mean "not only SQL," reflecting the diverse approaches modern NoSQL databases use for data management, retrieval, and storing. A database is typically classified as a NoSQL database based on several key characteristics that differentiate it from traditional relational database systems (shortly referred as RDBMS). These characteristics cater to the needs of modern applications requiring scalability, flexibility, and the ability to handle large volumes of *structured*, *semi-structured*, and *unstructured data*.
+The term "NoSQL" originally meant "non-SQL" but has evolved to mean "not only SQL," reflecting the diverse approaches modern NoSQL databases use for data management, retrieval, and storing. A database is typically classified as a NoSQL database based on several key characteristics that differentiate it from traditional relational database systems (shortly referred to as RDBMS). These characteristics cater to the needs of modern applications requiring scalability, flexibility, and the ability to handle large volumes of *structured*, *semi-structured*, and *unstructured data*.
 
 Here are the core qualities that qualify a database as a NoSQL database:
 
@@ -34,7 +36,7 @@ Here are the core qualities that qualify a database as a NoSQL database:
 
 3. **Flexible Schema**: Unlike relational databases that require a predefined schema (structure of the data) that can be *costly to modify*, NoSQL databases allow a *schema-less* or *dynamic schema approach*. This flexibility enables applications to store and combine data of different structures without needing to define and adhere to a rigid schema upfront.
 
-4. **High performance for specific use sases**: Many NoSQL databases are optimized for specific types of data and access patterns, providing high performance for tasks like full-text search, real-time analytics, and handling large volumes of transactions or data streams.
+4. **High performance for specific use cases**: Many NoSQL databases are optimized for specific types of data and access patterns, providing high performance for tasks like full-text search, real-time analytics, and handling large volumes of transactions or data streams.
 
 5. **Distributed nature**: NoSQL databases often employ a distributed architecture, distributing data across multiple servers or nodes. This approach enhances the database's availability, fault tolerance, and resilience, as there is no single point of failure.
 
@@ -55,7 +57,7 @@ In the ever-evolving world of NoSQL databases, the choice between **MongoDB** an
 
 ## How does MongoDB handle nested JSON?
 
-MongoDB, a document-oriented database, *shines with its native support for JSON-like*, schema-less data structures, allowing for the storage of nested documents and arrays seamlessly. This makes it an excellent choice for applications that require agile development and the ability to store complex hierarchical data within a single document. MongoDB's *dynamic schema*[^2] offers the flexibility to evolve our data model over time without significant downtime or complex migrations.
+MongoDB, a document-oriented database, *shines with its native support for JSON-like*, schema-less data structures, allowing for the seamless storage of nested documents and arrays. This makes it an excellent choice for applications that require agile development and the ability to store complex hierarchical data within a single document. MongoDB's *dynamic schema*[^2] offers the flexibility to evolve our data model over time without significant downtime or complex migrations.
 
 - **Native support**: MongoDB is designed as a document-oriented database, making it inherently well-suited for storing, reading, and writing nested JSON objects. It stores data in BSON (Binary JSON) format, which can naturally represent complex, hierarchical data structures with nested objects and arrays.
 - **Querying**: MongoDB provides *powerful querying capabilities for nested objects and arrays*, including the ability to project specific elements of an array, match against elements of nested documents, and perform aggregations. This makes it easy to work with complex data structures without requiring significant data transformation.
@@ -63,7 +65,7 @@ MongoDB, a document-oriented database, *shines with its native support for JSON-
 
 ## How does Cassandra handle nested JSON?
 
-On the other hand, Cassandra, a wide-column store, excels in handling vast amounts of data across many commodity servers, providing high availability without compromising performance. While not inherently document-oriented like MongoDB, Cassandra can be designed to store and query nested JSON data through its map and set data types, and with its JSON support, it allows for semi-structured data to be efficiently managed. However, this comes with the need for a more deliberate data modeling approach to ensure performance and scalability.
+On the other hand, Cassandra, a wide-column store, excels at handling vast amounts of data across many commodity servers, providing high availability without compromising performance. While not inherently document-oriented like MongoDB, Cassandra can be designed to store and query nested JSON data through its map and set data types, and with its JSON support, it allows for semi-structured data to be efficiently managed. However, this comes with the need for a more deliberate data modeling approach to ensure performance and scalability.
 
 - **Data modeling**: Cassandra is a wide-column store, which *does not natively store data in a nested JSON format*. Instead, complex data structures must be mapped to Cassandra's table structure, *often involving denormalization* or the *use of user-defined types* (UDTs) for nested objects. This requires careful data modeling to ensure efficiency.
 - **Read and write operations**: While Cassandra *can efficiently handle high write and read throughput*, the efficiency of operations involving nested JSON objects depends heavily on the data model. Well-designed tables can support efficient reads by minimizing the need for joins (which Cassandra does not support) and leveraging partition keys and clustering columns for fast data retrieval.
@@ -96,7 +98,7 @@ In Cassandra, denormalization is preferred over normalization because **normaliz
 - **No Joins**: Cassandra does not support joins. Normalizing data into multiple tables would necessitate joins to reassemble the data for queries, which Cassandra cannot do. Normalizing data into multiple tables would necessitate joins to reassemble the data for queries, which Cassandra cannot do.
 - **Data Modeling**: Cassandra's data modeling is based on query patterns rather than data relationships. The recommended approach is to model our tables based on the queries you intend to run. This often means creating multiple, *purpose-built tables that might duplicate data*[^3].
 - **Performance**: Cassandra is optimized for high write and read throughput across distributed systems. Normalization would require multiple read operations from different tables to reconstruct a single object, which would be slower and more complex to handle at scale.
-- **Partitioning and clustering**: Cassandra's architecture relies heavily on partitioning data across nodes. Normalized data would be more difficult to partition effectively and could lead to "hotspots" - where one partition has a significantly higher load than others.
+- **Partitioning and clustering**: Cassandra's architecture relies heavily on partitioning data across nodes. Normalized data would be more difficult to partition effectively and could lead to "hotspots," where one partition has a significantly higher load than others.
 
 ## Recommended approaches
 
@@ -121,7 +123,7 @@ The below nested array JSON will serve as a basis for these explanations:
 
 ### Using User-Defined Types (UDTs)
 
-Cassandra's UDTs allow us to define a custom data type that represents the structure of nested JSON data. This is useful for encapsulating attributes of a complex entity.
+Cassandra's UDTs allow us to define a custom data type that represents the structure of nested JSON data. This is useful for encapsulating the attributes of a complex entity.
 
 First, define a UDT using the `type` keyword for the address structure:
 
@@ -170,7 +172,7 @@ CREATE TABLE users (
 
 ### Creating purpose-built tables with data duplication
 
-For certain query patterns, we might create separate tables that duplicate some of the data to optimize for read performance. Here’s how we could model the users and their addresses in separate tables:
+For certain query patterns, we might create separate tables that duplicate some of the data to optimize read performance. Here’s how we could model the users and their addresses in separate tables:
 
 Users Table:
 
@@ -195,11 +197,11 @@ CREATE TABLE user_addresses (
 
 To insert the data, we would first insert the user information into the `users` table and then insert each address into the `user_addresses` table, possibly generating a unique `address_id` for each address. This approach allows for flexible queries and can be optimized for different access patterns, such as retrieving all addresses for a given user. However, it requires managing data duplication and consistency across tables.
 
-**Conclusion**: Each of these options has its trade-offs in terms of complexity, flexibility, and performance. The choice depends on our specific application's query patterns and performance requirements. Using UDTs keeps the structure close to the original JSON and is more straightforward for simple nested objects. Collection types offer flexibility for simpler nested data. However, collections are limited in size (2 billion elements) and are not ideal for very large datasets. Purpose-built tables can provide the highest query performance at the cost of data duplication and increased complexity in data management.
+**Conclusion**: Each of these options has its own trade-offs in terms of complexity, flexibility, and performance. The choice depends on our specific application's query patterns and performance requirements. Using UDTs keeps the structure close to the original JSON and is more straightforward for simple nested objects. Collection types offer flexibility for simpler nested data. However, collections are limited in size (2 billion elements) and are not ideal for very large datasets. Purpose-built tables can provide the highest query performance at the cost of data duplication and increased complexity in data management.
 
 ---
 
-# Conslusion
+# Conclusion
 
 In summary, MongoDB provides a more flexible query model with support for join-like operations through its aggregation framework, which can be useful for applications that require complex data retrieval. Cassandra, on the other hand, focuses on scalability and performance, avoiding joins in favor of denormalization and careful data modeling. Normalization is not a possible approach for working with nested JSON data in Cassandra. Instead, leveraging Cassandra's strengths involves denormalizing data, thoughtfully designing tables around our application's query patterns, and using Cassandra's data types effectively to manage complex data structures within the wide-column store model.
 
@@ -211,11 +213,11 @@ When choosing between them, consider our application's specific requirements, in
 
 ## Is a wide column store the same as a columnar store?
 
-No, wide column stores and columnar stores are not the same, despite their similar names. They are designed for different use cases and have distinct architectures. Here’s a brief overview of each:
+No, wide-column stores and columnar stores are not the same, despite their similar names. They are designed for different use cases and have distinct architectures. Here’s a brief overview of each:
 
 ### Wide Column Stores
 
-- **Definition**: Wide column stores are a type of NoSQL database that organize data into tables, rows, and dynamic columns. Each row is uniquely identifiable by a row key, and each row can have any number of columns. This model allows for the efficient storage and retrieval of data at a massive scale.
+- **Definition**: Wide-column stores are a type of NoSQL database that organizes data into tables, rows, and dynamic columns. Each row is uniquely identifiable by a row key, and each row can have any number of columns. This model allows for the efficient storage and retrieval of data on a massive scale.
 - **Use Cases**: They are optimized for queries over large datasets and are ideal for storing data that doesn't fit well into relational models, such as big data applications, real-time analytics, and scalable web applications.
 - **Examples**: Cassandra and HBase are well-known wide column stores.
 
@@ -249,11 +251,11 @@ No, MongoDB is not a wide column store like Cassandra. MongoDB is categorized as
 - **Schema Flexibility**: While Cassandra offers some flexibility with dynamic columns, its data model is generally more rigid than MongoDB's, requiring a defined schema that specifies the column families.
 - **Use Cases**: Cassandra excels in scenarios requiring high availability, scalability across multiple data centers, and the ability to handle large volumes of writes and reads. It is ideal for applications such as messaging systems, IoT data storage, and any use case that requires linear scalability and fault tolerance.
 
-In summary, MongoDB and Cassandra serve different purposes and excel in different scenarios due to their distinct data models and architecture. MongoDB is a document database that is best for use cases requiring complex data structures and schema flexibility, while Cassandra is a wide column store optimized for scalability and performance across large, distributed datasets.
+In summary, MongoDB and Cassandra serve different purposes and excel in different scenarios due to their distinct data models and architectures. MongoDB is a document database that is best for use cases requiring complex data structures and schema flexibility, while Cassandra is a wide column store optimized for scalability and performance across large, distributed datasets.
 
 ## What does it mean to have purpose-built tables with possible duplicate data in Cassandra?
 
-When it comes to Cassandra, tables are frequently constructed with the queries that the application will execute in mind, as opposed to minimizing data redundancy. Each table is typically optimized to serve a specific type of query with all the necessary data included within the same partition. With that said, Cassandra may involve creating multiple, purpose-built tables that duplicate data in order to optimize data retrieval operations. This is fundamentally different from the relational database practice of normalization, which seeks to minimize redundancy and maintain data integrity by splitting data into multiple related tables that are then recombined using joins.
+When it comes to Cassandra, tables are frequently constructed with the queries that the application will execute in mind, as opposed to minimizing data redundancy. Each table is typically optimized to serve a specific type of query, with all the necessary data included within the same partition. With that said, Cassandra may involve creating multiple, purpose-built tables that duplicate data in order to optimize data retrieval operations. This is fundamentally different from the relational database practice of normalization, which seeks to minimize redundancy and maintain data integrity by splitting data into multiple related tables that are then recombined using joins.
 
 - **Duplication for performance**: To ensure that each query can be satisfied by reading from a single table, without the need for joins or multiple reads from different tables, data is duplicated across these purpose-built tables. This means that the same piece of data might exist in several tables, each structured to answer a different query.
 - **Write amplification**: This approach leads to write amplification, where a single logical update may result in updates across multiple tables. While this increases write complexity, it benefits read performance because each query can be satisfied by a direct and efficient table scan.
