@@ -1346,23 +1346,25 @@ ol {
 /* Table styles */
 table {
     border-collapse: collapse;
-  }
-  
-  th, td {
+    margin-top: 30px;
+    margin-bottom: 40px;
+}
+
+th, td {
     border: 1px solid black;
     padding: 8px;
-  }
-  
-  /* Optional: Add more styling to your table headers and rows */
-  th {
+}
+
+/* Optional: Add more styling to your table headers and rows */
+th {
     background-color: #f2f2f2;
     text-align: left;
-  }
-  
-  tr:nth-child(even) {
+}
+
+tr:nth-child(even) {
     background-color: #f9f9f9;
-  }
-  
-  tr:hover {
+}
+
+tr:hover {
     background-color: #e8e8e8;
-  }
+}
