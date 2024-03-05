@@ -6,8 +6,8 @@
         <img class="featured-image {% if page.imageshadow %} image-shadow {% endif %}" src="{% if page.image contains "://" %}{{ page.image }}{% else %}{{ site.baseurl }}/{{ page.image }}{% endif %}" alt="{{ page.title }}">
     {% endif %}
     {% if page.image-credits %}
-        <span class="featured-image-credits">
-            <p><b>Image Credits: </b>{{ page.image-credits }} {{ page.image-description }}</p>
+        <span class="featured-image-credits" style="line-height: 1.5; text-align: center;">
+            <p style="margin-top: 20px;"><b>Image Credits: </b>{{ page.image-credits }}<br>{{ page.image-description }}</p>
         </span>
     {% endif %}
  </div>
