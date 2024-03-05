@@ -1345,15 +1345,25 @@ ol {
 
 /* Table styles */
 table {
-    border-collapse: collapse;
+    // border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    overflow: hidden;
+
     margin-top: 30px;
     margin-bottom: 40px;
     font-size: 70%;
 }
 
 th, td {
-    border: 1px solid black;
+    // border: 1px solid black;
     padding: 8px;
+    border: 0.5px solid #ccc;
+    padding: 10px;
+    text-align: left;
 }
 
 /* Optional: Add more styling to your table headers and rows */
@@ -1364,6 +1374,7 @@ th {
 
 tr:nth-child(even) {
     background-color: #f9f9f9;
+    border-bottom: none;
 }
 
 tr:hover {
