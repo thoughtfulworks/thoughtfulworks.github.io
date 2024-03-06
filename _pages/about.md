@@ -17,7 +17,7 @@ Join us at <b>{{ site.name }}</b> as we embark on this journey of learning, shar
 
 Feel free to get in [touch]({{ site.baseurl }}/contact) with us if you like reading our posts, have feedback for us, or would like to contribute.
  
-Happy learning!
+<img src="/assets/images/author/author-casual.png" alt="Author" style="width: 30%; border-radius: 8px;"/>
 
 **Senthil Nayagan**<br/>
 <sup>**Lead Author and Content Creator**: [thoughtfulworks.dev](https://thoughtfulworks.dev/){:target="_blank"}, [towardsdata.dev](https://towardsdata.dev/){:target="_blank"}, and [rustinaction.dev](https://rustinaction.dev/){:target="_blank"}.</sup>
