@@ -20,7 +20,7 @@ Feel free to get in [touch]({{ site.baseurl }}/contact) with us if you like read
 Happy learning!
 
 **Senthil Nayagan**<br/>
-<sup>Founder of [thoughtfulworks.dev](https://thoughtfulworks.dev/){:target="_blank"}, [towardsdata.dev](https://towardsdata.dev/){:target="_blank"} and [rustinaction.dev](https://rustinaction.dev/){:target="_blank"}.</sup>
+<sup>**Lead Author and Content Creator**: [thoughtfulworks.dev](https://thoughtfulworks.dev/){:target="_blank"}, [towardsdata.dev](https://towardsdata.dev/){:target="_blank"}, and [rustinaction.dev](https://rustinaction.dev/){:target="_blank"}.</sup>
 
 **Email:** [hello@thoughtfulworks.dev](mailto:hello@thoughtfulworks.dev)<br/>
 **Twitter:** [thoughtfulwx](https://twitter.com/thoughtfulwx){:target="_blank"}<br/>
