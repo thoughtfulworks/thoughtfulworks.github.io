@@ -13,6 +13,8 @@ featured: false
 hidden: false
 ---
 
+# Overview
+
 Caching is a common approach for reusing certain computation in Apache Spark. It's one of the optimisation techniques in Spark. Among big data practitioners, caching receives a lot of consideration and discussion.
 
 The underlying data store is accessed each time an operation is performed in a Spark DataFrame, requiring the entire dataset to be sent across the network for each execution. When the same data is retrieved frequently, caching is immensely useful. The objective of caching is to *minimize disk I/O* and *retrieve data as quickly as possible* by storing it in RAM rather than on the disk.

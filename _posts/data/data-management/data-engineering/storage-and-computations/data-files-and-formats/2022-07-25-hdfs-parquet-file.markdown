@@ -10,17 +10,19 @@ tags: ["apache-spark", "hadoop", "parquet", "columnar-format", "columnar-storage
 categories: data-files-and-formats
 featured: false
 hidden: false
+draft: true
 ---
-
-> **Writing in progress:** If you have any suggestions for improving the content or notice any inaccuracies, please email me at [hello@senthilnayagan.com](mailto:hello@senthilnayagan.com). Thanks!
 
 # Parquet Motivation
 
 Parquet was created to make the benefits of compressed, efficient columnar data representation available to all Hadoop ecosystems. It's an open source file format. As stated, it's a *columnar storage* format for data that is not necessarily tubular (rows and columns), such as data with complex nested structures. In columnar storage, data in a single column is stored contiguously as shown below:
 
-|![Columnar storage format](/assets/images/posts/columnar-format.png)|
-|:-:|
-|<sub><sup>*Columnar storage format.*</sup></sub>|
+<p align="center">
+  <img src="/assets/images/posts/columnar-format.png" alt="Columnar storage format" title="Created by Author" style="width:80%;"/>
+  <br>
+  <br>
+  <sup><b>Figure 1</b>: Columnar storage format.</sup>
+</p>
 
 Numerous benefits are associated with the columnar format. We will explore them in detail below.
 

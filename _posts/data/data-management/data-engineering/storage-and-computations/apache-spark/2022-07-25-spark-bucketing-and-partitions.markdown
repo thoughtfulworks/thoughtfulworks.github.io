@@ -31,9 +31,12 @@ Partitions are the fundamental building blocks of parallelism in Apache Spark. S
 
 Partitioning can also deliver a significant speed benefit by reducing the amount of data to be shuffled across the network. If RDDs are too large to fit on a single node, they must be partitioned (distributed) across many nodes. Apache Spark *automatically* partitions RDDs and distributes them across different nodes.
 
-|![Data Partitioned by Spark](/assets/images/posts/apache-spark-data-partitions.png)|
-|:-:|
-|<sup>*Figure 1: Data Partitioned by Spark.*</sup>|<br/><br/>|
+<p align="center">
+  <img src="/assets/images/posts/apache-spark-data-partitions.png" alt="Data Partitioned by Spark" title="Created by Author" style="width:80%;"/>
+  <br>
+  <br>
+  <sup><b>Figure 1</b>: Data Partitioned by Spark.</sup>
+</p>
 
 Spark is a distributed computing system, so it can operate on data partitons in parallel. A transformation or any sort of computation on a data partitons is called a **task** and each task generally takes place on one core. As there is one task for every partition, the total number of tasks is the same as the total number of partitions. Optimal partitioning in Spark strikes a balance between read performance and write performance.
 
