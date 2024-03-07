@@ -24,6 +24,14 @@ This post aims to provide a comprehensive overview of how MongoDB and Cassandra 
 
 ---
 
+# TL;DR
+
+Handling nested JSON objects in Cassandra presents challenges due to the lack of support for `JOIN` operations, requiring a different approach for efficient data read/write operations. The recommended strategy involves flattening the nested data structure, utilizing Cassandra's collection types (`list`s, `set`s, and `map`s) or User-Defined Types (UDTs) to model the data. This approach allows us to store complex, nested information in a single table, reducing the need for joins.
+
+Now that we've captured the essence with our TL;DR, let's dive deeper into the nuances and explore the subject in greater detail.
+
+---
+
 # A brief introduction to NoSQL database
 
 The term "NoSQL" originally meant "non-SQL" but has evolved to mean "not only SQL," reflecting the diverse approaches modern NoSQL databases use for data management, retrieval, and storing. A database is typically classified as a NoSQL database based on several key characteristics that differentiate it from traditional relational database systems (shortly referred to as RDBMS). These characteristics cater to the needs of modern applications requiring scalability, flexibility, and the ability to handle large volumes of *structured*, *semi-structured*, and *unstructured data*.
@@ -47,11 +55,6 @@ The aforementioned qualities make NoSQL databases a strong option in situations 
 ---
 
 # Handling nested JSON objects
-
-
-**TL;DR**: Handling nested JSON objects in Cassandra presents challenges due to the lack of support for JOIN operations, requiring a different approach for efficient data read/write operations. The recommended strategy involves flattening the nested data structure, utilizing Cassandra's collection types (lists, sets, and maps) or User-Defined Types (UDTs) to model the data. This approach allows us to store complex, nested information in a single table, reducing the need for joins.
-
-Let's dive deep into this in detail.
 
 In the ever-evolving world of NoSQL databases, the choice between **MongoDB** and **Cassandra** becomes crucial when dealing with nested or complex JSON objects. MongoDB and Cassandra offer different approaches due to their underlying data models and architectures. The efficiency of read and write operations in these databases is significantly influenced by how they handle such data structures. Whether we're building a real-time analytics engine, or any application requiring efficient storage and retrieval of complex JSON data, understanding the strengths and limitations of each database system will empower us to make an informed decision.
 

@@ -143,13 +143,19 @@ Follow the key steps outlined below to create an EMR cluster in AWS Management C
 
 It may take a few minutes to launch the EMR cluster after we have clicked the "Create cluster" button. The launch time is determined by a variety of factors, including the number of cluster nodes, the number of applications and frameworks that we have chosen, and so on.
 
-|![Advanced options](/assets/images/posts/amazon-emr-advanced-options-all-frameworks.png "Adanced options")|
-|:-:|
-|<sup>*Figure 1: Amazon EMR - Adanced options.*</sup>|<br/><br/>
+<p align="center">
+  <img src="/assets/images/posts/amazon-emr-advanced-options-all-frameworks.png" alt="Amazon EMR - Adanced options" title="Amazon EMR - Adanced options" style="width:100%;"/>
+  <br>
+  <br>
+  <sup><b>Figure 1</b>: Amazon EMR - Adanced options.</sup>
+</p>
 
-|![Advanced options: Cluster Nodes and Instances](/assets/images/posts/amazon-emr-cluster-nodes-and-instances.png "Adanced options: Cluster Nodes and Instances")|
-|:-:|
-|<sup>*Figure 2: Amazon EMR - Adanced options: Cluster Nodes and Instances.*</sup>|<br/><br/>
+<p align="center">
+  <img src="/assets/images/posts/amazon-emr-cluster-nodes-and-instances.png" alt="Amazon EMR - Adanced options: Cluster Nodes and Instances" title="Amazon EMR - Adanced options: Cluster Nodes and Instances" style="width:100%;"/>
+  <br>
+  <br>
+  <sup><b>Figure 2</b>: Amazon EMR - Adanced options: Cluster Nodes and Instances.</sup>
+</p>
 
 #### Create a cluster with instance fleets or uniform instance groups
 
@@ -258,17 +264,26 @@ The steps that are shown below demonstrate how to include an inbound rule for SS
 11. Choose **Save**.
 12. Optionally, choose **ElasticMapReduce-slave** from the list and repeat the steps above to allow SSH client access to core and task nodes.
 
-|![Security groups for Master](/assets/images/posts/select-master-sg.png)|
-|:-:|
-|<sup>*Figure 3: Security groups for Master under Security and access.*</sup>|<br/><br/>
+<p align="center">
+  <img src="/assets/images/posts/select-master-sg.png" alt="Security groups for Master" title="Security groups for Master" style="width:80%;"/>
+  <br>
+  <br>
+  <sup><b>Figure 3</b>: Security groups for Master.</sup>
+</p>
 
-|![Edit ElasticMapReduce-master](/assets/images/posts/edit-emr-master-node-sg.png)|
-|:-:|
-|<sup>*Figure 4: Edit ElasticMapReduce-master*</sup>|<br/><br/>
+<p align="center">
+  <img src="/assets/images/posts/edit-emr-master-node-sg.png" alt="Edit ElasticMapReduce-master" title="Edit ElasticMapReduce-master" style="width:100%;"/>
+  <br>
+  <br>
+  <sup><b>Figure 4</b>: Edit ElasticMapReduce-master.</sup>
+</p>
 
-|![Added SSH 22 to inbound rules](/assets/images/posts/allowed-ssh-22-emr-master-sg.png)|
-|:-:|
-|<sup>*Figure 5: Added SSH 22 to inbound rules*</sup>|<br/><br/>
+<p align="center">
+  <img src="/assets/images/posts/allowed-ssh-22-emr-master-sg.png" alt="Added SSH 22 to inbound rules" title="Added SSH 22 to inbound rules" style="width:100%;"/>
+  <br>
+  <br>
+  <sup><b>Figure 5</b>: Added SSH 22 to inbound rules.</sup>
+</p>
 
 Now we should be able to SSH into the master node using the below command. We can find the master node's public DNS from the **Summary** tab in the EMR console as shown in *Figure 7* below.
 
@@ -279,16 +294,21 @@ ssh -i <key pair> hadoop@<EMR master public DNS>
 
 If we see the screen as shown below in *Figure 7* with the name EMR in huge letter, it is wonderful because it indicates that we have successfully constructed and connected to the EMR cluster by using the AWS CLI.
 
-|![SSHed into EMR EC2 node](/assets/images/posts/emr-ssh-inti-ec2-node.png)|
-|:-:|
-|<sup>*Figure 6: SSHed into EMR EC2 node*</sup>|<br/><br/>
+<p align="center">
+  <img src="/assets/images/posts/emr-ssh-inti-ec2-node.png" alt="SSHed into EMR EC2 node" title="SSHed into EMR EC2 node" style="width:100%;"/>
+  <br>
+  <br>
+  <sup><b>Figure 6</b>: SSHed into EMR EC2 node.</sup>
+</p>
 
+<p align="center">
+  <img src="/assets/images/posts/emr-find-master-node-public-dns.png" alt="Finding master node's public DNS" title="Finding master node's public DNS" style="width:100%;"/>
+  <br>
+  <br>
+  <sup><b>Figure 7</b>: Finding master node's public DNS.</sup>
+</p>
 
-|![Added SSH 22 to inbound rules](/assets/images/posts/emr-find-master-node-public-dns.png)|
-|:-:|
-|<sup>*Figure 7: Finding master node's public DNS*</sup>|<br/><br/>
-
-<hr class="grey_line"/>
+---
 
 # Understanding Amazon EMR security options
 
@@ -338,9 +358,12 @@ We an configure a cluster to periodically archive the log files stored on the ma
 
 Amazon EMR archives the log files to Amazon S3 at *5 minute intervals*. To have the log files archived to Amazon S3, we must enable this feature when we launch the cluster:
 
-|![Amazon EMR - Archiving cluster logs to S3](/assets/images/posts/amazon-emr-archiving-cluster-logs-to-S3.png "Amazon EMR - Archiving cluster logs to S3")|
-|:-:|
-|<sup>*Figure 3: Amazon EMR - Archiving cluster logs to S3.*</sup>|<br/><br/>
+<p align="center">
+  <img src="/assets/images/posts/amazon-emr-archiving-cluster-logs-to-S3.png" alt="Amazon EMR - Archiving cluster logs to S3" title="Amazon EMR - Archiving cluster logs to S3" style="width:100%;"/>
+  <br>
+  <br>
+  <sup><b>Figure 8</b>: Amazon EMR - Archiving cluster logs to S3.</sup>
+</p>
 
 ## Which cluster storage(S3 vs. HDFS) should we use?
 

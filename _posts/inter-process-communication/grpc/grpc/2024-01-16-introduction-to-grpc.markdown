@@ -24,9 +24,12 @@ It can generate code for both the server and the client in the most common progr
 
 As with most RPC systems, gRPC is based on the idea of defining a service by specifying the methods that can be called remotely, along with their parameters and return types. On the server side, the server implements this interface and runs a gRPC server to handle calls from clients. On the client side, the client has a stub that provides the same methods as the server.
 
-|![gRPC - Communication between clients and server](/assets/images/posts/grpc-overview.svg)|
-|:-:|
-|<sup>*Figure 1: gRPC - Communication between clients and server. (Image courtesy: grpc.io)*</sup>|<br/><br/>
+<p align="center">
+  <img src="/assets/images/posts/grpc-overview.svg" alt="gRPC - Communication between clients and server" title="Image courtesy: grpc.io" style="width:80%;"/>
+  <br>
+  <br>
+  <sup><b>Figure 1</b>: gRPC - Communication between clients and server. (Image courtesy: grpc.io).</sup>
+</p>
 
 gRPC clients and servers can run and talk to each other in any platform (Linux, macos, etc.) and can be written in any of gRPC’s supported languages. For example, we can easily create a gRPC server in Java with clients in Go, Python, or Ruby. Also, the latest Google APIs will have gRPC versions of their interfaces, which will make it easy to add Google features to our applications.
 

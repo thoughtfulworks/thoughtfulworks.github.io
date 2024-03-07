@@ -450,9 +450,12 @@ The provisioning workflow (Terraform's life cycle) in Terraform is based on the 
 - `apply`
 - `destroy`
 
-|![Terraform life cycle](/assets/images/posts/terraform-lifecycle.png "Created by Author")|
-|:-:|
-|<sup>*Terraform life cycle.*</sup>|<br/><br/>
+<p align="center">
+  <img src="/assets/images/posts/terraform-lifecycle.png" alt="Terraform life cycle" title="Created by Author" style="width:100%;"/>
+  <br>
+  <br>
+  <sup><b>Figure 1</b>: Terraform life cycle.</sup>
+</p>
 
 ### Init
 
@@ -635,9 +638,12 @@ The following steps will be performed in order to create an EC2 instance:
 
 Once Terraform has been successfully executed, a new EC2 instance is created in our AWS account as shown below:
 
-|![New EC2 instance created](/assets/images/posts/terraform-new-ec2-instance-created.png)|
-|:-:|
-|<sup>*A new EC2 instance created.*</sup>|<br/><br/>
+<p align="center">
+  <img src="/assets/images/posts/terraform-new-ec2-instance-created.png" alt="New EC2 instance created in AWS" title="New EC2 instance created" style="width:100%;"/>
+  <br>
+  <br>
+  <sup><b>Figure 2</b>: New EC2 instance created in AWS.</sup>
+</p>
 
 As shown in the screenshot, an EC2 instance was created with the given instance type `t2.mirco` and the AMI ID specified in our definition file.
 
@@ -694,9 +700,12 @@ To create a Compute Engine instance (it's a VM) in GCP, the following steps will
 
 Once Terraform has been successfully executed, a new Google Compute Engine (GCE) instance is created in our GCP account as shown below:
 
-|![New EC2 instance created](/assets/images/posts/terraform-new-gce-instance-created.png)|
-|:-:|
-|<sup>*A new GCE instance created in GCP.*</sup>|<br/><br/>
+<p align="center">
+  <img src="/assets/images/posts/terraform-new-gce-instance-created.png" alt="New EC2 instance created" title="New EC2 instance created" style="width:100%;"/>
+  <br>
+  <br>
+  <sup><b>Figure 3</b>: A new GCE instance created in GCP.</sup>
+</p>
 
 # Conclusion
 
