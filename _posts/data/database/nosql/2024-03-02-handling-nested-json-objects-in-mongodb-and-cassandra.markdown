@@ -324,6 +324,12 @@ If our main priority is straightforward management of nested JSON data and a fle
 
 # Frequently asked questions (FAQs)
 
+## Should normalization be performed on NoSQL databases?
+
+In NoSQL databases, the need for normalization is not as common as it is in traditional relational databases. The primary reason for this is that NoSQL databases have unique design objectives, which often prioritize scalability, performance, and flexibility over strict data integrity and relationships. 
+
+While traditional normalization principles from relational databases don't directly apply to NoSQL databases, considerations about data structure, duplication, and consistency are still relevant. The key is to balance the benefits of denormalization (like improved performance and simpler queries) with the potential drawbacks, such as increased storage requirements and complexity in maintaining consistency.
+
 ## Is a wide column store the same as a columnar store?
 
 No, wide-column stores and columnar stores are not the same, despite their similar names. They are designed for different use cases and have distinct architectures. Here’s a brief overview of each:
