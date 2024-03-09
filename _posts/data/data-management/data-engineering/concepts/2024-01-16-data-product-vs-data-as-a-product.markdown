@@ -21,9 +21,12 @@ We live in a world full of data, but how can we best use it? It should come as n
 
 Be aware that a "data product" is not the same as "data as a product". We might hear the term "data as a product" more often these days due to the current hot trend in the data industry known as "data mesh," which claims to be able to solve many of the problems of its predecessors. One of the principles of the data mesh paradigm is to consider data as a product. This principle is sometimes shortened to "data product," which leads to a misunderstanding between data product and data as a product. 
 
-|![Worlf full of data!](/assets/images/posts/world-full-of-data.webp)|
-|:-:|
-|<sup>*Data everywhere!*</sup>|<br/><br/>
+<p align="center">
+  <img src="/assets/images/posts/world-full-of-data.webp" alt="Data everywhere!" title="Data everywhere!" style="width:100%;"/>
+  <br>
+  <br>
+  <sup><b>Figure 1</b>: Data everywhere!</sup>
+</p>
 
 Let's explore the distinctions in detail between these two notions.
 
